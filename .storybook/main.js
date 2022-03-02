@@ -3,12 +3,17 @@
 const path = require('path');
 
 module.exports = {
-  stories: ['../**/*.stories.mdx', '../**/*.stories.@(js|jsx|ts|tsx)'],
+  stories: ['../**/*.stories.@(js|jsx|ts|tsx)'],
   /** Expose public folder to storybook as static */
   staticDirs: ['../public'],
   addons: [
     '@storybook/addon-links',
     '@storybook/addon-essentials',
+    "@storybook/addon-measure",
+    "@storybook/addon-a11y",
+    // "@storybook/addon-backgrounds",
+    "@storybook/addon-viewport",
+    "@storybook/addon-toolbars",
     {
       /**
        * Fix Storybook issue with PostCSS@8

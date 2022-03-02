@@ -18,7 +18,9 @@ export const parameters = {
       date: /Date$/,
     },
   },
+  layout: 'fullscreen',
   previewTabs: {
     'storybook/docs/panel': { index: -1 },
   },
+
 };
