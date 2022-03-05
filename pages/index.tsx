@@ -1,6 +1,6 @@
 import { useSession, signIn, signOut } from "next-auth/react"
 import { useRouter } from "next/router"
-import BaseNavigation from "../components/Navigation/BaseNavigation"
+import DefaultLayout from "../layouts/DefaultLayout"
 
 export default function Component() {
   const { status, data } = useSession()
@@ -17,16 +17,14 @@ export default function Component() {
 
   return (
     <>
-      <BaseNavigation
-        user={{
-          name: "Thomas",
-          email: "thomas@gmal.com",
-        }}
-      />
-      Signed in as {data?.user?.email} <br />
-      <button className="bg-red-700 w-[500px]" onClick={() => signOut()}>
-        Sign out
-      </button>
+      <DefaultLayout>
+        <>
+          Signed in as {data?.user?.email} <br />
+          <button className="bg-blue-200 w-[200px]" onClick={() => signOut()}>
+            Sign out
+          </button>
+        </>
+      </DefaultLayout>
     </>
   )
 }

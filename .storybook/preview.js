@@ -1,6 +1,7 @@
 // .storybook/preview.js
 
 import '../styles/globals.css';
+import "react-loading-skeleton/dist/skeleton.css"
 import * as NextImage from 'next/image';
 
 const OriginalNextImage = NextImage.default;
