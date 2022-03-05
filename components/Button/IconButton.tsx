@@ -23,7 +23,7 @@ function IconButton({
 }: IconButtonProps) {
   return (
     <ButtonBase
-      className={`w-10 hover:bg-gray-100 ${
+      className={`w-8 md:w-10 hover:bg-gray-100 ${
         type === IconButtonTypes.ROUNDED
           ? "rounded-full"
           : "rounded-lg outline-1 outline-gray-light "

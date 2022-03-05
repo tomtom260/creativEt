@@ -22,6 +22,9 @@ module.exports = {
       maxWidth: ({ theme }) => ({
         ...theme('width')
       }),
+      maxHeight: ({ theme }) => ({
+        ...theme('height')
+      }),
       fontFamily: {
         mono: [
           "Roboto Mono",

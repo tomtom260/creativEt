@@ -32,7 +32,7 @@ function ButtonBase({
       {...rest}
       onClick={onClick}
       type="button"
-      className={`h-10 flex justify-between items-center whitespace-nowrap ${className}`}
+      className={`h-8 md:h-10 flex justify-between items-center whitespace-nowrap font-sans tracking-wide text-sm md:text-base  ${className}`}
     >
       {appendComponent && (
         <div className="flex items-center justify-center mr-2">

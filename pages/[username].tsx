@@ -7,6 +7,9 @@ import { Prisma } from "@prisma/client"
 import DefaultLayout from "../layouts/DefaultLayout"
 import Text from "../components/Typography"
 import { TypographyVariant } from "../components/Typography/textVariant.enum"
+import Button from "../components/Button"
+import ButtonVariants from "../components/Button/button.enum"
+import Head from "next/head"
 
 type ProfileProps = {
   profile: Awaited<ReturnType<typeof getStaticProps>>["props"]["profile"]
@@ -26,26 +29,39 @@ function Profile({ profile }: ProfileProps) {
     return <div>NO User with that username exists</div>
   }
   return (
-    <DefaultLayout>
-      <div className="flex flex-col">
-        <div className="flex">
-          <div className="relative w-20 md:w-32 h-20 md:h-32">
-            <Image
-              src={profile.user.image!}
-              className="rounded-full"
-              layout="fill"
-              alt="profile image"
-            />
-          </div>
-          <div className="flex flex-col">
-            <Text varaint={TypographyVariant.H2}>{profile.user.name}</Text>
-            <Text varaint={TypographyVariant.Body1}>
-              {profile.location || "unknown"}
-            </Text>
+    <>
+      <Head>
+        <title>{profile.user.name} | creativET</title>
+      </Head>
+      <DefaultLayout>
+        <div className="flex flex-col w-full">
+          <div className="flex mx-auto">
+            <div className="relative w-20 md:w-32 h-20 md:h-32 mr-12">
+              <Image
+                src={profile.user.image!}
+                className="rounded-full"
+                layout="fill"
+                alt="profile image"
+              />
+            </div>
+            <div className="flex flex-col flex-1   justify-between min-h-20 md:min-h-32">
+              <Text className="" varaint={TypographyVariant.H1}>
+                {profile.user.name}
+              </Text>
+              <Text
+                className="capitalize mb-1 "
+                varaint={TypographyVariant.Body1}
+              >
+                {profile.location || "unknown"}
+              </Text>
+              <Button onClick={() => {}} variant={ButtonVariants.OUTLINED}>
+                Edit Profile
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
-    </DefaultLayout>
+      </DefaultLayout>
+    </>
   )
 }
 

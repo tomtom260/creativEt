@@ -7,7 +7,10 @@ export type TypographyProps = {
 } & Omit<HTMLAttributes<HTMLParagraphElement>, "children" | "className">
 
 const H1 = ({ className, children, ...rest }: TypographyProps) => (
-  <TypographyBase {...rest} className={`${className}`}>
+  <TypographyBase
+    {...rest}
+    className={`text-xl    md:text-3xl font-bold capitalize tracking-wide font-sans-serif  ${className}`}
+  >
     {children}
   </TypographyBase>
 )
@@ -19,7 +22,10 @@ const H2 = ({ className, children, ...rest }: TypographyProps) => (
 )
 
 const Body1 = ({ className, children, ...rest }: TypographyProps) => (
-  <TypographyBase {...rest} className={`${className}`}>
+  <TypographyBase
+    {...rest}
+    className={`text-sm md:text-base  font-serif   ${className}`}
+  >
     {children}
   </TypographyBase>
 )

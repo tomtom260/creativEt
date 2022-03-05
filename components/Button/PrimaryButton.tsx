@@ -11,7 +11,7 @@ export type PrimaryButtonProps = PrimaryButtonCustomProps &
 function PrimaryButton({ className, ...rest }: PrimaryButtonProps) {
   return (
     <ButtonBase
-      className={` px-4 text-white !justify-center bg-secondary-normal hover:bg-secondary-light tracking-wider rounded-md ${className}`}
+      className={`px-2 md:px-4 text-white !justify-center bg-secondary-normal hover:bg-secondary-light tracking-wider rounded-md ${className}`}
       {...rest}
     />
   )
