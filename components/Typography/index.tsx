@@ -12,19 +12,29 @@ const H1 = ({ className, children, ...rest }: TypographyProps) => (
   </TypographyBase>
 )
 
-const H2 = ({ className, children }: TypographyProps) => (
-  <TypographyBase className={`${className}`}>{children}</TypographyBase>
+const H2 = ({ className, children, ...rest }: TypographyProps) => (
+  <TypographyBase {...rest} className={`${className}`}>
+    {children}
+  </TypographyBase>
 )
 
-const Body1 = ({ className, children }: TypographyProps) => (
-  <TypographyBase className={`${className}`}>{children}</TypographyBase>
+const Body1 = ({ className, children, ...rest }: TypographyProps) => (
+  <TypographyBase {...rest} className={`${className}`}>
+    {children}
+  </TypographyBase>
 )
-const Body2 = ({ className, children }: TypographyProps) => (
-  <TypographyBase className={`text-xs ${className}`}>{children}</TypographyBase>
+const Body2 = ({ className, children, ...rest }: TypographyProps) => (
+  <TypographyBase {...rest} className={`text-xs ${className}`}>
+    {children}
+  </TypographyBase>
 )
 
-function TypographyBase({ children, className }: TypographyProps) {
-  return <p className={className}>{children}</p>
+function TypographyBase({ children, className, ...rest }: TypographyProps) {
+  return (
+    <p {...rest} className={className}>
+      {children}
+    </p>
+  )
 }
 
 export type TextProps = {

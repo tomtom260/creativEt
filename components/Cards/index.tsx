@@ -5,6 +5,8 @@ import HeartFilledSVG from "../../assets/icons/HeartFilled"
 import PlusSVG from "../../assets/icons/Plus"
 import { icons } from "../../utils/icons"
 import { images } from "../../utils/images"
+import Button from "../Button"
+import ButtonVariants from "../Button/button.enum"
 import Text from "../Typography"
 import { TypographyVariant } from "../Typography/textVariant.enum"
 
@@ -12,14 +14,14 @@ export type CardsProps = {}
 
 function Cards({}: CardsProps) {
   const [isCardLiked, setIsCardLiked] = useState<boolean>(false)
-  const [isAuthorFocused, setIsAuthorFocused] = useState<boolean>(false)
+  const [isAuthorFollowed, setIsAuthourFollowed] = useState<boolean>(false)
 
   const onContentLiked = () => {
     setIsCardLiked(state => !state)
   }
 
   return (
-    <div className="w-[300px] h-[250px] flex flex-col">
+    <div className="w-[300px]  flex flex-col">
       <div className="group hover:cursor-pointer w-full h-[220px] relative bg-white">
         <Image
           src={images.cardPlaceholder}
@@ -36,14 +38,15 @@ function Cards({}: CardsProps) {
               Watch
             </Text>
             <div>
-              <div
+              <Button
+                variant={ButtonVariants.ICON}
                 onClick={onContentLiked}
                 className={`w-8 h-8 ${
-                  isCardLiked ? "text-secondary" : "text-gray-light"
+                  isCardLiked ? "text-secondary-light " : "text-gray-normal"
                 } bg-white rounded-md flex items-center justify-center`}
               >
                 <HeartFilledSVG />
-              </div>
+              </Button>
             </div>
           </div>
         </div>
@@ -97,18 +100,22 @@ function Cards({}: CardsProps) {
                     </Text>
                     <Text
                       varaint={TypographyVariant.Body1}
-                      className="font-thin text-gray-light"
+                      className="font-thin text-gray-normal"
                     >
                       Ethiopia
                     </Text>
                   </div>
                 </div>
-                <div className="flex justify-center items-center text-black bg-gray-light w-28 h-12 rounded-lg  ">
-                  <PlusSVG />
-                  <Text varaint={TypographyVariant.Body1} className="ml-2">
-                    Follow
-                  </Text>
-                </div>
+                <Button
+                  onClick={() => setIsAuthourFollowed(state => !state)}
+                  appendComponent={<PlusSVG />}
+                  className={`${
+                    isAuthorFollowed ? "bg-secondary-normal" : "bg-gray-light"
+                  } `}
+                  variant={ButtonVariants.PRIMARY}
+                >
+                  Follow
+                </Button>
               </div>
               <div className="grid grid-cols-3 h-full gap-5 mt-5">
                 <Image
@@ -138,21 +145,22 @@ function Cards({}: CardsProps) {
         </div>
         <div className="flex">
           <div className="flex items-center mr-1">
-            <div
-              onClick={onContentLiked}
+            <Button
               title="Like this content?"
               className={`mx-1 ${
-                isCardLiked ? "text-secondary" : "text-gray-light"
-              } hover:text-secondary hover:cursor-pointer`}
+                isCardLiked ? "text-secondary-light " : "text-gray-normal"
+              } hover:text-secondary-light `}
+              onClick={onContentLiked}
+              variant={ButtonVariants.ICON}
             >
-              <HeartFilledSVG />{" "}
-            </div>
+              <HeartFilledSVG />
+            </Button>
             <Text className="mb-1" varaint={TypographyVariant.Body2}>
               172
             </Text>
           </div>
           <div className="flex items-center">
-            <div className="mx-1 text-gray-light">
+            <div className="mx-1 text-gray-normal">
               <EyeSVG />
             </div>
             <Text className="mb-1" varaint={TypographyVariant.Body2}>

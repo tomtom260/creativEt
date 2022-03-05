@@ -7,8 +7,13 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        secondary: "#ea4c89",
-        gray: { light: '#9e9ea7', dark: "#8b8b8b" }
+        secondary: {
+          dark: '#28104E',
+          normal: '#6237A0',
+          light: '#9754C8',
+          "very-light": '#DEACF5'
+        },
+        gray: { light: "#e7e7e9", normal: '#9e9ea7', dark: "#8b8b8b" }
 
       },
       screens: {

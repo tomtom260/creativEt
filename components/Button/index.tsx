@@ -1,23 +1,32 @@
-import React, { DetailedHTMLProps, HTMLAttributes, ReactNode } from "react"
+import React, { FC } from "react"
+import ButtonVariants from "./button.enum"
+import PrimaryButton, { PrimaryButtonProps } from "./PrimaryButton"
+import IconButton, { IconButtonProps } from "./IconButton"
+import OutlinedButton, { OutlinedButtonProps } from "./OutlinedButton"
 
-export type ButtonProps = {
-  /** 
-   * on Click
-   * */ 
-  onClick: () => void
-  children: ReactNode
-} & HTMLButtonElement
+type PBProps = {
+  variant: ButtonVariants.PRIMARY
+} & PrimaryButtonProps
 
-function Button({ children, onClick, }: ButtonProps) {
-  return (
-    <button
-      onClick={onClick}
-      type="button"
-      className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-    >
-      {children}
-    </button>
-  )
+type IBProps = {
+  variant: ButtonVariants.ICON
+} & IconButtonProps
+
+type OBProps = {
+  variant: ButtonVariants.OUTLINED
+} & OutlinedButtonProps
+
+export type ButtonProps = IBProps | PBProps | OBProps
+
+function Button(props: ButtonProps) {
+  switch (props.variant) {
+    case ButtonVariants.ICON:
+      return <IconButton {...props} />
+    case ButtonVariants.PRIMARY:
+      return <PrimaryButton {...props} />
+    case ButtonVariants.OUTLINED:
+      return <OutlinedButton {...props} />
+  }
 }
 
 export default Button
