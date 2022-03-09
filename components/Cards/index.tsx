@@ -1,6 +1,6 @@
 import Image from "next/image"
 import React, { useState } from "react"
-import EyeSVG from "../../assets/icons/Eye"
+import EyeSVG from "../../assets/icons/EyeOn"
 import HeartFilledSVG from "../../assets/icons/HeartFilled"
 import PlusSVG from "../../assets/icons/Plus"
 import { icons } from "../../utils/icons"

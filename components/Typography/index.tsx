@@ -1,9 +1,10 @@
 import React, { HTMLAttributes } from "react"
-import { TypographyVariant } from "./textVariant.enum"
+import { TextTheme, TypographyVariant } from "./textVariant.enum"
 
 export type TypographyProps = {
   children: string
   className?: HTMLAttributes<HTMLParagraphElement>["className"]
+  theme?: TextTheme
 } & Omit<HTMLAttributes<HTMLParagraphElement>, "children" | "className">
 
 const H1 = ({ className, children, ...rest }: TypographyProps) => (
@@ -38,9 +39,27 @@ const Body2 = ({ className, children, ...rest }: TypographyProps) => (
   </TypographyBase>
 )
 
-function TypographyBase({ children, className, ...rest }: TypographyProps) {
+function TypographyBase({
+  children,
+  className,
+  theme = TextTheme.NORMAL,
+  ...rest
+}: TypographyProps) {
+  let themeStyle: TypographyProps["className"]
+
+  switch (theme) {
+    case TextTheme.DANGER:
+      themeStyle = "text-red-500"
+      break
+    case TextTheme.WARN:
+      themeStyle = ""
+      break
+    default:
+      themeStyle = ""
+  }
+
   return (
-    <p {...rest} className={className}>
+    <p {...rest} className={`${themeStyle} ${className}`}>
       {children}
     </p>
   )

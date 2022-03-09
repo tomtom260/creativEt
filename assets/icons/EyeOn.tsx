@@ -1,6 +1,6 @@
 import React from "react"
 
-function EyeSVG() {
+function EyeOnSVG() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -24,4 +24,4 @@ function EyeSVG() {
   )
 }
 
-export default EyeSVG
+export default EyeOnSVG
