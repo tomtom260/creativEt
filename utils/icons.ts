@@ -1,3 +1,3 @@
 export const icons = {
-  heartFilled: `${process.env.NEXTAUTH_URL}/assets/icons/heart-filled.svg `,
+  heartFilled: `${process.env.NEXT_PUBLIC_URL}/assets/icons/heart-filled.svg `,
 }

@@ -1,4 +1,4 @@
 export const images = {
-  cardPlaceholder: `${process.env.NEXTAUTH_URL}/assets/images/cardplaceholder.webp`,
-  defaultProfile: `${process.env.NEXTAUTH_URL}/assets/images/defaultProfile.png`,
+  cardPlaceholder: `${process.env.NEXT_PUBLIC_URL}/assets/images/cardplaceholder.webp`,
+  defaultProfile: `${process.env.NEXT_PUBLIC_URL}/assets/images/defaultProfile.png`,
 }

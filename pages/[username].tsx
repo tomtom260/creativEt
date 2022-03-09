@@ -1,7 +1,7 @@
 import { GetStaticPropsContext } from "next"
 import { useRouter } from "next/router"
 import Image from "next/image"
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { prisma } from "../utils/db"
 import { Prisma } from "@prisma/client"
 import DefaultLayout from "../layouts/DefaultLayout"
@@ -10,6 +10,8 @@ import { TypographyVariant } from "../components/Typography/textVariant.enum"
 import Button from "../components/Button"
 import ButtonVariants from "../components/Button/button.enum"
 import Head from "next/head"
+import HorizontalMenu from "../components/HorizontalMenu"
+import Cards from "../components/Cards"
 
 type ProfileProps = {
   profile: Awaited<ReturnType<typeof getStaticProps>>["props"]["profile"]
@@ -20,7 +22,9 @@ function Profile({ profile }: ProfileProps) {
     console.log(profile?.user.name)
   }, [])
 
+  const [selectedMenuItem, setSelectedMenuItem] = useState<number>(0)
   const router = useRouter()
+
   if (router.isFallback) {
     return <div>Loading...</div>
   }
@@ -28,6 +32,8 @@ function Profile({ profile }: ProfileProps) {
   if (!profile) {
     return <div>NO User with that username exists</div>
   }
+  console.log(process.env.NEXT_PUBLIC_URL)
+
   return (
     <>
       <Head>
@@ -58,6 +64,18 @@ function Profile({ profile }: ProfileProps) {
                 Edit Profile
               </Button>
             </div>
+          </div>
+          <div className="mt-8 md:mt-16"></div>
+          <HorizontalMenu
+            setSelectedMenuItem={setSelectedMenuItem}
+            selectedMenuItem={selectedMenuItem}
+            menuItems={["Shots", "Boosted Shots", "Liked Shots"]}
+          />
+          <div className="grid md:grid-cols-2 justify-items-center lg:grid-cols-3 gap-4 gap-y-8  mt-12">
+            <Cards />
+            <Cards />
+            <Cards />
+            <Cards />
           </div>
         </div>
       </DefaultLayout>

@@ -9,14 +9,17 @@ export type TypographyProps = {
 const H1 = ({ className, children, ...rest }: TypographyProps) => (
   <TypographyBase
     {...rest}
-    className={`text-xl    md:text-3xl font-bold capitalize tracking-wide font-sans-serif  ${className}`}
+    className={`text-xl  md:text-3xl font-bold capitalize tracking-wide font-sans-serif  ${className}`}
   >
     {children}
   </TypographyBase>
 )
 
 const H2 = ({ className, children, ...rest }: TypographyProps) => (
-  <TypographyBase {...rest} className={`${className}`}>
+  <TypographyBase
+    {...rest}
+    className={`text-lg  md:text-2xl  font-bold capitalize font-sans-serif  ${className}`}
+  >
     {children}
   </TypographyBase>
 )

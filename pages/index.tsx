@@ -1,11 +1,11 @@
 import { useSession, signIn, signOut } from "next-auth/react"
 import { useRouter } from "next/router"
 import DefaultLayout from "../layouts/DefaultLayout"
+import { Cloudinary } from "@cloudinary/url-gen"
 
 export default function Component() {
   const { status, data } = useSession()
   const router = useRouter()
-
   if (status === "loading") {
     return "Loading"
   }
@@ -14,6 +14,7 @@ export default function Component() {
   if (status === "unauthenticated") {
     router.push("/auth/signin")
   }
+  
 
   return (
     <>
