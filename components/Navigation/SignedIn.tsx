@@ -5,24 +5,21 @@ import { BellIcon } from "@heroicons/react/outline"
 import Image from "next/image"
 import classNames from "../../utils/classNames"
 import BaseNavigation from "./BaseNavigation"
+import useUserService from "service/user"
+import { useQuery } from "react-query"
+import { useGetCurrentUser } from "hooks/user"
+import { getPublicIdFromUrl, getThumnailSizedImage } from "@/utils/cloudinary"
 
 function SignedInNavigation() {
-  const user = {
-    name: "Chelsea Hagon",
-    email: "chelseahagon@example.com",
-    imageUrl:
-      "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-  }
-
-  user.imageUrl =
-    user.imageUrl ||
-    "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-
+  const { data: user } = useGetCurrentUser()
   const userNavigation = [
     { name: "Your Profile", href: "#" },
     { name: "Settings", href: "#" },
     { name: "Sign out", href: "#" },
   ]
+
+  const publicId = getPublicIdFromUrl(user?.image!)
+  const imageUrl = getThumnailSizedImage(publicId)
 
   return (
     <>
@@ -35,7 +32,7 @@ function SignedInNavigation() {
                 width={40}
                 height={40}
                 className="h-10 w-10 rounded-full"
-                src={user.imageUrl}
+                src={imageUrl}
                 alt=""
               />
             </div>
@@ -72,7 +69,7 @@ function SignedInNavigation() {
                     width={32}
                     height={32}
                     className="h-8 w-8 rounded-full"
-                    src={user.imageUrl}
+                    src={imageUrl}
                     alt=""
                   />
                 </Menu.Button>

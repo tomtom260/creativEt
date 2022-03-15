@@ -1,12 +1,18 @@
 import axios from "axios"
 import { NextApiRequest, NextApiResponse } from "next"
 import { getSession } from "next-auth/react"
-import { wrongRequestMethodError } from "../../../utils/apiResponses"
+import {
+  SuccessAPIResponse,
+  wrongRequestMethodError,
+} from "../../../utils/apiResponses"
 import { prisma } from "../../../utils/db"
 
 type NextApiRequestType = Omit<NextApiRequest, "body"> & {
   body: {
     image?: string
+    name?: string
+    location?: string
+    bio?: string
   }
 }
 
@@ -15,20 +21,71 @@ export default async function userHandler(
   res: NextApiResponse
 ) {
   const session = await getSession({ req })
+  const id = session?.user?.id!
+
+  let k: keyof typeof req.body
+  for (k in req.body) {
+    if (!req.body[k]) delete req.body[k]
+  }
+
+  console.log("body", req.body)
+
   switch (req.method) {
     case "POST":
+      let user = {}
       const { image } = req.body
       if (image) {
-        const user = await prisma.user.update({
+        user = await prisma.user.update({
           where: {
-            email: session?.user?.email!,
+            id,
+          },
+          include: {
+            Profile: true,
           },
           data: {
             image,
           },
         })
-        return res.status(200).json({ user })
+      } else {
+        const { name, location, bio } = req.body
+        if (name) {
+          user = await prisma.user.update({
+            where: {
+              id,
+            },
+            include: {
+              Profile: true,
+            },
+            data: {
+              name,
+            },
+          })
+        }
+        if (location || bio) {
+          const profile = await prisma.profile.update({
+            where: {
+              userId: id,
+            },
+            include: {
+              user: true,
+            },
+            data: {
+              location,
+              bio,
+            },
+          })
+          user = {
+            ...profile.user,
+            Profile: {
+              bio: profile.bio,
+              location: profile.location,
+              username: profile.username,
+            },
+          }
+        }
       }
+      console.log(user)
+      return SuccessAPIResponse(res, user)
     default:
       wrongRequestMethodError(res, ["POST"])
   }

@@ -1,46 +1,30 @@
 import ProfileLayout from "@/layouts/ProfileLayout"
-import React, { useEffect, useState, InputHTMLAttributes } from "react"
+import React, { useState, InputHTMLAttributes } from "react"
 import Text from "@/components/Typography"
 import Button from "@/components/Button"
 import ButtonVariants from "@/components/Button/button.enum"
 import { TypographyVariant } from "@/components/Typography/textVariant.enum"
 import Input from "@/components/Form/Input"
-import axios from "axios"
 import { InputType } from "@/components/Form/Input/Input.enum"
-import { useRouter } from "next/router"
-import { useSession } from "next-auth/react"
 import Image from "next/image"
-import cloudinary, {
-  getPublicIdFromUrl,
-  getThumnailSizedImage,
-} from "@/utils/cloudinary"
+import { getPublicIdFromUrl, getThumnailSizedImage } from "@/utils/cloudinary"
+import useUserService from "service/user"
+import { useGetCurrentUser } from "hooks/user"
 
 function Profile() {
-  const { data: session, status } = useSession()
-
+  const { updateCurrentUserProfileImage, updateCurrentUserProfile } =
+    useUserService()
+  const { data: user } = useGetCurrentUser()
   const [imageToBeUploaded, setImageToBeUploaded] = useState<File>()
   const [imageError, setImageError] = useState<string>()
 
-  const [previewImage, setPreviewImage] = useState("")
+  const publicId = getPublicIdFromUrl(user?.image!)
+  const profileUrl = getThumnailSizedImage(publicId)
+  const [previewImage, setPreviewImage] = useState(profileUrl)
 
-  const router = useRouter()
-
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/auth/signin")
-      return
-    } else {
-      if (session?.user?.image!) {
-        const publicId = getPublicIdFromUrl(session?.user?.image!)
-        const profileUrl = getThumnailSizedImage(publicId)
-        setPreviewImage(profileUrl)
-      }
-    }
-  }, [status, router, session])
-
-  if (status === "loading") {
-    return "Loading"
-  }
+  const [name, setName] = useState(user?.name)
+  const [location, setLocation] = useState(user?.location)
+  const [bio, setBio] = useState(user?.bio)
 
   const checkIfImageIsValidBeforeUpload = (image: File) => {
     if (!image.type.includes("image")) {
@@ -69,28 +53,25 @@ function Profile() {
   }
 
   const uploadImage = async () => {
-    const formData = new FormData()
-    formData.append("file", imageToBeUploaded as Blob)
-    formData.append("upload_preset", "profile")
-    const data = await fetch(
-      `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
-      { body: formData, method: "POST" }
-    ).then(res => {
-      return res.json()
-    })
+    imageToBeUploaded
+      ? updateCurrentUserProfileImage(imageToBeUploaded)
+      : setImageError("Image is the same as current profile picture")
+  }
 
-    axios
-      .post(
-        "/api/account/updateUserProfile",
-        {
-          image: data.secure_url,
-        },
-        {
-          withCredentials: true,
-        }
-      )
-      .then(res => console.log(res))
-      .catch(err => console.log(err))
+  const updateProfile = () => {
+    const data = {
+      name,
+      location,
+      bio,
+    }
+    let k: keyof typeof data
+    for (k in data) {
+      if (!data[k] || data[k] === user[k]) {
+        delete data[k]
+      }
+      console.log(user[k], data[k])
+    }
+    updateCurrentUserProfile(data)
   }
 
   return (
@@ -150,28 +131,38 @@ function Profile() {
             </div>
             <Input
               variant={InputType.NORMAL}
-              value=""
-              onChange={() => {}}
+              value={name}
+              onChange={setName}
               label="Name"
             />
             <Input
               variant={InputType.NORMAL}
-              value=""
-              onChange={() => {}}
+              value={location}
+              onChange={setLocation}
               label="Location"
             />
             <Input
               variant={InputType.TEXTAREA}
-              value=""
-              onChange={() => {}}
+              value={bio}
+              onChange={setBio}
               label="Bio"
             />
-            <Button variant={ButtonVariants.PRIMARY}>Save </Button>
+            <Button onClick={updateProfile} variant={ButtonVariants.PRIMARY}>
+              Save
+            </Button>
           </div>
         </div>
       </div>
     </ProfileLayout>
   )
+}
+
+export async function getStaticProps() {
+  return {
+    props: {
+      protected: true,
+    },
+  }
 }
 
 export default Profile

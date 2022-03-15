@@ -11,7 +11,7 @@ type BaseInputCustomProps<T> = {
   error?: string
   value: string
   description?: string
-  onChange: () => void
+  onChange: (value: string | undefined) => void
   appendComponent?: ReactNode
   prependComponent?: ReactNode
   as: T
@@ -31,6 +31,7 @@ function BaseInput<T>({
   label,
   appendComponent,
   prependComponent,
+  onChange,
   as: As = InputVariant.INPUT,
   ...rest
 }: BaseInputProps<T>) {
@@ -47,6 +48,9 @@ function BaseInput<T>({
         {
           <As
             {...rest}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              onChange(e.target?.value)
+            }
             className={`h-12 py-4 px-2 flex-1 border-0 rounded-lg outline-none !ring-0 ${
               As === InputVariant.INPUT ? "" : " !h-28 resize-none"
             } `}

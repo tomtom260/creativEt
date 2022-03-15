@@ -1,4 +1,3 @@
-import { useSession } from "next-auth/react"
 import React, { FC, ReactNode } from "react"
 import Navigation from "../components/Navigation"
 import { NavigationVariant } from "../components/Navigation/nav.enum"

@@ -19,13 +19,15 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
     },
     callbacks: {
       async jwt({ token }) {
-        // if(token){
-        //   const user = await prisma.user.
-        //   token.emailVerified
+        // if (token) {
+
         // }
         return token
       },
       async session({ session, token }) {
+        if (session) {
+          session.user.id = token.sub
+        }
         return session
       },
       async signIn({ profile, user, account }) {

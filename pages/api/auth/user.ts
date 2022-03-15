@@ -20,13 +20,12 @@ export default async function userHandler(
   req: NextApiRequestType,
   res: NextApiResponse
 ) {
-  const { email, firstName, lastName, username, password } = req.body
-  const verificationToken = crypto.randomBytes(16).toString("hex")
-  const hashedVerificationToken = bcryptjs.hashSync(verificationToken, 10)
-  const hashedPassword = bcryptjs.hashSync(password, 10)
-
   switch (req.method) {
     case "POST":
+      const { email, firstName, lastName, username, password } = req.body
+      const verificationToken = crypto.randomBytes(16).toString("hex")
+      const hashedVerificationToken = bcryptjs.hashSync(verificationToken, 10)
+      const hashedPassword = bcryptjs.hashSync(password, 10)
       const user = await prisma?.user.upsert({
         where: {
           email,
@@ -57,7 +56,7 @@ export default async function userHandler(
           userId: user.id,
         },
         update: {
-        //   username: username,
+          //   username: username,
         },
       })
       await sendMail({

@@ -6,6 +6,8 @@ import { useRouter } from "next/router"
 import Link from "next/link"
 import Image from "next/image"
 import { useSession } from "next-auth/react"
+import { useGetCurrentUser } from "hooks/user"
+import { getPublicIdFromUrl, getThumnailSizedImage } from "@/utils/cloudinary"
 
 function ProfileLayout({ children: Children }: { children: ReactNode }) {
   const SidebarMenuItems = [
@@ -30,11 +32,13 @@ function ProfileLayout({ children: Children }: { children: ReactNode }) {
   ]
 
   const router = useRouter()
-  const { data: session, status } = useSession()
-
+  const { data: user } = useGetCurrentUser()!
   const currentPageDetails = SidebarMenuItems.find(
     item => item.path === router.pathname
   )!
+
+  const publicId = getPublicIdFromUrl(user?.image!)
+  const imageUrl = getThumnailSizedImage(publicId)
 
   return (
     <DefaultLayout>
@@ -43,13 +47,13 @@ function ProfileLayout({ children: Children }: { children: ReactNode }) {
           <Image
             layout="fill"
             className="rounded-full"
-            src={session?.user?.image!}
+            src={imageUrl}
             alt="profile image"
           />
         </div>
         <div className="flex flex-col">
           <Text varaint={TypographyVariant.H2}>
-            Thomas Mesfin / {currentPageDetails.label}
+            {user?.name} / {currentPageDetails.label}
           </Text>
           <Text className=" text-gray-normal" varaint={TypographyVariant.Body1}>
             {currentPageDetails.description}
