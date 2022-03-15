@@ -4,45 +4,54 @@ import {
   TextTheme,
   TypographyVariant,
 } from "@/components/Typography/textVariant.enum"
+import { InputVariant } from "./Input.enum"
 
-type BaseInputCustomProps = {
+type BaseInputCustomProps<T> = {
   label: string
-  error: string
+  error?: string
   value: string
-  description: string
+  description?: string
   onChange: () => void
   appendComponent?: ReactNode
   prependComponent?: ReactNode
+  as: T
 }
 
-export type BaseInputProps = Omit<
-  InputHTMLAttributes<HTMLInputElement>,
-  keyof BaseInputCustomProps
+export type BaseInputProps<T> = Omit<
+  InputHTMLAttributes<
+    T extends InputVariant.INPUT ? HTMLInputElement : HTMLAreaElement
+  >,
+  keyof BaseInputCustomProps<T>
 > &
-  BaseInputCustomProps
+  BaseInputCustomProps<T>
 
-function BaseInput({
+function BaseInput<T>({
   error,
-  description,
+  description = "",
   label,
   appendComponent,
   prependComponent,
+  as: As = InputVariant.INPUT,
   ...rest
-}: BaseInputProps) {
+}: BaseInputProps<T>) {
   return (
-    <div className="flex-1 px-2">
+    <div className="flex-1">
       <Text
         className="!font-mono  !text-xl mb-2 sm:mb-4"
         varaint={TypographyVariant.Body1}
       >
         {label}
       </Text>
-      <div className="flex flex-1  relative focus:border-0 border rounded-lg hover:ring-1 hover:border-0 border-gray-normal focus:ring-2 !ring-secondary-normal">
+      <div className="flex flex-1  relative focus:border-transparent  border rounded-lg hover:ring-1 focus:ring-1  hover:border-transparent  border-gray-normal  !ring-secondary-normal">
         {prependComponent}
-        <input
-          {...rest}
-          className="h-12 py-4  flex-1 border-0 rounded-lg outline-none !ring-0  "
-        />
+        {
+          <As
+            {...rest}
+            className={`h-12 py-4 px-2 flex-1 border-0 rounded-lg outline-none !ring-0 ${
+              As === InputVariant.INPUT ? "" : " !h-28 resize-none"
+            } `}
+          />
+        }
         {appendComponent}
       </div>
       <Text

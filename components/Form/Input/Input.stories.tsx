@@ -1,6 +1,6 @@
 import { Meta, Story } from "@storybook/react"
 import Input, { InputProps } from "."
-import { InputVariant } from "./Input.enum"
+import { InputType } from "./Input.enum"
 
 const meta: Meta = {
   title: "Form/Input",
@@ -11,7 +11,7 @@ const Template: Story<InputProps> = args => <Input {...args} />
 
 export const DefaultInput = Template.bind({})
 DefaultInput.args = {
-  variant: InputVariant.NORMAL,
+  variant: InputType.NORMAL,
   label: "Location",
   error: "Location is Required!",
   description: "Enter a city that is close to you",
@@ -19,7 +19,15 @@ DefaultInput.args = {
 
 export const PasswordInput = Template.bind({})
 PasswordInput.args = {
-  variant: InputVariant.PASSWORD,
+  variant: InputType.PASSWORD,
+  label: "Location",
+  error: "Location is Required!",
+  description: "Enter a city that is close to you",
+}
+
+export const TextArea = Template.bind({})
+TextArea.args = {
+  variant: InputType.TEXTAREA,
   label: "Location",
   error: "Location is Required!",
   description: "Enter a city that is close to you",

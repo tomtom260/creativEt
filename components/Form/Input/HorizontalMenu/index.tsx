@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction, useState } from "react"
-import Text from "../Typography"
-import { TypographyVariant } from "../Typography/textVariant.enum"
+import Text from "../../../Typography"
+import { TypographyVariant } from "../../../Typography/textVariant.enum"
 
 export type HorizontalMenuProps = {
   menuItems: string[]
