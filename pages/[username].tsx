@@ -10,7 +10,7 @@ import { TypographyVariant } from "../components/Typography/textVariant.enum"
 import Button from "../components/Button"
 import ButtonVariants from "../components/Button/button.enum"
 import Head from "next/head"
-import HorizontalMenu from "../components/HorizontalMenu"
+import HorizontalMenu from "../components/Form/Input/HorizontalMenu"
 import Cards from "../components/Cards"
 
 type ProfileProps = {
