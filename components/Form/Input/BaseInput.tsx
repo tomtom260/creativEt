@@ -1,12 +1,13 @@
-import React, { InputHTMLAttributes, ReactNode } from "react"
+import React, { InputHTMLAttributes, ReactElement, ReactNode } from "react"
 import Text from "@/components/Typography"
 import {
   TextTheme,
   TypographyVariant,
 } from "@/components/Typography/textVariant.enum"
 import { InputVariant } from "./Input.enum"
+import { UnionToIntersection } from "reselect/es/types"
 
-type BaseInputCustomProps<T> = {
+type BaseInputCustomProps = {
   label: string
   error?: string
   value: string
@@ -14,27 +15,27 @@ type BaseInputCustomProps<T> = {
   onChange: (value: string | undefined) => void
   appendComponent?: ReactNode
   prependComponent?: ReactNode
-  as: T
+  children: (
+    props: InputHTMLAttributes<HTMLInputElement & HTMLTextAreaElement>
+  ) => ReactElement
 }
 
-export type BaseInputProps<T> = Omit<
-  InputHTMLAttributes<
-    T extends InputVariant.INPUT ? HTMLInputElement : HTMLAreaElement
-  >,
-  keyof BaseInputCustomProps<T>
+export type BaseInputProps = Omit<
+  InputHTMLAttributes<HTMLInputElement | HTMLAreaElement>,
+  keyof BaseInputCustomProps
 > &
-  BaseInputCustomProps<T>
+  BaseInputCustomProps
 
-function BaseInput<T>({
+function BaseInput({
   error,
   description = "",
   label,
   appendComponent,
   prependComponent,
+  children: Container,
   onChange,
-  as: As = InputVariant.INPUT,
   ...rest
-}: BaseInputProps<T>) {
+}: BaseInputProps) {
   return (
     <div className="flex-1">
       <Text
@@ -45,17 +46,7 @@ function BaseInput<T>({
       </Text>
       <div className="flex flex-1  relative focus:border-transparent  border rounded-lg hover:ring-1 focus:ring-1  hover:border-transparent  border-gray-normal  !ring-secondary-normal">
         {prependComponent}
-        {
-          <As
-            {...rest}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              onChange(e.target?.value)
-            }
-            className={`h-12 py-4 px-2 flex-1 border-0 rounded-lg outline-none !ring-0 ${
-              As === InputVariant.INPUT ? "" : " !h-28 resize-none"
-            } `}
-          />
-        }
+        <Container onChange={e => onChange(e?.target.value)} {...rest} />
         {appendComponent}
       </div>
       <Text

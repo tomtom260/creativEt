@@ -6,7 +6,7 @@ import { InputVariant } from "./Input.enum"
 
 export type PasswordInputProps = BaseInputProps & Omit<BaseInputProps, "type">
 
-function PasswordInput(props: PasswordInputProps) {
+function PasswordInput(props: Omit<PasswordInputProps, "children">) {
   const [isPasswordVisible, setPasswordVisible] = useState<boolean>()
   return (
     <BaseInput
@@ -20,8 +20,9 @@ function PasswordInput(props: PasswordInputProps) {
           {isPasswordVisible ? <EyeOffSVG /> : <EyeOnSVG />}
         </div>
       }
-      as={InputVariant.INPUT}
-    />
+    >
+      {props => <input {...props} />}
+    </BaseInput>
   )
 }
 
