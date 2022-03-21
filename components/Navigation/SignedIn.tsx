@@ -5,9 +5,7 @@ import { BellIcon } from "@heroicons/react/outline"
 import Image from "next/image"
 import classNames from "../../utils/classNames"
 import BaseNavigation from "./BaseNavigation"
-import useUserService from "service/user"
-import { useQuery } from "react-query"
-import { useGetCurrentUser } from "hooks/user"
+import { useGetCurrentUser } from "@/hooks/user"
 import { getPublicIdFromUrl, getThumnailSizedImage } from "@/utils/cloudinary"
 
 function SignedInNavigation() {

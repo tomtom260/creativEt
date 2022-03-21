@@ -8,8 +8,8 @@ import Input from "@/components/Form/Input"
 import { InputType } from "@/components/Form/Input/Input.enum"
 import Image from "next/image"
 import { getPublicIdFromUrl, getThumnailSizedImage } from "@/utils/cloudinary"
-import useUserService from "service/user"
-import { useGetCurrentUser } from "hooks/user"
+import useUserService from "@/service/user"
+import { useGetCurrentUser } from "@/hooks/user"
 
 function Profile() {
   const { updateCurrentUserProfileImage, updateCurrentUserProfile } =

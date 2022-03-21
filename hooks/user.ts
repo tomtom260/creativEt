@@ -1,4 +1,4 @@
-import { useGetUserQuery } from "api/user"
+import { useGetUserQuery } from "@/api/user"
 import { useSession } from "next-auth/react"
 
 export function useGetCurrentUser() {

@@ -6,7 +6,7 @@ import { useRouter } from "next/router"
 import Link from "next/link"
 import Image from "next/image"
 import { useSession } from "next-auth/react"
-import { useGetCurrentUser } from "hooks/user"
+import { useGetCurrentUser } from "@/hooks/user"
 import { getPublicIdFromUrl, getThumnailSizedImage } from "@/utils/cloudinary"
 
 function ProfileLayout({ children: Children }: { children: ReactNode }) {

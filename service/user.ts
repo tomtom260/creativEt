@@ -1,8 +1,8 @@
 import {
   useUpdateUserProfile,
   useUpdateUserProfileImageMutation,
-} from "api/user"
-import { useGetCurrentUser } from "hooks/user"
+} from "@/api/user"
+import { useGetCurrentUser } from "@/hooks/user"
 import { useQueryClient } from "react-query"
 
 function useUserService() {

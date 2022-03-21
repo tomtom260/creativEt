@@ -1,9 +1,7 @@
 import React from "react"
 import ButtonBase, { ButtonBaseProps } from "./BaseButton"
 
-type OutlinedButtonCustomProps = {
-  children: string
-}
+type OutlinedButtonCustomProps = {}
 
 export type OutlinedButtonProps = Omit<
   ButtonBaseProps,

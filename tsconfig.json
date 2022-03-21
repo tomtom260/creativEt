@@ -19,7 +19,10 @@
       "@/components/*": ["components/*"],
       "@/layouts/*": ["layouts/*"],
       "@/assets/*": ["assets/*"],
-      "@/utils/*": ["utils/*"]
+      "@/utils/*": ["utils/*"],
+      "@/hooks/*": ["hooks/*"],
+      "@/service/*": ["service/*"],
+      "@/api/*": ["api/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
