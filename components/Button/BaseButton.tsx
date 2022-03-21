@@ -1,12 +1,12 @@
 import React, {
-  DetailedHTMLProps,
   HTMLAttributes,
   ReactNode,
   ButtonHTMLAttributes,
+  MouseEventHandler,
 } from "react"
 
 type ButtonBaseCustomProps = {
-  onClick: () => void
+  onClick: MouseEventHandler<HTMLButtonElement>
   className?: HTMLAttributes<HTMLButtonElement>["className"]
   children: ReactNode
   appendComponent?: ReactNode

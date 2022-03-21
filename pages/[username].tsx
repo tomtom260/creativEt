@@ -32,7 +32,6 @@ function Profile({ profile }: ProfileProps) {
   if (!profile) {
     return <div>NO User with that username exists</div>
   }
-  console.log(process.env.NEXT_PUBLIC_URL)
 
   return (
     <>

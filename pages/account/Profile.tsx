@@ -22,9 +22,9 @@ function Profile() {
   const profileUrl = getThumnailSizedImage(publicId)
   const [previewImage, setPreviewImage] = useState(profileUrl)
 
-  const [name, setName] = useState(user?.name)
-  const [location, setLocation] = useState(user?.location)
-  const [bio, setBio] = useState(user?.bio)
+  const [name, setName] = useState(user?.name || "")
+  const [location, setLocation] = useState(user?.location || "")
+  const [bio, setBio] = useState(user?.bio || "")
 
   const checkIfImageIsValidBeforeUpload = (image: File) => {
     if (!image.type.includes("image")) {
@@ -66,10 +66,9 @@ function Profile() {
     }
     let k: keyof typeof data
     for (k in data) {
-      if (!data[k] || data[k] === user[k]) {
+      if (!data[k] || data[k] === user![k]) {
         delete data[k]
       }
-      console.log(user[k], data[k])
     }
     updateCurrentUserProfile(data)
   }
@@ -92,6 +91,7 @@ function Profile() {
             <div>
               <div>
                 <div className="flex items-center">
+                  {/* @ts-ignore */}
                   <Button onClick={() => {}} variant={ButtonVariants.OUTLINED}>
                     <label>
                       Choose File

@@ -28,8 +28,6 @@ export default async function userHandler(
     if (!req.body[k]) delete req.body[k]
   }
 
-  console.log("body", req.body)
-
   switch (req.method) {
     case "POST":
       let user = {}
@@ -84,7 +82,6 @@ export default async function userHandler(
           }
         }
       }
-      console.log(user)
       return SuccessAPIResponse(res, user)
     default:
       wrongRequestMethodError(res, ["POST"])

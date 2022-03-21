@@ -6,19 +6,27 @@ import PasswordInput from "./PasswordInput"
 
 export type InputProps = Omit<BaseInputProps, "children"> & {
   variant: InputType
+  noBorder?: boolean
 }
 
-function Input(props: InputProps) {
-  switch (props.variant) {
+function Input({ variant, ...rest }: InputProps) {
+  switch (variant) {
     case InputType.NORMAL:
-      return <BaseInput {...props}>{props => <input {...props} />}</BaseInput>
+      return <BaseInput {...rest}>{prop => <input {...prop} />}</BaseInput>
     case InputType.PASSWORD:
-      return <PasswordInput {...props} />
+      return <PasswordInput {...rest} />
     case InputType.TEXTAREA:
       return (
-        <BaseInput {...props}>{props => <textarea {...props} />}</BaseInput>
+        <BaseInput {...rest}>
+          {prop => (
+            <textarea
+              {...prop}
+              className={`${prop.className} !h-28 resize-none `}
+            />
+          )}
+        </BaseInput>
       )
   }
 }
 
-export default Input
+export default React.memo(Input)
