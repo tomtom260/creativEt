@@ -26,15 +26,6 @@ async function fetchUser(id: string) {
   return await axios.get(`/api/account/${id}`)
 }
 
-async function updateUserProfileImage(formData: FormData) {
-  return await fetch(
-    `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
-    { body: formData, method: "POST" }
-  ).then(res => {
-    return res.json()
-  })
-}
-
 async function updateUserProfile({
   name,
   location,
@@ -60,18 +51,6 @@ async function updateUserProfile({
   )
 }
 
-// async function saveUserProfileImageToDB(url: string) {
-//   return await axios.post(
-//     "/api/account/updateUserProfile",
-//     {
-//       image: url,
-//     },
-//     {
-//       withCredentials: true,
-//     }
-//   )
-// }
-
 export const useGetUserQuery = (id: string) => {
   return useQuery(["user", id], () => fetchUser(id), {
     refetchOnWindowFocus: false,
@@ -81,12 +60,6 @@ export const useGetUserQuery = (id: string) => {
 
 export const useUpdateUserProfile = (props: CustomUseMutationOptions) => {
   return useMutation(updateUserProfile, props)
-}
-
-export const useUpdateUserProfileImageMutation = (
-  props: CustomUseMutationOptions
-) => {
-  return useMutation(updateUserProfileImage, props)
 }
 
 export const useUpdateUserProfileMutation = (

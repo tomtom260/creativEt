@@ -1,7 +1,5 @@
-import {
-  useUpdateUserProfile,
-  useUpdateUserProfileImageMutation,
-} from "@/api/user"
+import { useUpdateUserProfile } from "@/api/user"
+import { useUploadImageMutation } from "@/api/content"
 import { useGetCurrentUser } from "@/hooks/user"
 import { useQueryClient } from "react-query"
 
@@ -15,7 +13,7 @@ function useUserService() {
     },
   })
 
-  const updateUserProfileImageMutation = useUpdateUserProfileImageMutation({
+  const updateUserProfileImageMutation = useUploadImageMutation({
     onSuccess: (data: any) =>
       saveUserProfileToDBMutation.mutate({
         image: data.secure_url,

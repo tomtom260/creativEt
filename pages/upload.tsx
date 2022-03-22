@@ -7,6 +7,7 @@ import Select from "@/components/Form/Select"
 import Text from "@/components/Typography"
 import { TypographyVariant } from "@/components/Typography/textVariant.enum"
 import DefaultLayout from "@/layouts/DefaultLayout"
+import useContentService from "@/service/content"
 import { images } from "@/utils/images"
 import Image from "next/image"
 import React, { useState } from "react"
@@ -21,7 +22,8 @@ function Upload() {
   const [imagePreview, setImagePreview] = useState<string>()
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
-  const [selectedOptions, setSelectedOptions] = useState<string[]>([])
+  const [tags, setTags] = useState<string[]>([])
+  const { uploadContent } = useContentService()
 
   const errorMessage = (code: string) => {
     switch (code) {
@@ -37,8 +39,8 @@ function Upload() {
   const onImageChange = (image: File) => {
     if (image) {
       setImageError([])
-      // checkIfImageIsValidBeforeUpload(image)
       prepareImageforPreview(image)
+      setImageToBeUploaded(image)
     }
   }
 
@@ -48,10 +50,19 @@ function Upload() {
     reader.onloadend = () => setImagePreview(reader.result as string)
   }
 
+  const onUpload = () => {
+    uploadContent({
+      imageToBeUploaded: imageToBeUploaded!,
+      tags,
+      title,
+      description,
+    })
+  }
+
   return (
     <DefaultLayout>
       <div className="flex w-full justify-end">
-        <Button onClick={() => {}} variant={ButtonVariants.PRIMARY}>
+        <Button onClick={onUpload} variant={ButtonVariants.PRIMARY}>
           Continue
         </Button>
       </div>
@@ -152,8 +163,8 @@ function Upload() {
       {imagePreview ? (
         <>
           <Select
-            selectedOptions={selectedOptions}
-            setSelectedOptions={setSelectedOptions}
+            selectedOptions={tags}
+            setSelectedOptions={setTags}
             options={OPTIONS}
           />
           <Input
