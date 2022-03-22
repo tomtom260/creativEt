@@ -53,7 +53,7 @@ export default function Select({
         }
       }}
     >
-      <Combobox.Label className="block text-3xl mb-4 text-gray-700">
+      <Combobox.Label className="block text-base md:text-3xl mb-4 text-gray-700">
         Tags
       </Combobox.Label>
       <div
@@ -61,7 +61,7 @@ export default function Select({
           inputRef.current.focus()
           setIsInputFocused(true)
         }}
-        className={` relative py-2 min-h-[66px] px-3 mt-1 rounded-md  flex flex-wrap cursor-text border  ${
+        className={` relative overflow-hidden py-1 md:py-2 min-h-[48px] md:min-h-[66px] px-1 md:px-3 mt-1 rounded-md  flex flex-wrap cursor-text border  ${
           isInputFocused
             ? "shadow-center shadow-secondary-light border-secondary-normal "
             : ""
@@ -69,7 +69,7 @@ export default function Select({
       >
         {selectedOptions.map(el => (
           <div
-            className="flex gap-1 my-1 rounded-lg items-center mr-4  px-2 py-2 bg-gray-light"
+            className="flex gap-1 my-1 rounded-lg items-center mr-4 p-1 md:p-2 bg-gray-light"
             key={el}
           >
             <Text varaint={TypographyVariant.Body1}>{el}</Text>
@@ -87,7 +87,7 @@ export default function Select({
           </div>
         ))}
         <Combobox.Input
-          className="flex flex-1 rounded-md border-0 outline-0 p-0 !ring-0 bg-white    sm:text-sm"
+          className="flex flex-1 rounded-md border-0 outline-0 p-0 !ring-0 bg-white w-min    sm:text-sm"
           onChange={event => {}}
           ref={inputRef}
           onFocus={() => setIsInputFocused(true)}

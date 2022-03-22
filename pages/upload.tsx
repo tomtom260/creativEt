@@ -61,18 +61,13 @@ function Upload() {
 
   return (
     <DefaultLayout>
-      <div className="flex w-full justify-end">
-        <Button onClick={onUpload} variant={ButtonVariants.PRIMARY}>
-          Continue
-        </Button>
-      </div>
       <Text varaint={TypographyVariant.H1}>Upload your work</Text>
       {imagePreview ? (
         <Input
           variant={InputType.NORMAL}
           label=""
           placeholder="Content Title"
-          className=" text-3xl px-0 "
+          className=" text-base md:text-3xl px-0 "
           value={title}
           onChange={setTitle}
           noBorder
@@ -93,7 +88,7 @@ function Upload() {
       >
         {({ getRootProps }) => (
           <div
-            className="w-full h-[480px] md:w-3/5 mx-auto flex flex-col items-center  relative border  my-16 py-16"
+            className="w-full h-[200px] xs:h-[280px] md:h-[480px] md:w-3/5 mx-auto flex flex-col items-center justify-between  relative border my-4  md:my-16 pr-4 pl-8 py-2  md:py-16"
             {...getRootProps()}
           >
             {imagePreview ? (
@@ -105,7 +100,7 @@ function Upload() {
                 />
                 <div className="text-white bg-black rounded-md absolute top-3 right-3">
                   <Button
-                    className="hover:!bg-black "
+                    className="hover:!bg-black rounded-sm  !h-5 md:!h-8 !w-5 md:!w-8  text-sm"
                     onClick={e => {
                       setImagePreview(undefined)
                       setImageToBeUploaded(null)
@@ -113,13 +108,13 @@ function Upload() {
                     }}
                     variant={ButtonVariants.ICON}
                   >
-                    <TrashSVG />
+                    <TrashSVG className="h-3 md:h-6 w-3 md:w-6" />
                   </Button>
                 </div>
               </>
             ) : (
               <>
-                <div className="relative w-20 h-20 md:w-40 md:h-40 mt-8 mb-16">
+                <div className="relative w-20 h-20 md:w-40 md:h-40 flex-shrink-0">
                   <Image
                     src={images.picturePlaceholder}
                     layout="fill"
@@ -130,7 +125,7 @@ function Upload() {
                   Drag and drop some files here, or click to browse image
                 </Text>
                 <ul
-                  className={`flex flex-col items-start mt-8 list-disc ${
+                  className={`flex flex-col items-start mt-2 md:mt-8 list-disc ${
                     imageError?.length ? "text-red-600" : "text-gray-dark"
                   }`}
                 >
@@ -171,15 +166,19 @@ function Upload() {
             variant={InputType.TEXTAREA}
             label=""
             placeholder="Anything else you would like to mention?"
-            className=" text-3xl px-0 "
+            className="text-base md:text-3xl px-0 "
             value={description}
             onChange={setDescription}
             noBorder
           />
         </>
-      ) : (
-        <div className="h-28" />
-      )}
+      ) : // <div className="h-28" />
+      null}
+      <div className="flex w-full justify-end">
+        <Button onClick={onUpload} variant={ButtonVariants.PRIMARY}>
+          Continue
+        </Button>
+      </div>
     </DefaultLayout>
   )
 }

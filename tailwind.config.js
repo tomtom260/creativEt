@@ -1,3 +1,5 @@
+const { screens } = require('tailwindcss/defaultTheme')
+
 module.exports = {
   content: [
     "./pages/**/*.{js,ts,jsx,tsx}",
@@ -5,6 +7,10 @@ module.exports = {
     "./layouts/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    screens: {
+      xs: "450px",
+      ...screens,
+    },
     extend: {
       boxShadow: {
         'center': '0.5px 0.5px 10px',
@@ -19,9 +25,7 @@ module.exports = {
         gray: { light: "#e7e7e9", normal: '#9e9ea7', dark: "#8b8b8b" }
 
       },
-      screens: {
-        xs: "450px"
-      },
+
       maxWidth: ({ theme }) => ({
         ...theme('width')
       }),
