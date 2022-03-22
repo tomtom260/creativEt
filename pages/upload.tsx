@@ -3,6 +3,7 @@ import Button from "@/components/Button"
 import ButtonVariants from "@/components/Button/button.enum"
 import Input from "@/components/Form/Input"
 import { InputType, InputVariant } from "@/components/Form/Input/Input.enum"
+import Select from "@/components/Form/Select"
 import Text from "@/components/Typography"
 import { TypographyVariant } from "@/components/Typography/textVariant.enum"
 import DefaultLayout from "@/layouts/DefaultLayout"
@@ -12,6 +13,7 @@ import React, { useState } from "react"
 import Dropzone from "react-dropzone"
 
 const MAX_IMAGE_SIZE = 1024 * 1024 * 10
+const OPTIONS = ["Nature", "Art", "Photography", "Night"]
 
 function Upload() {
   const [imageToBeUploaded, setImageToBeUploaded] = useState<File | null>(null)
@@ -19,6 +21,7 @@ function Upload() {
   const [imagePreview, setImagePreview] = useState<string>()
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([])
 
   const errorMessage = (code: string) => {
     switch (code) {
@@ -147,15 +150,22 @@ function Upload() {
         )}
       </Dropzone>
       {imagePreview ? (
-        <Input
-          variant={InputType.TEXTAREA}
-          label=""
-          placeholder="Anything else you would like to mention?"
-          className=" text-3xl px-0 "
-          value={description}
-          onChange={setDescription}
-          noBorder
-        />
+        <>
+          <Select
+            selectedOptions={selectedOptions}
+            setSelectedOptions={setSelectedOptions}
+            options={OPTIONS}
+          />
+          <Input
+            variant={InputType.TEXTAREA}
+            label=""
+            placeholder="Anything else you would like to mention?"
+            className=" text-3xl px-0 "
+            value={description}
+            onChange={setDescription}
+            noBorder
+          />
+        </>
       ) : (
         <div className="h-28" />
       )}
