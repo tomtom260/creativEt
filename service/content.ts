@@ -1,12 +1,15 @@
-import { useCreateContentMutation, useUploadImageMutation } from "@/api/content"
+import {
+  useCreateContentMutation,
+  useDislikeContentMutation,
+  useLikeContentMutation,
+  useUploadImageMutation,
+} from "@/api/content"
 
 export default function useContentService() {
   const uploadImageMutation = useUploadImageMutation({})
-  const createContentMutation = useCreateContentMutation({
-    onSettled(res) {
-      console.log(res)
-    },
-  })
+  const createContentMutation = useCreateContentMutation({})
+  const likeContentMutation = useLikeContentMutation({})
+  const dislikeContentMutation = useDislikeContentMutation({})
 
   async function uploadContent({
     imageToBeUploaded,
@@ -17,7 +20,7 @@ export default function useContentService() {
     imageToBeUploaded: File
     description: string
     title: string
-    tags: string[]
+    tags: any
   }) {
     const formData = new FormData()
     formData.append("file", imageToBeUploaded)
@@ -31,7 +34,14 @@ export default function useContentService() {
     })
   }
 
+  function onContentSeen() {}
+  function onContentLiked(contentId: string) {
+    likeContentMutation.mutate(contentId)
+  }
+
   return {
     uploadContent,
+    onContentSeen,
+    onContentLiked,
   }
 }

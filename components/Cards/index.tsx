@@ -1,33 +1,70 @@
+import { useGetBest3ContentsQuery } from "@/api/content"
+import { getPublicIdFromUrl, getThumnailSizedImage } from "@/utils/cloudinary"
+import { useInView } from "react-intersection-observer"
 import Image from "next/image"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
+import { Content } from "types/content"
 import EyeSVG from "../../assets/icons/EyeOn"
 import HeartFilledSVG from "../../assets/icons/HeartFilled"
 import PlusSVG from "../../assets/icons/Plus"
-import { icons } from "../../utils/icons"
-import { images } from "../../utils/images"
 import Button from "../Button"
 import ButtonVariants from "../Button/button.enum"
+import ImageWithSkeleton from "../ImageWithSkeleton"
 import Text from "../Typography"
 import { TypographyVariant } from "../Typography/textVariant.enum"
+import useContentService from "@/service/content"
 
-export type CardsProps = {}
+export type CardsProps = {
+  content: Content
+}
 
-function Cards({}: CardsProps) {
+function Cards({
+  content: { createdBy, title, image, totalLikes, views, id },
+}: CardsProps) {
   const [isCardLiked, setIsCardLiked] = useState<boolean>(false)
+  const [isCardSeen, setIsCardSeen] = useState<boolean>(false)
   const [isAuthorFollowed, setIsAuthourFollowed] = useState<boolean>(false)
+  const [getBest3ContentsQueryEnabled, setGetBest3ContentsQueryEnabled] =
+    useState(false)
 
-  const onContentLiked = () => {
+  const getBest3ContentsQuery = useGetBest3ContentsQuery(createdBy.id, {
+    enabled: getBest3ContentsQueryEnabled,
+  })
+
+  const { onContentLiked } = useContentService()
+
+  const ownerImageURL = getThumnailSizedImage(
+    getPublicIdFromUrl(createdBy.image)
+  )
+
+  const onLike = () => {
     setIsCardLiked(state => !state)
+    onContentLiked(id)
   }
 
+  const { ref, inView } = useInView({
+    threshold: 1,
+  })
+
+  useEffect(() => {
+    if (inView) {
+      setIsCardSeen(true)
+    }
+  }, [inView])
+
+  useEffect(() => {
+    if (isCardSeen) {
+      console.log("Seen", title)
+    }
+  }, [isCardSeen])
+
   return (
-    <div className="w-[300px]  flex flex-col">
-      <div className="group hover:cursor-pointer w-full h-[220px] relative bg-white">
-        <Image
-          src={images.cardPlaceholder}
+    <div ref={ref} className="w-[375px]  flex flex-col">
+      <div className="group hover:cursor-pointer w-full h-[275px] relative bg-white">
+        <ImageWithSkeleton
+          src={image}
           className=" rounded-lg overflow-hidden"
           layout="fill"
-          alt=""
         />
         <div className="absolute flex flex-col-reverse bottom-0 w-full h-20 z-1 group-hover:bg-gradient-to-t  from-gray-dark">
           <div className="hidden group-hover:flex flex-row m-4 justify-between items-center">
@@ -35,12 +72,12 @@ function Cards({}: CardsProps) {
               className="text-white font-semibold mt-px"
               varaint={TypographyVariant.Body1}
             >
-              Watch
+              {title}
             </Text>
             <div>
               <Button
                 variant={ButtonVariants.ICON}
-                onClick={onContentLiked}
+                onClick={onLike}
                 className={`w-8 h-8 ${
                   isCardLiked ? "text-secondary-light " : "text-gray-normal"
                 } bg-white rounded-md flex items-center justify-center`}
@@ -59,23 +96,23 @@ function Cards({}: CardsProps) {
       >
         <div className="flex flex-col relative group">
           <div
-            // onMouseOver={() => {
-            //   setIsAuthorFocused(true)
-            // }}
+            onMouseEnter={() => {
+              setGetBest3ContentsQueryEnabled(true)
+            }}
             className="flex flex-row items-center focus:cursor-pointer z-10"
           >
-            <Image
-              className="rounded-full"
-              src={images.defaultProfile}
-              width={25}
-              height={25}
-              alt=""
-            />
+            <div className="relative w-[25px] h-[25px]">
+              <ImageWithSkeleton
+                layout="fill"
+                className="rounded-full"
+                src={ownerImageURL}
+              />
+            </div>
             <Text
               className="mb-1 ml-3 font-medium cursor-pointer"
               varaint={TypographyVariant.Body1}
             >
-              Picko Labs
+              {createdBy.name}
             </Text>
           </div>
           <div className="pt-6 absolute">
@@ -84,25 +121,25 @@ function Cards({}: CardsProps) {
             >
               <div className="flex justify-between items-center">
                 <div className="flex">
-                  <Image
-                    src={images.defaultProfile}
-                    width={60}
-                    height={60}
-                    alt=""
-                    className="rounded-full"
-                  />
+                  <div className="w-[60px] h-[60px] relative">
+                    <ImageWithSkeleton
+                      src={ownerImageURL}
+                      layout="fill"
+                      className="rounded-full"
+                    />
+                  </div>
                   <div className="flex flex-col ml-6">
                     <Text
                       varaint={TypographyVariant.H2}
                       className="font-semibold mt-3"
                     >
-                      Picko Labs
+                      {createdBy.name}
                     </Text>
                     <Text
                       varaint={TypographyVariant.Body1}
                       className="font-thin text-gray-normal"
                     >
-                      Ethiopia
+                      {createdBy.location}
                     </Text>
                   </div>
                 </div>
@@ -118,27 +155,23 @@ function Cards({}: CardsProps) {
                 </Button>
               </div>
               <div className="grid grid-cols-3 h-full gap-5 mt-5">
-                <Image
-                  src={images.cardPlaceholder}
-                  alt=""
-                  width={106}
-                  height={82}
-                  className="rounded-md"
-                />
-                <Image
-                  src={images.cardPlaceholder}
-                  alt=""
-                  width={106}
-                  height={82}
-                  className="rounded-md"
-                />
-                <Image
-                  src={images.cardPlaceholder}
-                  alt=""
-                  width={106}
-                  height={82}
-                  className="rounded-md"
-                />
+                {getBest3ContentsQuery.isFetching ? (
+                  <p>Fetcghing</p>
+                ) : (
+                  getBest3ContentsQuery.data?.map(content => (
+                    <div
+                      key={content.id}
+                      className="relative w-[106px] h-[82px]"
+                    >
+                      <ImageWithSkeleton
+                        src={content.image}
+                        alt=""
+                        layout="fill"
+                        className="rounded-md"
+                      />
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           </div>
@@ -155,16 +188,18 @@ function Cards({}: CardsProps) {
             >
               <HeartFilledSVG />
             </Button>
-            <Text className="mb-1" varaint={TypographyVariant.Body2}>
-              172
+            <Text className="" varaint={TypographyVariant.Body2}>
+              {`${totalLikes}`}
             </Text>
           </div>
           <div className="flex items-center">
             <div className="mx-1 text-gray-normal">
-              <EyeSVG />
+              <Button onClick={() => {}} variant={ButtonVariants.ICON}>
+                <EyeSVG />
+              </Button>
             </div>
-            <Text className="mb-1" varaint={TypographyVariant.Body2}>
-              17.4K
+            <Text className="" varaint={TypographyVariant.Body2}>
+              {`${views}`}
             </Text>
           </div>
         </div>

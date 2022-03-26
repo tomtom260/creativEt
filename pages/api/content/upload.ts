@@ -12,7 +12,7 @@ type NextApiRequestType = Omit<NextApiRequest, "body"> & {
 }
 
 export default async function userHandler(
-  req: NextApiRequestType,
+req: NextApiRequestType,
   res: NextApiResponse
 ) {
   const session = await getSession({ req })

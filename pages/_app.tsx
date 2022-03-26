@@ -13,7 +13,13 @@ import Modal from "@/components/Dialog/Modal"
 import { useAppSelector } from "@/hooks/redux"
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const queryClient = new QueryClient()
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: Infinity,
+      },
+    },
+  })
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -48,7 +54,6 @@ const App = ({
     } else {
       document.body.style.overflow = "visible"
     }
-    console.log("isModalVisible", isModalVisible)
   }, [isModalVisible])
 
   if (privatePage) {

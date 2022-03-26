@@ -60,6 +60,7 @@ model User {
   sessions      Session[]
   Profile       Profile?
   Content       Content[]
+  Likes         Likes[]
 }
 
 model VerificationToken {
@@ -84,5 +85,18 @@ model Content {
   image       String
   tags        Tags[]
   createdBy   User     @relation(fields: [userId], references: [id])
-  userId      String 
+  userId      String
+  views       Int      @default(0)
+  likes       Likes[]
+}
+
+model Likes {
+  id        String   @id @default(cuid())
+  likedAt   DateTime @default(now())
+  contentId String
+  content   Content  @relation(fields: [contentId], references: [id])
+  userId    String
+  User      User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, contentId])
 }

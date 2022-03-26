@@ -1,31 +1,36 @@
-import { useSession, signIn, signOut } from "next-auth/react"
-import { useRouter } from "next/router"
 import DefaultLayout from "../layouts/DefaultLayout"
-import { Cloudinary } from "@cloudinary/url-gen"
+import Cards from "@/components/Cards"
+import { changeDateInJSONToMoment } from "@/utils/changeDateToMoment"
+import { Content } from "types/content"
+import { getContents } from "../pages/api/content/service"
+import { getSession } from "next-auth/react"
 
-export default function Component() {
-  const { status, data } = useSession()
-  const router = useRouter()
-  if (status === "loading") {
-    return "Loading"
-  }
-  console.log(status)
+type HomeProps = {
+  contents: Content[]
+}
 
-  if (status === "unauthenticated") {
-    router.push("/auth/signin")
-  }
-  
-
+export default function Home({ contents }: HomeProps) {
+  console.log(contents)
   return (
     <>
       <DefaultLayout>
-        <>
-          Signed in as {data?.user?.email} <br />
-          <button className="bg-blue-200 w-[200px]" onClick={() => signOut()}>
-            Sign out
-          </button>
-        </>
+        <div className="flex justify-center mb-40 gap-8 grid-cols-1  flex-wrap">
+          {contents.map(content => (
+            <Cards key={content.id} content={content} />
+          ))}
+        </div>
       </DefaultLayout>
     </>
   )
+}
+
+export async function getServerSideProps({ req }) {
+  const session = await getSession({ req })
+  const contents = await getContents(session?.user.id)
+  return {
+    props: {
+      protected: true,
+      contents: changeDateInJSONToMoment(contents),
+    },
+  }
 }
