@@ -12,14 +12,14 @@ type NextApiRequestType = Omit<NextApiRequest, "body"> & {
 }
 
 export default async function userHandler(
-req: NextApiRequestType,
+  req: NextApiRequestType,
   res: NextApiResponse
 ) {
   const session = await getSession({ req })
   const id = session?.user?.id!
 
   const { image, title, description, tags } = req.body
-  if (!image || !title || !description || !tags) {
+  if (!image || !title) {
     return
   }
 

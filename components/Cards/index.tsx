@@ -1,5 +1,5 @@
 import { useGetBest3ContentsQuery } from "@/api/content"
-import { getPublicIdFromUrl, getThumnailSizedImage } from "@/utils/cloudinary"
+import { getOptimisedProfileImage } from "@/utils/cloudinary"
 import { useInView } from "react-intersection-observer"
 import Image from "next/image"
 import React, { useEffect, useState } from "react"
@@ -33,9 +33,7 @@ function Cards({
 
   const { onContentLiked } = useContentService()
 
-  const ownerImageURL = getThumnailSizedImage(
-    getPublicIdFromUrl(createdBy.image)
-  )
+  const ownerImageURL = getOptimisedProfileImage(createdBy.image)
 
   const onLike = () => {
     setIsCardLiked(state => !state)

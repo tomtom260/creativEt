@@ -49,6 +49,20 @@ async function getBest3Contents(userId: string) {
   )
 }
 
+export async function getContentById(contentId: string) {
+  return await axios.get(`/api/content/getContentByID?contentId=${contentId}`)
+}
+
+// export function useGetContentById(
+//   contentId: string,
+//   options: CustomUseQueryOptions
+// ) {
+//   return useQuery(["content", contentId], () => getContentById(contentId), {
+//     select: data => data.data.data,
+//     ...options,
+//   })
+// }
+
 export function useGetBest3ContentsQuery(
   userId: string,
   options: CustomUseQueryOptions

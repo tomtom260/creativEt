@@ -29,7 +29,7 @@ export default function SignIn({ providers, csrfToken }: SignInPropsType) {
   }
 
   if (status === "authenticated") {
-    router.push('/')
+    router.push("/")
   }
 
   return (
@@ -158,8 +158,8 @@ export default function SignIn({ providers, csrfToken }: SignInPropsType) {
                 <div>
                   <button
                     onClick={() => {
-                        signIn(providers?.facebook.id)
-                      }}
+                      signIn(providers?.facebook.id)
+                    }}
                     className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
                   >
                     <span className="sr-only">Sign in with Facebook</span>
@@ -233,6 +233,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     props: {
       providers,
       csrfToken,
+      protected: false,
     },
   }
 }

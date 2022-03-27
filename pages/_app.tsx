@@ -1,7 +1,7 @@
 import "../styles/globals.css"
 import "react-loading-skeleton/dist/skeleton.css"
 import type { AppProps } from "next/app"
-import { ReactNode, useEffect } from "react"
+import { ReactNode, useEffect, useRef } from "react"
 import { SessionProvider, useSession } from "next-auth/react"
 import { Provider, useSelector } from "react-redux"
 import { store } from "store"
@@ -13,13 +13,15 @@ import Modal from "@/components/Dialog/Modal"
 import { useAppSelector } from "@/hooks/redux"
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        staleTime: Infinity,
+  const queryClient = useRef(
+    new QueryClient({
+      defaultOptions: {
+        queries: {
+          staleTime: Infinity,
+        },
       },
-    },
-  })
+    })
+  ).current
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -48,6 +50,8 @@ const App = ({
   const userQuery = useGetCurrentUser()
   const { isModalVisible } = useAppSelector(state => state.modal)
 
+  // console.log(privatePage, "privatePage", userQuery.data?.image)
+
   useEffect(() => {
     if (isModalVisible) {
       document.body.style.overflow = "hidden"
@@ -57,13 +61,13 @@ const App = ({
   }, [isModalVisible])
 
   if (privatePage) {
-    if (status === "loading" || userQuery.isLoading)
-      return <div>Loading...</div>
-
     if (status === "unauthenticated") {
       router.push("/auth/signin")
       return null
     }
+
+    if (status === "loading" || userQuery.isLoading)
+      return <div>Loading...</div>
   }
 
   return <div>{Children}</div>

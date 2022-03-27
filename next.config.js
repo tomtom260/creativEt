@@ -29,7 +29,7 @@ module.exports = withImages({
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ["tailwindui.com", "images.unsplash.com", "lh3.googleusercontent.com", "localhost", "res.cloudinary.com"]
+    domains: ["tailwindui.com", "images.unsplash.com", "lh3.googleusercontent.com", "localhost", "res.cloudinary.com", "scontent.fadd1-1.fna.fbcdn.net"]
   }
 }
 

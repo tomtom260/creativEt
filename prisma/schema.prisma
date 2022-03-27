@@ -55,7 +55,7 @@ model User {
   name          String
   email         String?   @unique
   emailVerified DateTime? @default(now())
-  image         String?   @db.Text
+  image         String?   @default("https://res.cloudinary.com/dlqzrhr6r/image/upload/v1648297324/profile/22-223968_default-profile-picture-circle-hd-png-download_xrlhqm.png")
   accounts      Account[]
   sessions      Session[]
   Profile       Profile?
@@ -82,7 +82,7 @@ model Content {
   createdAt   DateTime @default(now())
   description String
   title       String
-  image       String
+  image       String  
   tags        Tags[]
   createdBy   User     @relation(fields: [userId], references: [id])
   userId      String

@@ -37,6 +37,7 @@ const checkifEmailExists = async (email: string) => {
 export default function SignUp({ providers, csrfToken }: SignInPropsType) {
   const router = useRouter()
   const [email, setEmail] = useState<string>("")
+  const [username, setUsername] = useState<string>("")
 
   const { data, status } = useSession()
 
@@ -73,11 +74,7 @@ export default function SignUp({ providers, csrfToken }: SignInPropsType) {
 
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-            <form
-              className="space-y-6"
-              action="/api/auth/user"
-              method="POST"
-            >
+            <form className="space-y-6" action="/api/auth/user" method="POST">
               <input hidden name="csrfToken" defaultValue={csrfToken} />
               <div>
                 <label
@@ -149,7 +146,7 @@ export default function SignUp({ providers, csrfToken }: SignInPropsType) {
                 <div className="mt-1">
                   <input
                     id="user"
-                    name="user"
+                    name="username"
                     type="user"
                     autoComplete="user"
                     required

@@ -16,4 +16,13 @@ export const getPublicIdFromUrl = (url: string) =>
 export const getThumnailSizedImage = (publicId: string) =>
   cloudinary.image(publicId).resize(Resize.scale().width(80).height(80)).toURL()
 
+export function getOptimisedProfileImage(url: string) {
+  if (url.includes("cloudinary")) {
+    const publicId = getPublicIdFromUrl(url)
+    return getThumnailSizedImage(publicId)
+  } else {
+    return url
+  }
+}
+
 export default cloudinary

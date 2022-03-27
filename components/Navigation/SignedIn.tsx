@@ -3,21 +3,26 @@ import { Fragment } from "react"
 import { Menu, Transition } from "@headlessui/react"
 import { BellIcon } from "@heroicons/react/outline"
 import Image from "next/image"
+import Link from "next/link"
 import classNames from "../../utils/classNames"
 import BaseNavigation from "./BaseNavigation"
 import { useGetCurrentUser } from "@/hooks/user"
-import { getPublicIdFromUrl, getThumnailSizedImage } from "@/utils/cloudinary"
+import { getOptimisedProfileImage } from "@/utils/cloudinary"
+import { signOut } from "next-auth/react"
 
 function SignedInNavigation() {
   const { data: user } = useGetCurrentUser()
   const userNavigation = [
-    { name: "Your Profile", href: "#" },
-    { name: "Settings", href: "#" },
-    { name: "Sign out", href: "#" },
+    { name: "Your Profile", href: `/${user?.username}`, onClick: () => {} },
+    { name: "Settings", href: "#", onClick: () => {} },
+    {
+      name: "Sign out",
+      href: "#",
+      onClick: () => (signOut(), console.log("ssss")),
+    },
   ]
 
-  const publicId = getPublicIdFromUrl(user?.image!)
-  const imageUrl = getThumnailSizedImage(publicId)
+  const imageUrl = getOptimisedProfileImage(user?.image!)
 
   return (
     <>
@@ -86,6 +91,7 @@ function SignedInNavigation() {
                     <Menu.Item key={item.name}>
                       {({ active }) => (
                         <a
+                          onClick={item.onClick}
                           href={item.href}
                           className={classNames(
                             active ? "bg-gray-100" : "",
@@ -100,12 +106,11 @@ function SignedInNavigation() {
                 </Menu.Items>
               </Transition>
             </Menu>
-            <a
-              href="#"
-              className="ml-6 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              Upload
-            </a>
+            <Link passHref href="/upload">
+              <span className="ml-6 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Upload
+              </span>
+            </Link>
           </div>
         )}
       />

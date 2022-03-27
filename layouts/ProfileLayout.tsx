@@ -7,7 +7,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { useSession } from "next-auth/react"
 import { useGetCurrentUser } from "@/hooks/user"
-import { getPublicIdFromUrl, getThumnailSizedImage } from "@/utils/cloudinary"
+import { getOptimisedProfileImage } from "@/utils/cloudinary"
 
 function ProfileLayout({ children: Children }: { children: ReactNode }) {
   const SidebarMenuItems = [
@@ -37,8 +37,7 @@ function ProfileLayout({ children: Children }: { children: ReactNode }) {
     item => item.path === router.pathname
   )!
 
-  const publicId = getPublicIdFromUrl(user?.image!)
-  const imageUrl = getThumnailSizedImage(publicId)
+  const imageUrl = getOptimisedProfileImage(user?.image!)
 
   return (
     <DefaultLayout>

@@ -8,21 +8,17 @@ import classNames from "../../utils/classNames"
 export type BaseNavigationProps = {
   NavigationRightSide: FC
   MobileNavigationRightSide?: FC
-  userNavigation: { name: string; href: string }[]
+  userNavigation: { name: string; href: string; onClick: () => void }[]
 }
 
 function BaseNavigation({
   NavigationRightSide,
   MobileNavigationRightSide,
+  userNavigation,
 }: BaseNavigationProps) {
   const navigation = [
     { name: "Marketplace", href: "#", current: true },
     { name: "Hire Artists", href: "#", current: false },
-  ]
-  const userNavigation = [
-    { name: "Your Profile", href: "#" },
-    { name: "Settings", href: "#" },
-    { name: "Sign out", href: "#" },
   ]
 
   return (
@@ -105,6 +101,7 @@ function BaseNavigation({
                 <div className="mt-3 max-w-3xl mx-auto px-2 space-y-1 sm:px-4">
                   {userNavigation.map(item => (
                     <a
+                      onClick={item.onClick}
                       key={item.name}
                       href={item.href}
                       className="block rounded-md py-2 px-3 text-base font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-900"

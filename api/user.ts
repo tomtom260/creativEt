@@ -23,7 +23,11 @@ function transformUserResponse(res: AxiosResponse<any, any>): User {
 }
 
 async function fetchUser(id: string) {
-  return await axios.get(`/api/account/${id}`)
+  const user = await axios.get(`/api/account/${id}`)
+  if (!user.data.data.image)
+    user.data.data.image =
+      "https://res.cloudinary.com/dlqzrhr6r/image/upload/v1648297324/profile/22-223968_default-profile-picture-circle-hd-png-download_xrlhqm.png"
+  return user
 }
 
 async function updateUserProfile({

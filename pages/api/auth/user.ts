@@ -47,6 +47,7 @@ export default async function userHandler(
           verificationToken: hashedVerificationToken,
         },
       })
+      console.log(username, user)
       await prisma?.profile.upsert({
         where: {
           userId: user.id,

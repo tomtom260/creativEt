@@ -4,6 +4,8 @@ import { changeDateInJSONToMoment } from "@/utils/changeDateToMoment"
 import { Content } from "types/content"
 import { getContents } from "../pages/api/content/service"
 import { getSession } from "next-auth/react"
+import { useQueries, useQueryClient } from "react-query"
+import { getContentById } from "@/api/content"
 
 type HomeProps = {
   contents: Content[]
@@ -11,6 +13,14 @@ type HomeProps = {
 
 export default function Home({ contents }: HomeProps) {
   console.log(contents)
+
+  // useQueries(
+  //   contents.map(content => ({
+  //     queryKey: ["content", content.id as string],
+  //     queryFn: getContentById,
+  //   }))
+  // )
+
   return (
     <>
       <DefaultLayout>

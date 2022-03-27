@@ -7,7 +7,7 @@ import { TypographyVariant } from "@/components/Typography/textVariant.enum"
 import Input from "@/components/Form/Input"
 import { InputType } from "@/components/Form/Input/Input.enum"
 import Image from "next/image"
-import { getPublicIdFromUrl, getThumnailSizedImage } from "@/utils/cloudinary"
+import { getOptimisedProfileImage } from "@/utils/cloudinary"
 import useUserService from "@/service/user"
 import { useGetCurrentUser } from "@/hooks/user"
 
@@ -18,8 +18,7 @@ function Profile() {
   const [imageToBeUploaded, setImageToBeUploaded] = useState<File>()
   const [imageError, setImageError] = useState<string>()
 
-  const publicId = getPublicIdFromUrl(user?.image!)
-  const profileUrl = getThumnailSizedImage(publicId)
+  const profileUrl = getOptimisedProfileImage(user?.image!)
   const [previewImage, setPreviewImage] = useState(profileUrl)
 
   const [name, setName] = useState(user?.name || "")
