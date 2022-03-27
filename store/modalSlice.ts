@@ -1,16 +1,16 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
-export type CounterState = {
+export type ModalSlice = {
   isModalVisible: boolean
   modalPayload: null | {}
 }
 
-const initialState: CounterState = {
+const initialState: ModalSlice = {
   isModalVisible: false,
   modalPayload: null,
 }
 
-export const counterSlice = createSlice({
+export const modalSlice = createSlice({
   name: "modal",
   initialState,
   reducers: {
@@ -24,6 +24,6 @@ export const counterSlice = createSlice({
     },
   },
 })
-export const { showModal, hideModal } = counterSlice.actions
+export const { showModal, hideModal } = modalSlice.actions
 
-export default counterSlice.reducer
+export default modalSlice.reducer

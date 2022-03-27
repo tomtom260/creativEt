@@ -9,7 +9,7 @@ type CustomUseMutationOptions = UseMutationOptions<
   unknown
 >
 
-function transformUserResponse(res: AxiosResponse<any, any>): User {
+export function transformUserResponse(res: AxiosResponse<any, any>): User {
   let userData = res.data.data
   const { location, username, bio } = userData.Profile
   userData = {
@@ -22,11 +22,8 @@ function transformUserResponse(res: AxiosResponse<any, any>): User {
   return userData
 }
 
-async function fetchUser(id: string) {
+export async function fetchUser(id: string) {
   const user = await axios.get(`/api/account/${id}`)
-  if (!user.data.data.image)
-    user.data.data.image =
-      "https://res.cloudinary.com/dlqzrhr6r/image/upload/v1648297324/profile/22-223968_default-profile-picture-circle-hd-png-download_xrlhqm.png"
   return user
 }
 

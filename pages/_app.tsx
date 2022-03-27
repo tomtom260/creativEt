@@ -1,9 +1,9 @@
 import "../styles/globals.css"
 import "react-loading-skeleton/dist/skeleton.css"
 import type { AppProps } from "next/app"
-import { ReactNode, useEffect, useRef } from "react"
+import { ReactNode, useEffect, useRef, useState } from "react"
 import { SessionProvider, useSession } from "next-auth/react"
-import { Provider, useSelector } from "react-redux"
+import { Provider } from "react-redux"
 import { store } from "store"
 import { QueryClient, QueryClientProvider } from "react-query"
 import { useRouter } from "next/router"
@@ -24,17 +24,17 @@ function MyApp({ Component, pageProps }: AppProps) {
   ).current
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <Provider store={store}>
-        <SessionProvider session={pageProps.session}>
+    <SessionProvider session={pageProps.session}>
+      <QueryClientProvider client={queryClient}>
+        <Provider store={store}>
           <App privatePage={pageProps.protected}>
             <Component {...pageProps} />
           </App>
           <Modal />
-        </SessionProvider>
-      </Provider>
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
+        </Provider>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
+    </SessionProvider>
   )
 }
 
@@ -47,10 +47,8 @@ const App = ({
 }) => {
   const { status, data: session } = useSession()
   const router = useRouter()
-  const userQuery = useGetCurrentUser()
   const { isModalVisible } = useAppSelector(state => state.modal)
-
-  // console.log(privatePage, "privatePage", userQuery.data?.image)
+  const [queryEnabled, setQueryEnabled] = useState(false)
 
   useEffect(() => {
     if (isModalVisible) {
@@ -60,16 +58,27 @@ const App = ({
     }
   }, [isModalVisible])
 
+  useEffect(() => {
+    if (status === "authenticated") setQueryEnabled(true)
+  }, [status])
+
+  const userQuery = useGetCurrentUser(session?.user.id, queryEnabled)
+
   if (privatePage) {
     if (status === "unauthenticated") {
       router.push("/auth/signin")
       return null
     }
-
-    if (status === "loading" || userQuery.isLoading)
-      return <div>Loading...</div>
   }
 
+  if (
+    status === "loading" ||
+    userQuery.isFetching ||
+    (privatePage && !queryEnabled)
+  )
+    return <div>Loading...</div>
+
+  console.log(status, "privatePage", userQuery, queryEnabled)
   return <div>{Children}</div>
 }
 
