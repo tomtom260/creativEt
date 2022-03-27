@@ -4,29 +4,41 @@ import { changeDateInJSONToMoment } from "@/utils/changeDateToMoment"
 import { Content } from "types/content"
 import { getContents } from "../pages/api/content/service"
 import { getSession } from "next-auth/react"
-import { useQueries, useQueryClient } from "react-query"
+import { useQueries, useQuery, useQueryClient } from "react-query"
 import { getContentById } from "@/api/content"
+import { fetchUserWithProfile, getUser, transformUserResponse } from "api/user"
 
 type HomeProps = {
   contents: Content[]
 }
 
 export default function Home({ contents }: HomeProps) {
-  console.log(contents)
+  const { data: user } = useQuery(["currentUser"], {
+    select: transformUserResponse,
+  })
 
-  // useQueries(
-  //   contents.map(content => ({
-  //     queryKey: ["content", content.id as string],
-  //     queryFn: getContentById,
-  //   }))
-  // )
+  const contentsQuery = useQueries(
+    contents.map(content => ({
+      queryFn: () => getContentById(content.id, user.id),
+      queryKey: ["content", content.id],
+      initialData: content,
+    }))
+  )
+
+  useQueries(
+    contents.map(content => ({
+      queryFn: () => fetchUserWithProfile(content.userId),
+      queryKey: ["user", content.userId],
+      initialData: content.createdBy,
+    }))
+  )
 
   return (
     <>
       <DefaultLayout>
-        <div className="flex justify-center mb-40 gap-8 grid-cols-1  flex-wrap">
-          {contents.map(content => (
-            <Cards key={content.id} content={content} />
+        <div className="flex mb-40 gap-8  grid-cols-1  flex-wrap">
+          {contentsQuery.map(content => (
+            <Cards key={content.data.id} content={content.data} />
           ))}
         </div>
       </DefaultLayout>

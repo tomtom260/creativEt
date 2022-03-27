@@ -4,12 +4,20 @@ import {
   useLikeContentMutation,
   useUploadImageMutation,
 } from "@/api/content"
+import { useQueryClient } from "react-query"
 
 export default function useContentService() {
+  const queryClient = useQueryClient()
   const uploadImageMutation = useUploadImageMutation({})
   const createContentMutation = useCreateContentMutation({})
-  const likeContentMutation = useLikeContentMutation({})
-  const dislikeContentMutation = useDislikeContentMutation({})
+  const likeContentMutation = useLikeContentMutation({
+    onSuccess: res =>
+      queryClient.invalidateQueries(["content", res.data.data.contentId]),
+  })
+  const dislikeContentMutation = useDislikeContentMutation({
+    onSuccess: res =>
+      queryClient.invalidateQueries(["content", res.data.data.contentId]),
+  })
 
   async function uploadContent({
     imageToBeUploaded,
@@ -38,10 +46,14 @@ export default function useContentService() {
   function onContentLiked(contentId: string) {
     likeContentMutation.mutate(contentId)
   }
+  function onContentDisliked(contentId: string) {
+    dislikeContentMutation.mutate(contentId)
+  }
 
   return {
     uploadContent,
     onContentSeen,
     onContentLiked,
+    onContentDisliked,
   }
 }

@@ -16,13 +16,15 @@ export default async function userHandler(
   switch (req.method) {
     case "GET":
       const contentId = req.query.contentId as string
-      const contents = await prisma?.likes.delete({
+      const like = await prisma?.likes.delete({
         where: {
-          userId,
-          contentId,
+          userId_contentId: {
+            userId,
+            contentId,
+          },
         },
       })
-      return SuccessAPIResponse(res, contents!)
+      return SuccessAPIResponse(res, like!)
     default:
       wrongRequestMethodError(res, ["GET"])
   }

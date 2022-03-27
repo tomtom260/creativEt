@@ -47,7 +47,6 @@ export default async function userHandler(
           verificationToken: hashedVerificationToken,
         },
       })
-      console.log(username, user)
       await prisma?.profile.upsert({
         where: {
           userId: user.id,
@@ -77,6 +76,17 @@ export default async function userHandler(
         </div>`,
       })
       return res.status(200).json({})
+    case "GET":
+      const userId = req.query.id as string
+      console.log("userId", userId)
+      return await prisma.user.findFirst({
+        where: {
+          id: userId,
+        },
+        include: {
+          Profile: true,
+        },
+      })
     default:
       wrongRequestMethodError(res, ["POST"])
   }

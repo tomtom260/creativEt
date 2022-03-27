@@ -19,9 +19,16 @@ export type CardsProps = {
 }
 
 function Cards({
-  content: { createdBy, title, image, totalLikes, views, id },
+  content: {
+    createdBy,
+    title,
+    image,
+    totalLikes,
+    views,
+    id,
+    isLikedByCurrentUser,
+  },
 }: CardsProps) {
-  const [isCardLiked, setIsCardLiked] = useState<boolean>(false)
   const [isCardSeen, setIsCardSeen] = useState<boolean>(false)
   const [isAuthorFollowed, setIsAuthourFollowed] = useState<boolean>(false)
   const [getBest3ContentsQueryEnabled, setGetBest3ContentsQueryEnabled] =
@@ -31,13 +38,12 @@ function Cards({
     enabled: getBest3ContentsQueryEnabled,
   })
 
-  const { onContentLiked } = useContentService()
+  const { onContentLiked, onContentDisliked } = useContentService()
 
   const ownerImageURL = getOptimisedProfileImage(createdBy.image)
 
-  const onLike = () => {
-    setIsCardLiked(state => !state)
-    onContentLiked(id)
+  const onLikePress = () => {
+    isLikedByCurrentUser ? onContentDisliked(id) : onContentLiked(id)
   }
 
   const { ref, inView } = useInView({
@@ -75,9 +81,11 @@ function Cards({
             <div>
               <Button
                 variant={ButtonVariants.ICON}
-                onClick={onLike}
+                onClick={onLikePress}
                 className={`w-8 h-8 ${
-                  isCardLiked ? "text-secondary-light " : "text-gray-normal"
+                  isLikedByCurrentUser
+                    ? "text-secondary-light "
+                    : "text-gray-normal"
                 } bg-white rounded-md flex items-center justify-center`}
               >
                 <HeartFilledSVG />
@@ -86,12 +94,7 @@ function Cards({
           </div>
         </div>
       </div>
-      <div
-        // onMouseLeave={() => {
-        //   setIsAuthorFocused(false)
-        // }}
-        className="flex justify-between items-center mt-2 px-2"
-      >
+      <div className="flex justify-between items-center mt-2 px-2">
         <div className="flex flex-col relative group">
           <div
             onMouseEnter={() => {
@@ -115,7 +118,7 @@ function Cards({
           </div>
           <div className="pt-6 absolute">
             <div
-              className={`hidden group-hover:flex bg-white shadow-md mt-6  rounded-2xl w-[400px] h-[200px] p-5 flex-col`}
+              className={`hidden group-hover:flex bg-white shadow-md mt-6  rounded-2xl w-[400px] min-h-[200px] p-5 flex-col z-10 absolute`}
             >
               <div className="flex justify-between items-center">
                 <div className="flex">
@@ -126,7 +129,7 @@ function Cards({
                       className="rounded-full"
                     />
                   </div>
-                  <div className="flex flex-col ml-6">
+                  <div className="flex flex-col mx-3">
                     <Text
                       varaint={TypographyVariant.H2}
                       className="font-semibold mt-3"
@@ -179,9 +182,12 @@ function Cards({
             <Button
               title="Like this content?"
               className={`mx-1 ${
-                isCardLiked ? "text-secondary-light " : "text-gray-normal"
-              } hover:text-secondary-light `}
-              onClick={onContentLiked}
+                isLikedByCurrentUser
+                  ? "text-secondary-light"
+                  : "text-gray-normal"
+              } 
+             `}
+              onClick={() => {}}
               variant={ButtonVariants.ICON}
             >
               <HeartFilledSVG />

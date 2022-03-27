@@ -49,8 +49,12 @@ async function getBest3Contents(userId: string) {
   )
 }
 
-export async function getContentById(contentId: string) {
-  return await axios.get(`/api/content/getContentByID?contentId=${contentId}`)
+export async function getContentById(contentId: string, userId: string) {
+  return await (
+    await axios.get(
+      `/api/content/getContentByID?contentId=${contentId}&userId=${userId}`
+    )
+  ).data.data
 }
 
 // export function useGetContentById(

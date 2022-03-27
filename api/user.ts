@@ -22,8 +22,15 @@ export function transformUserResponse(res: AxiosResponse<any, any>): User {
   return userData
 }
 
-export async function fetchUser(id: string) {
+export async function fetchUserWithProfile(id: string) {
   const user = await axios.get(`/api/account/${id}`)
+  return user
+}
+
+export async function getUser(id: string) {
+  const user = await axios
+    .get(`/api/auth/user?id=${id}`)
+    .catch(err => console.log(err))
   return user
 }
 
@@ -53,7 +60,7 @@ async function updateUserProfile({
 }
 
 export const useGetUserQuery = (id: string) => {
-  return useQuery(["user", id], () => fetchUser(id), {
+  return useQuery(["user", id], () => fetchUserWithProfile(id), {
     refetchOnWindowFocus: false,
     select: transformUserResponse,
   })
