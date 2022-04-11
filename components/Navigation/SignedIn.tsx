@@ -18,7 +18,7 @@ function SignedInNavigation() {
     {
       name: "Sign out",
       href: "#",
-      onClick: () => (signOut(), console.log("ssss")),
+      onClick: () => signOut(),
     },
   ]
 

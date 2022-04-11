@@ -78,7 +78,6 @@ const App = ({
   )
     return <div>Loading...</div>
 
-  console.log(status, "privatePage", userQuery, queryEnabled)
   return <div>{Children}</div>
 }
 

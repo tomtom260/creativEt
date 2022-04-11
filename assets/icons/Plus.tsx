@@ -1,10 +1,10 @@
 import React from "react"
 
-function PlusSVG() {
+function PlusSVG({ className }: { className?: string }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      className="h-5 w-5"
+      className={`h-5 w-5 ${className}`}
       viewBox="0 0 20 20"
       fill="currentColor"
     >

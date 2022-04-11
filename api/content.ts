@@ -22,7 +22,6 @@ type CustomUseQueryOptions = UseQueryOptions<
 >
 
 async function uploadImage(formData: FormData) {
-  console.log("formData", formData)
   return await fetch(
     `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
     { body: formData, method: "POST" }
@@ -57,15 +56,15 @@ export async function getContentById(contentId: string, userId: string) {
   ).data.data
 }
 
-// export function useGetContentById(
-//   contentId: string,
-//   options: CustomUseQueryOptions
-// ) {
-//   return useQuery(["content", contentId], () => getContentById(contentId), {
-//     select: data => data.data.data,
-//     ...options,
-//   })
-// }
+export async function contentSeen(contentId: string) {
+  return await (
+    await axios.get(`/api/content/seen?contentId=${contentId}`)
+  ).data.data
+}
+
+export function useContentSeenMutation(props: CustomUseMutationOptions) {
+  return useMutation(contentSeen, props)
+}
 
 export function useGetBest3ContentsQuery(
   userId: string,

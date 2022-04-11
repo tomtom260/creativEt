@@ -3,6 +3,7 @@ import {
   useDislikeContentMutation,
   useLikeContentMutation,
   useUploadImageMutation,
+  useContentSeenMutation,
 } from "@/api/content"
 import { useQueryClient } from "react-query"
 
@@ -15,6 +16,11 @@ export default function useContentService() {
       queryClient.invalidateQueries(["content", res.data.data.contentId]),
   })
   const dislikeContentMutation = useDislikeContentMutation({
+    onSuccess: res =>
+      queryClient.invalidateQueries(["content", res.data.data.contentId]),
+  })
+
+  const contentSeenMutation = useContentSeenMutation({
     onSuccess: res =>
       queryClient.invalidateQueries(["content", res.data.data.contentId]),
   })
@@ -42,7 +48,9 @@ export default function useContentService() {
     })
   }
 
-  function onContentSeen() {}
+  function onContentSeen(contentId: string) {
+    contentSeenMutation.mutate(contentId)
+  }
   function onContentLiked(contentId: string) {
     likeContentMutation.mutate(contentId)
   }

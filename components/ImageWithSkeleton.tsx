@@ -2,15 +2,20 @@ import React, { useEffect, useRef, useState, ReactDOM } from "react"
 import Image, { ImageProps } from "next/image"
 import Skeleton from "./Skeleton"
 
-function ImageWithSkeleton({ className, ...rest }: ImageProps) {
+type ImageWithSkeletonProps = Omit<ImageProps, "onLoadingComplete"> & {
+  imageLoaded?: () => void
+}
+
+function ImageWithSkeleton({
+  className,
+  imageLoaded,
+  ...rest
+}: ImageWithSkeletonProps) {
   const [showSkeleton, setShowSkeleton] = useState(true)
   const imageRef = useRef<HTMLDivElement>({} as HTMLDivElement)
   const [parentHeight, setParentHeight] = useState(0)
 
   useEffect(() => {
-    console.log(imageRef.current.childNodes[0].offsetHeight, "off")
-    // let para = document.querySelector("#image span")
-    // console.log(para)
     imageRef.current.childNodes[0].offsetHeight &&
       setParentHeight(imageRef.current.childNodes[0].offsetHeight)
   }, [imageRef])
@@ -25,6 +30,7 @@ function ImageWithSkeleton({ className, ...rest }: ImageProps) {
           {...rest}
           onLoadingComplete={() => {
             setShowSkeleton(false)
+            imageLoaded && imageLoaded()
           }}
           className={`${className} ${
             showSkeleton ? "opacity-0" : "opacity-100"

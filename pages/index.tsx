@@ -2,11 +2,11 @@ import DefaultLayout from "../layouts/DefaultLayout"
 import Cards from "@/components/Cards"
 import { changeDateInJSONToMoment } from "@/utils/changeDateToMoment"
 import { Content } from "types/content"
-import { getContents } from "../pages/api/content/service"
+import { getContents } from "module/content/server"
 import { getSession } from "next-auth/react"
 import { useQueries, useQuery, useQueryClient } from "react-query"
 import { getContentById } from "@/api/content"
-import { fetchUserWithProfile, getUser, transformUserResponse } from "api/user"
+import { fetchUserWithProfile, transformUserResponse } from "api/user"
 
 type HomeProps = {
   contents: Content[]

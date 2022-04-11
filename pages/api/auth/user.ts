@@ -78,7 +78,6 @@ export default async function userHandler(
       return res.status(200).json({})
     case "GET":
       const userId = req.query.id as string
-      console.log("userId", userId)
       return await prisma.user.findFirst({
         where: {
           id: userId,

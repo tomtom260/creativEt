@@ -35,7 +35,6 @@ export default async function userHandler(
       })!) as Profile
       content.createdBy = { ...content.createdBy, location, username }
       content.totalLikes = content._count.likes
-      console.log(userId)
       content.isLikedByCurrentUser = content.likes.some(
         like => like.userId === userId
       )

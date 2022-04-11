@@ -14,6 +14,7 @@ type BaseInputCustomProps = {
   label: string
   error?: string
   value: string
+  inputContainerStyle: string
   onChange: (value: string) => void
   description?: string
   appendComponent?: ReactNode
@@ -36,6 +37,7 @@ function BaseInput({
   label,
   appendComponent,
   prependComponent,
+  inputContainerStyle,
   children,
   noBorder = false,
   onChange,
@@ -56,7 +58,7 @@ function BaseInput({
           noBorder
             ? "border-0"
             : "border  hover:ring-1 focus:ring-1  hover:border-transparent  border-gray-normal  !ring-secondary-normal"
-        }`}
+        } ${inputContainerStyle} `}
       >
         {prependComponent}
         <Container

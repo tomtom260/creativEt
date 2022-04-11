@@ -2,26 +2,22 @@ import { GetStaticPropsContext } from "next"
 import { useRouter } from "next/router"
 import Image from "next/image"
 import React, { useEffect, useState } from "react"
-import { prisma } from "../utils/db"
+import { prisma } from "../../utils/db"
 import { Prisma } from "@prisma/client"
-import DefaultLayout from "../layouts/DefaultLayout"
-import Text from "../components/Typography"
-import { TypographyVariant } from "../components/Typography/textVariant.enum"
-import Button from "../components/Button"
-import ButtonVariants from "../components/Button/button.enum"
+import DefaultLayout from "../../layouts/DefaultLayout"
+import Text from "../../components/Typography"
+import { TypographyVariant } from "../../components/Typography/textVariant.enum"
+import Button from "../../components/Button"
+import ButtonVariants from "../../components/Button/button.enum"
 import Head from "next/head"
-import HorizontalMenu from "../components/HorizontalMenu"
-import Cards from "../components/Cards"
+import HorizontalMenu from "../../components/HorizontalMenu"
+import Cards from "../../components/Cards"
 
 type ProfileProps = {
   profile: Awaited<ReturnType<typeof getStaticProps>>["props"]["profile"]
 }
 
 function Profile({ profile }: ProfileProps) {
-  useEffect(() => {
-    console.log(profile?.user.name)
-  }, [])
-
   const [selectedMenuItem, setSelectedMenuItem] = useState<number>(0)
   const router = useRouter()
 

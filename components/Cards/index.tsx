@@ -1,4 +1,4 @@
-import { useGetBest3ContentsQuery } from "@/api/content"
+import { contentSeen, useGetBest3ContentsQuery } from "@/api/content"
 import { getOptimisedProfileImage } from "@/utils/cloudinary"
 import { useInView } from "react-intersection-observer"
 import Image from "next/image"
@@ -38,7 +38,8 @@ function Cards({
     enabled: getBest3ContentsQueryEnabled,
   })
 
-  const { onContentLiked, onContentDisliked } = useContentService()
+  const { onContentLiked, onContentDisliked, onContentSeen } =
+    useContentService()
 
   const ownerImageURL = getOptimisedProfileImage(createdBy.image)
 
@@ -58,7 +59,7 @@ function Cards({
 
   useEffect(() => {
     if (isCardSeen) {
-      console.log("Seen", title)
+      contentSeen(id)
     }
   }, [isCardSeen])
 
