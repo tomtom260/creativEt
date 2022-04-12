@@ -80,14 +80,22 @@ async function likeContent(id: string) {
   return await axios.get(`/api/content/like?contentId=${id}`)
 }
 
-async function dislikeContent(id: string) {
-  return await axios.get(`/api/content/dislike?contentId=${id}`)
-}
-
 export const useLikeContentMutation = (props: CustomUseMutationOptions) => {
   return useMutation(likeContent, props)
 }
 
+async function dislikeContent(id: string) {
+  return await axios.get(`/api/content/dislike?contentId=${id}`)
+}
+
 export function useDislikeContentMutation(props: CustomUseMutationOptions) {
   return useMutation(dislikeContent, props)
+}
+
+async function buyContent(contentId: string) {
+  return await axios.get(`/api/content/buy?contentId=${contentId}`)
+}
+
+export function useBuyContentMutation(props: CustomUseMutationOptions) {
+  return useMutation(buyContent, props)
 }

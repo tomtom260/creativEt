@@ -38,7 +38,13 @@ import LinkSVG from "@/assets/icons/Link"
 import useContentService from "@/service/content"
 import { useQuery } from "react-query"
 import { getContentById } from "@/api/content"
-import { useGetCurrentUser } from "@/hooks/user"
+import {
+  useFollowUserMutation,
+  useGetCurrentUser,
+  useUnfollowUserMutation,
+} from "@/hooks/user"
+import { EyeIcon } from "@heroicons/react/outline"
+import useUserService from "@/service/user"
 
 function Content({ content }: { content: ContentWithProfile }) {
   const { data: user } = useGetCurrentUser()
@@ -55,7 +61,11 @@ function Content({ content }: { content: ContentWithProfile }) {
   const [contentImage, setContentImage] = useState(contentQuery.data.image)
   const [isShareMode, setIsShareMode] = useState(false)
 
-  const { onContentLiked, onContentDisliked } = useContentService()
+  const { onContentLiked, onContentDisliked, onContentBuy } =
+    useContentService()
+
+  const onFollow = useFollowUserMutation(content.createdBy.id)
+  const onUnfollow = useUnfollowUserMutation(content.createdBy.id)
 
   const publicId = getPublicIdFromUrl(contentQuery.data.createdBy.image)
   const contentPublicId = getPublicIdFromUrl(contentQuery.data.image)
@@ -66,6 +76,16 @@ function Content({ content }: { content: ContentWithProfile }) {
     contentQuery.data.isLikedByCurrentUser
       ? onContentDisliked(contentQuery.data.id)
       : onContentLiked(contentQuery.data.id)
+  }
+
+  const onFollowButtonClicked = () => {
+    contentQuery.data.isFollowedByCurrentUser
+      ? onFollow.mutate(content.createdBy.id)
+      : onUnfollow.mutate(content.createdBy.id)
+  }
+
+  const onBuyClicked = () => {
+    !contentQuery.data.isBoughtByCurrentUser && onContentBuy(content.id)
   }
 
   return (
@@ -84,6 +104,7 @@ function Content({ content }: { content: ContentWithProfile }) {
               {!isShareMode ? (
                 <>
                   <Button
+                    onClick={onFollowButtonClicked}
                     className=" relative rounded-full   right-0  text-gray-dark bg-gray-light"
                     variant={ButtonVariants.ICON}
                   >
@@ -177,8 +198,9 @@ function Content({ content }: { content: ContentWithProfile }) {
             <Button
               className="absolute w-20 sm:hidden z-10 right-4"
               variant={ButtonVariants.PRIMARY}
+              onClick={onBuyClicked}
             >
-              Buy
+              {!contentQuery.data.isBoughtByCurrentUser ? " Buy" : "Download"}
             </Button>
           </div>
           <div className="absolute sm:hidden  z-10 bottom-0">
@@ -197,10 +219,9 @@ function Content({ content }: { content: ContentWithProfile }) {
               setIsImageLoaded(true)
             }}
             loader={({ width }) => {
-              const image = getResponsiveWatermarkedImage(
-                contentPublicId,
-                width
-              )
+              const image = contentQuery.data.isBoughtByCurrentUser
+                ? getResponsiveImage(contentPublicId, width)
+                : getResponsiveWatermarkedImage(contentPublicId, width)
               setContentImage(image)
               return image
             }}
@@ -233,7 +254,12 @@ function Content({ content }: { content: ContentWithProfile }) {
                 </div>
               </div>
             </div>
-            <Button variant={ButtonVariants.OUTLINED}>Follow</Button>
+            <Button
+              onClick={onFollowButtonClicked}
+              variant={ButtonVariants.OUTLINED}
+            >
+              Follow
+            </Button>
           </div>
           <Text className="mt-4" varaint={TypographyVariant.Body1}>
             {contentQuery.data.description || "hello ብብት "}
@@ -241,11 +267,46 @@ function Content({ content }: { content: ContentWithProfile }) {
           <Text className="font-bold" varaint={TypographyVariant.Body1}>
             #nature
           </Text>
+          <div className="flex my-4 gap-4  text-gray-dark">
+            <div className="flex flex-col items-center justify-center">
+              <Button
+                onClick={onLikeButtonClicked}
+                className={`text-white
+            ${
+              content.isLikedByCurrentUser
+                ? " bg-secondary-normal "
+                : "bg-gray-dark"
+            }
+              `}
+                variant={ButtonVariants.ICON}
+              >
+                <HeartFilledSVG />
+              </Button>
+              <Text className="mt-2" varaint={TypographyVariant.Body1}>
+                {content.totalLikes}
+              </Text>
+            </div>
+            <div className="flex flex-col items-center justify-center ">
+              <Button
+                onClick={() => {}}
+                className={`first-letter:
+            
+            `}
+                variant={ButtonVariants.ICON}
+              >
+                <EyeIcon className="h-6 w-6" />
+              </Button>
+              <Text className="mt-2" varaint={TypographyVariant.Body1}>
+                {content.views}
+              </Text>
+            </div>
+          </div>
           <Button
             className="w-40 ml-auto mt-10"
             variant={ButtonVariants.PRIMARY}
+            onClick={onBuyClicked}
           >
-            Buy
+            {!contentQuery.data.isBoughtByCurrentUser ? " Buy" : "Download"}
           </Button>
           <div className="relative mt-24">
             <Input
@@ -294,6 +355,7 @@ export async function getServerSideProps(ctx: CustomNextPageContext) {
   const session = await getSession(ctx)
   try {
     const content = await getContent(id, session?.user?.id)
+    console.log(content)
     return {
       props: {
         content: changeDateInJSONToMoment(content),

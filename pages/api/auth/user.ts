@@ -5,6 +5,7 @@ import { prisma } from "../../../utils/db"
 import sendMail from "../../../utils/mail"
 import crypto from "crypto"
 import { create } from "domain"
+import { getSession } from "next-auth/react"
 
 type NextApiRequestType = Omit<NextApiRequest, "body"> & {
   body: {
@@ -77,15 +78,31 @@ export default async function userHandler(
       })
       return res.status(200).json({})
     case "GET":
+      const session = await getSession({ req })
+      if (!session?.user) {
+        throw {
+          status: "error",
+          statusCode: 401,
+          message: "unauthorized",
+        }
+      }
+
       const userId = req.query.id as string
-      return await prisma.user.findFirst({
+      const User = await prisma.user.findFirst({
         where: {
           id: userId,
         },
         include: {
           Profile: true,
+          followers: true,
         },
       })
+      console.log(User)
+
+      // if (User) {
+      //   User.isFollowedByCurrentUser = true
+      // }
+      return User
     default:
       wrongRequestMethodError(res, ["POST"])
   }

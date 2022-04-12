@@ -29,7 +29,8 @@ export default function Home({ contents }: HomeProps) {
     contents.map(content => ({
       queryFn: () => fetchUserWithProfile(content.userId),
       queryKey: ["user", content.userId],
-      initialData: content.createdBy,
+      initialData: { data: { data: content.createdBy } },
+      select: transformUserResponse,
     }))
   )
 

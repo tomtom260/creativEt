@@ -13,6 +13,11 @@ import ImageWithSkeleton from "../ImageWithSkeleton"
 import Text from "../Typography"
 import { TypographyVariant } from "../Typography/textVariant.enum"
 import useContentService from "@/service/content"
+import useUserService from "@/service/user"
+import { useFollowUserMutation, useUnfollowUserMutation } from "@/hooks/user"
+import { useQuery } from "react-query"
+import { create } from "domain"
+import { fetchUserWithProfile, transformUserResponse } from "@/api/user"
 
 export type CardsProps = {
   content: Content
@@ -29,8 +34,16 @@ function Cards({
     isLikedByCurrentUser,
   },
 }: CardsProps) {
+  const createdByQuery = useQuery(
+    ["user", createdBy.id],
+    // fetchUserWithProfile,
+    {
+      // select: transformUserResponse,
+    }
+  ).data.data
+  console.log(createdByQuery.data.isFollowedByCurrentUser)
+
   const [isCardSeen, setIsCardSeen] = useState<boolean>(false)
-  const [isAuthorFollowed, setIsAuthourFollowed] = useState<boolean>(false)
   const [getBest3ContentsQueryEnabled, setGetBest3ContentsQueryEnabled] =
     useState(false)
 
@@ -38,8 +51,7 @@ function Cards({
     enabled: getBest3ContentsQueryEnabled,
   })
 
-  const { onContentLiked, onContentDisliked, onContentSeen } =
-    useContentService()
+  const { onContentLiked, onContentDisliked } = useContentService()
 
   const ownerImageURL = getOptimisedProfileImage(createdBy.image)
 
@@ -62,6 +74,15 @@ function Cards({
       contentSeen(id)
     }
   }, [isCardSeen])
+
+  const followMutation = useFollowUserMutation(createdBy.id)
+  const unfollowMutation = useUnfollowUserMutation(createdBy.id)
+
+  const onFollowButtonCliked = () => {
+    createdByQuery.data.isFollowedByCurrentUser
+      ? unfollowMutation.mutate(createdBy.id)
+      : followMutation.mutate(createdBy.id)
+  }
 
   return (
     <div ref={ref} className="w-[375px]  flex flex-col">
@@ -119,7 +140,7 @@ function Cards({
           </div>
           <div className="pt-6 absolute">
             <div
-              className={`hidden group-hover:flex bg-white shadow-md mt-6  rounded-2xl w-[400px] min-h-[200px] p-5 flex-col z-10 absolute`}
+              className={`hidden group-hover:flex bg-white shadow-md mt-6  rounded-2xl w-[400px] min-h-[200px] p-5 flex-col z-10 relative`}
             >
               <div className="flex justify-between items-center">
                 <div className="flex">
@@ -146,14 +167,18 @@ function Cards({
                   </div>
                 </div>
                 <Button
-                  onClick={() => setIsAuthourFollowed(state => !state)}
-                  appendComponent={<PlusSVG />}
+                  onClick={onFollowButtonCliked}
+                  // appendComponent={<PlusSVG />}
                   className={`${
-                    isAuthorFollowed ? "bg-secondary-normal" : "bg-gray-light"
+                    createdByQuery.data.isFollowedByCurrentUser
+                      ? "bg-secondary-normal"
+                      : "bg-gray-light"
                   } `}
                   variant={ButtonVariants.PRIMARY}
                 >
-                  Follow
+                  {createdByQuery.data.isFollowedByCurrentUser
+                    ? "Following"
+                    : "Follow"}
                 </Button>
               </div>
               <div className="grid grid-cols-3 h-full gap-5 mt-5">

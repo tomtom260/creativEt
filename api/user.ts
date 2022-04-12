@@ -59,6 +59,18 @@ async function updateUserProfile({
   )
 }
 
+export async function followUser(followingId: string) {
+  return await (
+    await axios.get(`/api/account/follow?followingId=${followingId}`)
+  ).data.data
+}
+
+export async function unfollowUser(followingId: string) {
+  return await (
+    await axios.delete(`/api/account/follow?followingId=${followingId}`)
+  ).data.data
+}
+
 export const useGetUserQuery = (id: string) => {
   return useQuery(["user", id], () => fetchUserWithProfile(id), {
     refetchOnWindowFocus: false,

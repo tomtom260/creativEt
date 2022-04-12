@@ -30,10 +30,7 @@ export const getThumnailSizedImage = (publicId: string) =>
   cloudinary.image(publicId).resize(Resize.scale().width(80).height(80)).toURL()
 
 export const getResponsiveImage = (publicId: string, width: number) =>
-  cloudinary
-    .image(publicId)
-    .resize(Resize.scale().width(width))
-    .toURL()
+  cloudinary.image(publicId).resize(Resize.scale().width(width)).toURL()
 
 export const getResponsiveWatermarkedImage = (
   publicId: string,

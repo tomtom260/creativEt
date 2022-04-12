@@ -1,4 +1,4 @@
-import { Likes, Profile, Tags } from "@prisma/client"
+import { Likes, Profile, Tags, Transaction } from "@prisma/client"
 import { prisma } from "@/utils/db"
 import { Content } from "types/content"
 import { User } from "types/user"
@@ -10,6 +10,7 @@ export async function getContents(userId: string) {
       tags: true,
       createdBy: true,
       likes: true,
+      Transaction: true,
       _count: {
         select: { likes: true },
       },
@@ -28,6 +29,7 @@ export async function getContent(id: string, userId: string) {
       tags: true,
       createdBy: true,
       likes: true,
+      Transaction: true,
       _count: {
         select: { likes: true },
       },
@@ -44,7 +46,26 @@ export async function getContent(id: string, userId: string) {
     } as ErrorObject
   }
 
+  content.createdBy.isFollowedByCurrentUser = addUserFollowsContentCreator(
+    userId,
+    content.createdBy.id
+  )
+  
   return await addProfileToContentCreator(content, userId)
+}
+
+async function addUserFollowsContentCreator(
+  followerId: string,
+  followingId: string
+) {
+  return !!(await prisma.follow.findUnique({
+    where: {
+      followerId_followingId: {
+        followerId,
+        followingId,
+      },
+    },
+  }))
 }
 
 async function addProfileToContentCreator(
@@ -67,9 +88,16 @@ async function addProfileToContentCreator(
   contentWithProfile.isLikedByCurrentUser = content.likes.some(
     like => like.userId === userId
   )
+  contentWithProfile.isBoughtByCurrentUser = content.Transaction.some(
+    trans => trans.buyerId === userId
+  )
+
+  contentWithProfile.createdBy.isFollowedByCurrentUser =
+    await addUserFollowsContentCreator(userId, contentWithProfile.createdBy.id)
 
   delete contentWithProfile._count
   delete contentWithProfile.likes
+  delete contentWithProfile.Transaction
   return contentWithProfile
 }
 
@@ -77,8 +105,10 @@ export type ContentWithProfile = ContentWithLikesTagsUser & {
   createdBy: Content["createdBy"] & {
     location: string
     username: string
+    isFollowedByCurrentUser: boolean
   }
   isLikedByCurrentUser: boolean
+  isBoughtByCurrentUser: boolean
   totalLikes: number
 }
 
@@ -87,6 +117,7 @@ type ContentWithLikesTagsUser =
       tags: Tags[]
       createdBy: User
       likes: Likes[]
+      Transaction: Transaction[]
       _count: {
         likes: number
       }

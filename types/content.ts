@@ -12,4 +12,5 @@ export type Content = {
   createdBy: User
   likes: number
   views: number
+  isBoughtByCurrentUser: boolean
 }
