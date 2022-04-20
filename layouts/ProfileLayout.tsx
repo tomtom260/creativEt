@@ -34,7 +34,7 @@ function ProfileLayout({ children: Children }: { children: ReactNode }) {
   const router = useRouter()
   const { data: user } = useGetCurrentUser()!
   const currentPageDetails = SidebarMenuItems.find(
-    item => item.path === router.pathname
+    (item) => item.path === router.pathname
   )!
 
   const imageUrl = getOptimisedProfileImage(user?.image!)
@@ -61,7 +61,7 @@ function ProfileLayout({ children: Children }: { children: ReactNode }) {
       </div>
       <div className="grid grid-cols-[1fr,3fr] mt-12">
         <div className="">
-          {SidebarMenuItems.map(item => {
+          {SidebarMenuItems.map((item) => {
             const isActive = router.pathname === item.path
             return (
               <Link key={item.name} href={item.path} passHref>

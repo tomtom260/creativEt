@@ -25,7 +25,7 @@ export default function Select({
 
   useEffect(() => {
     setFilteredOptions(
-      options.filter(option => {
+      options.filter((option) => {
         return (
           option.toLowerCase().includes(inputRef.current.value.toLowerCase()) &&
           !selectedOptions.includes(option)
@@ -67,7 +67,7 @@ export default function Select({
             : ""
         } hover:border-secondary-normal hover:shadow-center   transition-shadow hover:shadow-secondary-light   `}
       >
-        {selectedOptions.map(el => (
+        {selectedOptions.map((el) => (
           <div
             className="flex gap-1 my-1 rounded-lg items-center mr-4 p-1 md:p-2 bg-gray-light"
             key={el}
@@ -77,7 +77,7 @@ export default function Select({
               className=" !h-min !w-min text-gray-dark"
               onClick={() => {
                 setSelectedOptions(
-                  selectedOptions.filter(option => option !== el)
+                  selectedOptions.filter((option) => option !== el)
                 )
               }}
               variant={ButtonVariants.ICON}
@@ -88,7 +88,7 @@ export default function Select({
         ))}
         <Combobox.Input
           className="flex flex-1 rounded-md border-0 outline-0 p-0 !ring-0 bg-white w-min    sm:text-sm"
-          onChange={event => {}}
+          onChange={(event) => {}}
           ref={inputRef}
           onFocus={() => setIsInputFocused(true)}
           onBlur={() => setIsInputFocused(false)}
@@ -96,7 +96,7 @@ export default function Select({
       </div>
       {filteredOptions.length > 0 && (
         <Combobox.Options className=" z-10 mt-4 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-          {filteredOptions.map(option => (
+          {filteredOptions.map((option) => (
             <Combobox.Option
               key={option}
               value={option}

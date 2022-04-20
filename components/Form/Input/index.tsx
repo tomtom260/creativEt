@@ -12,13 +12,13 @@ export type InputProps = Omit<BaseInputProps, "children"> & {
 function Input({ variant, ...rest }: InputProps) {
   switch (variant) {
     case InputType.NORMAL:
-      return <BaseInput {...rest}>{prop => <input {...prop} />}</BaseInput>
+      return <BaseInput {...rest}>{(prop) => <input {...prop} />}</BaseInput>
     case InputType.PASSWORD:
       return <PasswordInput {...rest} />
     case InputType.TEXTAREA:
       return (
         <BaseInput {...rest}>
-          {prop => (
+          {(prop) => (
             <textarea
               {...prop}
               className={`${prop.className} !h-28 resize-none `}

@@ -131,7 +131,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
             },
           })
           const credentialAccount = user?.accounts.find(
-            acc => acc.type === "credentials"
+            (acc) => acc.type === "credentials"
           )
           if (credentialAccount) {
             if (bcrypt.compareSync(password, credentialAccount?.password!)) {

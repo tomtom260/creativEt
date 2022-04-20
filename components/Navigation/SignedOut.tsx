@@ -13,7 +13,7 @@ function SignedOutNavigation() {
         userNavigation={userNavigation}
         NavigationRightSide={() => (
           <div className="hidden lg:flex lg:items-center lg:justify-end xl:col-span-4">
-            {userNavigation.map(userNav => (
+            {userNavigation.map((userNav) => (
               <a
                 key={userNav.name}
                 href={userNav.href}

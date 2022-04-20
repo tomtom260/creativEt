@@ -25,7 +25,7 @@ async function uploadImage(formData: FormData) {
   return await fetch(
     `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
     { body: formData, method: "POST" }
-  ).then(res => {
+  ).then((res) => {
     return res.json()
   })
 }
@@ -71,7 +71,7 @@ export function useGetBest3ContentsQuery(
   options: CustomUseQueryOptions
 ) {
   return useQuery(["contentByUserId", userId], () => getBest3Contents(userId), {
-    select: data => data.data.data,
+    select: (data) => data.data.data,
     ...options,
   })
 }

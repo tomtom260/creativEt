@@ -87,7 +87,7 @@ function SignedInNavigation() {
                 leaveTo="transform opacity-0 scale-95"
               >
                 <Menu.Items className="origin-top-right absolute z-10 right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 py-1 focus:outline-none">
-                  {userNavigation.map(item => (
+                  {userNavigation.map((item) => (
                     <Menu.Item key={item.name}>
                       {({ active }) => (
                         <a

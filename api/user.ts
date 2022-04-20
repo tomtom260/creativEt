@@ -30,7 +30,7 @@ export async function fetchUserWithProfile(id: string) {
 export async function getUser(id: string) {
   const user = await axios
     .get(`/api/auth/user?id=${id}`)
-    .catch(err => console.log(err))
+    .catch((err) => console.log(err))
   return user
 }
 

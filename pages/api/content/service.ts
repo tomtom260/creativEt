@@ -22,7 +22,7 @@ export async function getContents(userId: string) {
       content.createdBy = { ...content.createdBy, location, username }
       content.totalLikes = content._count.likes
       content.isLikedByCurrentUser = content.likes.some(
-        like => like.userId === userId
+        (like) => like.userId === userId
       )
 
       delete content._count

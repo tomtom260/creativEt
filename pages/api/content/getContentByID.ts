@@ -11,11 +11,11 @@ export default async function userHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const id = req.query.contentId as string
+  const userId = req.query.userId as string
+  const content = await getContent(id, userId)
   switch (req.method) {
     case "GET":
-      const id = req.query.contentId as string
-      const userId = req.query.userId as string
-      const content = await getContent(id, userId)
       // const content = await prisma?.content.findUnique({
       //   where: {
       //     id,

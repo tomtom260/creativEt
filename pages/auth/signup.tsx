@@ -29,7 +29,7 @@ const checkifEmailExists = async (email: string) => {
     .then(({ data }) => {
       console.log(data)
     })
-    .catch(data => {
+    .catch((data) => {
       console.log(data)
     })
 }
@@ -122,7 +122,7 @@ export default function SignUp({ providers, csrfToken }: SignInPropsType) {
                 <div className="mt-1">
                   <input
                     value={email}
-                    onChange={e => {
+                    onChange={(e) => {
                       setEmail(e.target.value)
                       checkifEmailExists(e.target.value)
                     }}

@@ -7,7 +7,7 @@ const meta: Meta = {
   component: Navigation,
 }
 
-const Template: Story<NavigationProps> = args => <Navigation {...args} />
+const Template: Story<NavigationProps> = (args) => <Navigation {...args} />
 
 export const SignedIn = Template.bind({})
 SignedIn.args = {

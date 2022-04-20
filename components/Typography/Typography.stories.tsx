@@ -6,7 +6,7 @@ const meta: Meta = {
   component: TypographyBase,
 }
 
-const Template: Story<TypographyProps> = args => <TypographyBase {...args} />
+const Template: Story<TypographyProps> = (args) => <TypographyBase {...args} />
 
 export const H1 = Template.bind({})
 H1.args = {

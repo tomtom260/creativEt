@@ -79,11 +79,11 @@ function Upload() {
         accept="image/*"
         maxSize={MAX_IMAGE_SIZE}
         multiple={false}
-        onDrop={acceptedFiles => {
+        onDrop={(acceptedFiles) => {
           onImageChange(acceptedFiles[0])
         }}
         onDropRejected={([{ errors }]) => {
-          setImageError(errors.map(error => errorMessage(error.code)))
+          setImageError(errors.map((error) => errorMessage(error.code)))
         }}
       >
         {({ getRootProps }) => (
@@ -101,7 +101,7 @@ function Upload() {
                 <div className="text-white bg-black rounded-md absolute top-3 right-3">
                   <Button
                     className="hover:!bg-black rounded-sm  !h-5 md:!h-8 !w-5 md:!w-8  text-sm"
-                    onClick={e => {
+                    onClick={(e) => {
                       setImagePreview(undefined)
                       setImageToBeUploaded(null)
                       e.stopPropagation()
@@ -130,7 +130,7 @@ function Upload() {
                   }`}
                 >
                   {imageError?.length ? (
-                    imageError.map(error => (
+                    imageError.map((error) => (
                       <li key={error}>
                         <Text varaint={TypographyVariant.Body2}>{error}</Text>
                       </li>

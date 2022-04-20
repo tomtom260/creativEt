@@ -47,7 +47,7 @@ const App = ({
 }) => {
   const { status, data: session } = useSession()
   const router = useRouter()
-  const { isModalVisible } = useAppSelector(state => state.modal)
+  const { isModalVisible } = useAppSelector((state) => state.modal)
   const [queryEnabled, setQueryEnabled] = useState(false)
 
   useEffect(() => {

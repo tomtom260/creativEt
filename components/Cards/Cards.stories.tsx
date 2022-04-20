@@ -6,7 +6,7 @@ const meta: Meta = {
   component: Cards,
 }
 
-const Template: Story<CardsProps> = args => <Cards {...args} />
+const Template: Story<CardsProps> = (args) => <Cards {...args} />
 
 export const ContentCard = Template.bind({})
 ContentCard.args = {}

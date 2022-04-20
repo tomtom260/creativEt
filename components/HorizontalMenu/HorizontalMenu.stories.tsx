@@ -5,7 +5,7 @@ const meta: Meta = {
   title: "Horizontal Menu",
   component: Menu,
   decorators: [
-    Story => (
+    (Story) => (
       <div className="m-5 w-full">
         <Story />
       </div>
@@ -13,7 +13,7 @@ const meta: Meta = {
   ],
 }
 
-const Template: Story<HorizontalMenuProps> = args => <Menu {...args} />
+const Template: Story<HorizontalMenuProps> = (args) => <Menu {...args} />
 
 export const HorizontalMenu = Template.bind({})
 HorizontalMenu.args = {

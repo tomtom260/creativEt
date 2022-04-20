@@ -185,7 +185,7 @@ function Cards({
                 {getBest3ContentsQuery.isFetching ? (
                   <p>Fetcghing</p>
                 ) : (
-                  getBest3ContentsQuery.data?.map(content => (
+                  getBest3ContentsQuery.data?.map((content) => (
                     <div
                       key={content.id}
                       className="relative w-[106px] h-[82px]"

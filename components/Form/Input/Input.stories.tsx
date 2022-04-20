@@ -7,7 +7,7 @@ const meta: Meta = {
   component: Input,
 }
 
-const Template: Story<InputProps> = args => <Input {...args} />
+const Template: Story<InputProps> = (args) => <Input {...args} />
 
 export const DefaultInput = Template.bind({})
 DefaultInput.args = {

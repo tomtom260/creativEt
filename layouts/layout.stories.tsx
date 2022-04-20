@@ -6,7 +6,7 @@ const meta: Meta = {
   component: DefLayout,
 }
 
-const Template: Story<DefaultLayoutProps> = args => <DefLayout {...args} />
+const Template: Story<DefaultLayoutProps> = (args) => <DefLayout {...args} />
 
 export const DefaultLayout = Template.bind({})
 DefaultLayout.args = {

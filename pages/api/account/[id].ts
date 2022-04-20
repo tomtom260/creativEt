@@ -45,7 +45,7 @@ export default async function userHandler(
       console.log(user)
 
       user.isFollowedByCurrentUser = user.following.some(
-        follow => follow.followerId === session.user.id
+        (follow) => follow.followerId === session.user.id
       )
 
       // delete user.followers

@@ -6,7 +6,7 @@ const meta: Meta = {
   component: ModalComp,
 }
 
-const Template: Story<ModalProps> = args => <Modal {...args} />
+const Template: Story<ModalProps> = (args) => <Modal {...args} />
 
 export const Modal = Template.bind({})
 Modal.args = {}

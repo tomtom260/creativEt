@@ -62,7 +62,7 @@ function BaseInput({
       >
         {prependComponent}
         <Container
-          onChange={e => {
+          onChange={(e) => {
             onChange(e?.target.value)
           }}
           className={`h-12 py-4 px-2 flex-1 border-0 rounded-lg outline-none !ring-0 ${className}`}

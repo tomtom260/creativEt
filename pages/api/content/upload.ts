@@ -33,14 +33,14 @@ export default async function userHandler(
             description,
             userId: id,
             tags: {
-              connectOrCreate: tags.map(tag => ({
+              connectOrCreate: tags.map((tag) => ({
                 create: { name: tag },
                 where: { name: tag },
               })),
             },
           },
         })
-        .catch(err => console.log(err))
+        .catch((err) => console.log(err))
       return SuccessAPIResponse(res, content!)
     default:
       wrongRequestMethodError(res, ["POST"])

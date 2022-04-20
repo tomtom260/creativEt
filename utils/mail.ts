@@ -18,9 +18,9 @@ export default async function sendMail({ to, subject, message }: MailOptions) {
       text: message,
     })
     .then(
-      data => {
+      (data) => {
         console.log(data)
       },
-      err => console.log(err)
+      (err) => console.log(err)
     )
 }

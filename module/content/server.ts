@@ -50,7 +50,7 @@ export async function getContent(id: string, userId: string) {
     userId,
     content.createdBy.id
   )
-  
+
   return await addProfileToContentCreator(content, userId)
 }
 
@@ -86,10 +86,10 @@ async function addProfileToContentCreator(
   contentWithProfile.createdBy = { ...content.createdBy, location, username }
   contentWithProfile.totalLikes = content._count.likes
   contentWithProfile.isLikedByCurrentUser = content.likes.some(
-    like => like.userId === userId
+    (like) => like.userId === userId
   )
   contentWithProfile.isBoughtByCurrentUser = content.Transaction.some(
-    trans => trans.buyerId === userId
+    (trans) => trans.buyerId === userId
   )
 
   contentWithProfile.createdBy.isFollowedByCurrentUser =

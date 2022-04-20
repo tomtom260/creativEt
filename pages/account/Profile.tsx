@@ -35,15 +35,16 @@ function Profile() {
     setImageToBeUploaded(image)
   }
 
-  const onImageChange: InputHTMLAttributes<HTMLInputElement>["onChange"] =
-    e => {
-      const image = e.target.files && e.target.files[0]
-      if (image) {
-        setImageError(undefined)
-        checkIfImageIsValidBeforeUpload(image)
-        prepareImageforPreview(image)
-      }
+  const onImageChange: InputHTMLAttributes<HTMLInputElement>["onChange"] = (
+    e
+  ) => {
+    const image = e.target.files && e.target.files[0]
+    if (image) {
+      setImageError(undefined)
+      checkIfImageIsValidBeforeUpload(image)
+      prepareImageforPreview(image)
     }
+  }
 
   const prepareImageforPreview = (image: File) => {
     const reader = new FileReader()

@@ -9,7 +9,7 @@ export type ModalProps = {}
 
 function Modal({}: ModalProps) {
   const dispatch = useAppDispatch()
-  const { isModalVisible } = useAppSelector(state => state.modal)
+  const { isModalVisible } = useAppSelector((state) => state.modal)
   return (
     <div
       className={`${

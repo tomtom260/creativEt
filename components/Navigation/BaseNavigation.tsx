@@ -53,7 +53,7 @@ function BaseNavigation({
                   <div className="flex flex-1 items-center px-6 py-4 md:max-w-3xl md:mx-auto lg:max-w-none lg:mx-0 xl:px-0">
                     <div className="w-full flex flex-1 justify-center">
                       <div className=" hidden lg:flex items-center w-3/5 max-w[400px] justify-between">
-                        {navigation.map(item => (
+                        {navigation.map((item) => (
                           <Link key={item.name} href={item.href} passHref>
                             <p className="font-sans font-medium text-lg whitespace-nowrap cursor-pointer tracking-widest">
                               {item.name}
@@ -80,7 +80,7 @@ function BaseNavigation({
 
             <Popover.Panel as="nav" className="lg:hidden" aria-label="Global">
               <div className="max-w-3xl mx-auto px-2 pt-2 pb-3 space-y-1 sm:px-4">
-                {navigation.map(item => (
+                {navigation.map((item) => (
                   <a
                     key={item.name}
                     href={item.href}
@@ -99,7 +99,7 @@ function BaseNavigation({
               <div className="border-t border-gray-200 pt-4 pb-3">
                 {MobileNavigationRightSide && <MobileNavigationRightSide />}
                 <div className="mt-3 max-w-3xl mx-auto px-2 space-y-1 sm:px-4">
-                  {userNavigation.map(item => (
+                  {userNavigation.map((item) => (
                     <a
                       onClick={item.onClick}
                       key={item.name}

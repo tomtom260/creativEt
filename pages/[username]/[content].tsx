@@ -167,7 +167,7 @@ function Content({ content }: { content: ContentWithProfile }) {
               )}
 
               <Button
-                onClick={() => setIsShareMode(state => !state)}
+                onClick={() => setIsShareMode((state) => !state)}
                 className="   right-5  text-gray-dark bg-gray-light"
                 variant={ButtonVariants.ICON}
               >

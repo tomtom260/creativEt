@@ -22,7 +22,7 @@ export default async function userHandler(
 
   switch (req.method) {
     case "GET":
-    const followObj = await prisma.follow.create({
+      const followObj = await prisma.follow.create({
         data: {
           followerId: followerId,
           followingId,

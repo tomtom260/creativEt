@@ -18,7 +18,7 @@ export default function Home({ contents }: HomeProps) {
   })
 
   const contentsQuery = useQueries(
-    contents.map(content => ({
+    contents.map((content) => ({
       queryFn: () => getContentById(content.id, user.id),
       queryKey: ["content", content.id],
       initialData: content,
@@ -26,7 +26,7 @@ export default function Home({ contents }: HomeProps) {
   )
 
   useQueries(
-    contents.map(content => ({
+    contents.map((content) => ({
       queryFn: () => fetchUserWithProfile(content.userId),
       queryKey: ["user", content.userId],
       initialData: { data: { data: content.createdBy } },
@@ -38,7 +38,7 @@ export default function Home({ contents }: HomeProps) {
     <>
       <DefaultLayout>
         <div className="flex mb-40 gap-8  grid-cols-1  flex-wrap">
-          {contentsQuery.map(content => (
+          {contentsQuery.map((content) => (
             <Cards key={content.data.id} content={content.data} />
           ))}
         </div>

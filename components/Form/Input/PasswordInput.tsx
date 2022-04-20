@@ -14,14 +14,14 @@ function PasswordInput(props: Omit<PasswordInputProps, "children">) {
       type={isPasswordVisible ? "text" : "password"}
       appendComponent={
         <div
-          onClick={() => setPasswordVisible(state => !state)}
+          onClick={() => setPasswordVisible((state) => !state)}
           className="flex items-center justify-center py-2 px-3  text-gray-normal"
         >
           {isPasswordVisible ? <EyeOffSVG /> : <EyeOnSVG />}
         </div>
       }
     >
-      {props => <input {...props} />}
+      {(props) => <input {...props} />}
     </BaseInput>
   )
 }
