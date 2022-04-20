@@ -16,7 +16,8 @@
     "format": "yarn prettier --write ",
     "check-format": "yarn prettier --list-different ",
     "types": "tsc",
-    "validate": " yarn types && yarn lint && check-format "
+    "validate": " yarn types && yarn lint && check-format ",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@cloudinary/url-gen": "^1.6.0",
@@ -75,6 +76,7 @@
     "eslint-config-next": "12.1.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-storybook": "^0.5.7",
+    "husky": "^7.0.0",
     "postcss": "^8.4.7",
     "postcss-import": "^14.0.2",
     "prettier": "^2.6.2",
