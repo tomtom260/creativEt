@@ -48,7 +48,6 @@ const App = ({
   const { status, data: session } = useSession()
   const router = useRouter()
   const { isModalVisible } = useAppSelector((state) => state.modal)
-  const [queryEnabled, setQueryEnabled] = useState(false)
 
   useEffect(() => {
     if (isModalVisible) {
@@ -58,11 +57,7 @@ const App = ({
     }
   }, [isModalVisible])
 
-  useEffect(() => {
-    if (status === "authenticated") setQueryEnabled(true)
-  }, [status])
-
-  const userQuery = useGetCurrentUser(session?.user.id, queryEnabled)
+  const userQuery = useGetCurrentUser()
 
   if (privatePage) {
     if (status === "unauthenticated") {
@@ -71,12 +66,7 @@ const App = ({
     }
   }
 
-  if (
-    status === "loading" ||
-    userQuery.isFetching ||
-    (privatePage && !queryEnabled)
-  )
-    return <div>Loading...</div>
+  if (!userQuery.data) return <div>Loading...</div>
 
   return <div>{Children}</div>
 }

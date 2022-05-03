@@ -17,11 +17,7 @@ function HorizontalMenu({
     <div className="flex w-full flex-1 overflow-auto justify justify-between">
       {menuItems.map((item, i) => (
         <div
-          className={`flex flex-1 h-10 px-2 md:px-4 md:py-10 justify-center items-center border  ${
-            selectedMenuItem === i
-              ? "border-b-transparent  rounded-t-lg "
-              : "border-transparent border-b-inherit border-x-0"
-          }
+          className={`flex flex-1 h-10 px-2 md:px-4 md:py-10 justify-center items-center border-b  
           `}
           onClick={() => setSelectedMenuItem(i)}
           key={item}
@@ -29,7 +25,7 @@ function HorizontalMenu({
           <Text
             className={`${
               selectedMenuItem === i ? "text-black" : "text-gray-normal"
-            } cursor-pointer hover:text-black transition-colors hover:duration-500 whitespace-nowrap  md:!text-xl`}
+            } cursor-pointer hover:text-black  whitespace-nowrap  md:!text-xl`}
             varaint={TypographyVariant.Body1}
           >
             {item}

@@ -6,6 +6,8 @@ import {
   useQueryClient,
 } from "react-query"
 import { followUser, unfollowUser } from "@/api/user"
+import { useEffect, useState } from "react"
+import { useSession } from "next-auth/react"
 
 type CustomUseMutationOptions = UseMutationOptions<
   unknown,
@@ -14,11 +16,25 @@ type CustomUseMutationOptions = UseMutationOptions<
   unknown
 >
 
-export function useGetCurrentUser(id?: string, enabled?: boolean) {
-  const query = useQuery(["currentUser"], () => fetchUserWithProfile(id!), {
-    select: transformUserResponse,
-    enabled: enabled,
-  })
+export function useGetCurrentUser() {
+  const [enabled, setEnabled] = useState(false)
+
+  const { data, status } = useSession()
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      setEnabled(true)
+    }
+  }, [status])
+
+  const query = useQuery(
+    ["currentUser"],
+    () => fetchUserWithProfile(data.user.id!),
+    {
+      select: transformUserResponse,
+      enabled: enabled,
+    }
+  )
 
   return query
 }

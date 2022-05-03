@@ -22,6 +22,7 @@ function SignedInNavigation() {
     },
   ]
 
+  console.log("user", user)
   const imageUrl = getOptimisedProfileImage(user?.image!)
 
   return (
