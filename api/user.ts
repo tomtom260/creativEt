@@ -14,7 +14,7 @@ export function transformUserResponse(res: AxiosResponse<any, any>): User {
   const { location, username, bio } = userData.Profile
   userData = {
     ...userData,
-    location,
+    location: location || null,
     username,
     bio,
   }

@@ -4,7 +4,7 @@ import { Content } from "types/content"
 import { User } from "types/user"
 import { ErrorObject } from "types/error"
 
-export async function getContents(userId: string) {
+export async function getContents(userId: string, creatorId?: string) {
   const contents = await prisma.content.findMany({
     include: {
       tags: true,
@@ -13,6 +13,63 @@ export async function getContents(userId: string) {
       Transaction: true,
       _count: {
         select: { likes: true },
+      },
+    },
+    where: {
+      createdBy: {
+        id: creatorId,
+      },
+    },
+  })
+  return await Promise.all(
+    contents.map(async (content: Exclude<typeof contents[number], void>) => {
+      return await addProfileToContentCreator(content, userId)
+    })
+  )
+}
+
+export async function getLikedContents(userId: string) {
+  const contents = await prisma.content.findMany({
+    include: {
+      tags: true,
+      createdBy: true,
+      likes: true,
+      Transaction: true,
+      _count: {
+        select: { likes: true },
+      },
+    },
+    where: {
+      likes: {
+        some: {
+          userId,
+        },
+      },
+    },
+  })
+  return await Promise.all(
+    contents.map(async (content: Exclude<typeof contents[number], void>) => {
+      return await addProfileToContentCreator(content, userId)
+    })
+  )
+}
+
+export async function getBoughtContents(userId: string) {
+  const contents = await prisma.content.findMany({
+    include: {
+      tags: true,
+      createdBy: true,
+      likes: true,
+      Transaction: true,
+      _count: {
+        select: { likes: true },
+      },
+    },
+    where: {
+      Transaction: {
+        some: {
+          buyerId: userId,
+        },
       },
     },
   })

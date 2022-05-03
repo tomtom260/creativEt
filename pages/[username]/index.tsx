@@ -1,8 +1,4 @@
-import {
-  GetServerSideProps,
-  GetServerSidePropsContext,
-  GetStaticPropsContext,
-} from "next"
+import { GetServerSidePropsContext } from "next"
 import { useRouter } from "next/router"
 import Image from "next/image"
 import React, { useEffect, useState } from "react"
@@ -16,14 +12,49 @@ import ButtonVariants from "../../components/Button/button.enum"
 import Head from "next/head"
 import HorizontalMenu from "../../components/HorizontalMenu"
 import Cards from "../../components/Cards"
-import { getSession } from "next-auth/react"
+import { getSession, useSession } from "next-auth/react"
 import { MailIcon } from "@heroicons/react/outline"
-
+import { changeDateInJSONToMoment } from "@/utils/changeDateToMoment"
+import { getContents } from "../../module/content/server"
+import { ContentBoughtQuery, ContentLikedQuery } from "@/api/content"
+// import { useContentBoughtQuery, useContentLikedQuery } from "@/api/content"
+type Contents = Awaited<ReturnType<typeof getContents>>
 type ProfileProps = Awaited<ReturnType<typeof getServerSideProps>>["props"]
 
-function ProfilePage({ profile, myProfile }: ProfileProps) {
+enum MenuItems {
+  "Shots",
+  "Liked Shots",
+  "Bought Content",
+  "Boosted Shots",
+}
+
+function ProfilePage({ profile, myProfile, contents }: ProfileProps) {
   const [selectedMenuItem, setSelectedMenuItem] = useState<number>(0)
+  const [filteredContents, setFilteredContents] = useState<Contents>([])
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
+
+  useEffect(() => {
+    setLoading(true)
+    switch (selectedMenuItem) {
+      case MenuItems["Liked Shots"]:
+        ContentLikedQuery().then((res) => {
+          setLoading(false)
+          setFilteredContents(res)
+        })
+        break
+      case MenuItems["Bought Content"]:
+        ContentBoughtQuery().then((res) => {
+          setLoading(false)
+          setFilteredContents(res)
+        })
+        break
+      default:
+      case MenuItems.Shots:
+        setFilteredContents(contents)
+        setLoading(false)
+    }
+  }, [selectedMenuItem])
 
   if (router.isFallback) {
     return <div>Loading...</div>
@@ -61,7 +92,7 @@ function ProfilePage({ profile, myProfile }: ProfileProps) {
                   {profile.location}
                 </Text>
               )}
-              {!myProfile ? (
+              {myProfile ? (
                 <Button onClick={() => {}} variant={ButtonVariants.OUTLINED}>
                   Edit Profile
                 </Button>
@@ -76,7 +107,7 @@ function ProfilePage({ profile, myProfile }: ProfileProps) {
                   </Button>
                   <Button
                     appendComponent={<MailIcon />}
-                    className="w-min"
+                    className=""
                     onClick={() => {}}
                     variant={ButtonVariants.PRIMARY}
                   >
@@ -90,15 +121,16 @@ function ProfilePage({ profile, myProfile }: ProfileProps) {
           <HorizontalMenu
             setSelectedMenuItem={setSelectedMenuItem}
             selectedMenuItem={selectedMenuItem}
-            menuItems={[
-              "Shots",
-              "Liked Shots",
-              "Bought Content",
-              "Boosted Shots",
-            ]}
+            menuItems={Object.values(MenuItems).filter(
+              (item) => typeof item === "string"
+            )}
           />
           <div className="grid md:grid-cols-2 justify-items-center lg:grid-cols-3 gap-4 gap-y-8  mt-12">
-            
+            {filteredContents?.map((content) => {
+              return (
+                <Cards key={content.id} loading={loading} content={content} />
+              )
+            })}
           </div>
         </div>
       </DefaultLayout>
@@ -137,13 +169,15 @@ export async function getServerSideProps(
       },
     },
   })
+  const contents = await getContents(session?.user.id, profile?.user.id)
   const formattedProfileObject = formatProfileObject(profile)
 
   return {
-    props: {
+    props: changeDateInJSONToMoment({
       profile: formattedProfileObject,
       myProfile: formattedProfileObject.id === session?.user.id,
-    },
+      contents,
+    }),
   }
 }
 

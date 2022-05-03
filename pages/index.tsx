@@ -25,21 +25,15 @@ export default function Home({ contents }: HomeProps) {
     }))
   )
 
-  useQueries(
-    contents.map((content) => ({
-      queryFn: () => fetchUserWithProfile(content.userId),
-      queryKey: ["user", content.userId],
-      initialData: { data: { data: content.createdBy } },
-      select: transformUserResponse,
-    }))
-  )
-
   return (
     <>
       <DefaultLayout>
         <div className="flex mb-40 gap-8  grid-cols-1  flex-wrap">
           {contentsQuery.map((content) => (
-            <Cards key={content.data.id} content={content.data} />
+            <Cards
+              key={content.data.id}
+              content={content.data}
+            />
           ))}
         </div>
       </DefaultLayout>
