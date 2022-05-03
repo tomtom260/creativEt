@@ -2,6 +2,7 @@ import axios from "axios"
 import {
   useMutation,
   UseMutationOptions,
+  useQueries,
   useQuery,
   UseQueryOptions,
 } from "react-query"
@@ -60,6 +61,43 @@ export async function contentSeen(contentId: string) {
   return await (
     await axios.get(`/api/content/seen?contentId=${contentId}`)
   ).data.data
+}
+
+async function getLikedContents() {
+  return await (
+    await axios.get(`/api/content/getLikedContent`)
+  ).data.data
+}
+
+export async function ContentLikedQuery() {
+  const contents = await getLikedContents()
+  // return useQueries(
+  //   contents.map((content) => ({
+  //     queryFn: () => getContentById(content.id, userId),
+  //     queryKey: ["content", content.id],
+  //     initialData: content,
+  //   }))
+  // )
+  return contents
+}
+
+export async function getBoughtContents() {
+  return await (
+    await axios.get(`/api/content/getBoughtContents`)
+  ).data.data
+}
+
+export async function ContentBoughtQuery() {
+  const contents = await getBoughtContents()
+  // return useQueries(
+  //   contents.map((content) => ({
+  //     queryFn: () => getContentById(content.id, userId),
+  //     queryKey: ["content", content.id],
+  //     initialData: content,
+  //     ...options,
+  //   }))
+  // )
+  return contents
 }
 
 export function useContentSeenMutation(props: CustomUseMutationOptions) {
