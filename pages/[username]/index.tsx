@@ -67,10 +67,10 @@ function Profile({ profile }: ProfileProps) {
             menuItems={["Shots", "Boosted Shots", "Liked Shots"]}
           />
           <div className="grid md:grid-cols-2 justify-items-center lg:grid-cols-3 gap-4 gap-y-8  mt-12">
+            {/* <Cards />
             <Cards />
             <Cards />
-            <Cards />
-            <Cards />
+            <Cards /> */}
           </div>
         </div>
       </DefaultLayout>
