@@ -4,6 +4,7 @@ import {
   UseMutationOptions,
   useQuery,
   useQueryClient,
+  UseQueryOptions,
 } from "react-query"
 import { followUser, unfollowUser } from "@/api/user"
 import { useEffect, useState } from "react"
@@ -39,6 +40,15 @@ export function useGetCurrentUser() {
   return query
 }
 
+export const useUserWithProfileQuery = (
+  id: string,
+  options: UseQueryOptions
+) => {
+  return useQuery(["user", id], () => fetchUserWithProfile(id), {
+    select: transformUserResponse,
+    ...options,
+  })
+}
 export const useFollowUserMutation = (
   id: string,
   props?: CustomUseMutationOptions

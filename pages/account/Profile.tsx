@@ -9,12 +9,11 @@ import { InputType } from "@/components/Form/Input/Input.enum"
 import Image from "next/image"
 import { getOptimisedProfileImage } from "@/utils/cloudinary"
 import useUserService from "@/service/user"
-import { useGetCurrentUser } from "@/hooks/user"
+import { getUserWithProfileQuery, useGetCurrentUser } from "@/hooks/user"
 
 function Profile() {
   const { updateCurrentUserProfileImage, updateCurrentUserProfile } =
     useUserService()
-  const { data: user } = useGetCurrentUser()
   const [imageToBeUploaded, setImageToBeUploaded] = useState<File>()
   const [imageError, setImageError] = useState<string>()
 

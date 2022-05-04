@@ -30,14 +30,18 @@ export default async function userHandler(
       })
       return SuccessAPIResponse(res, followObj)
     case "DELETE":
-      await prisma.follow.delete({
-        where: {
-          followerId_followingId: {
-            followerId,
-            followingId,
+      await prisma.follow
+        .delete({
+          where: {
+            followerId_followingId: {
+              followerId,
+              followingId,
+            },
           },
-        },
-      })
+        })
+        .catch((err) => {
+          console.log(err)
+        })
       return SuccessAPIResponse(res, {})
 
     default:

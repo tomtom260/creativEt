@@ -129,7 +129,7 @@ async function addProfileToContentCreator(
   content: ContentWithLikesTagsUser,
   userId: string
 ): Promise<ContentWithProfile> {
-  const { location, username } = (await prisma?.profile.findUnique({
+  const { location, username, bio } = (await prisma?.profile.findUnique({
     where: {
       userId: content.userId,
     },
@@ -140,7 +140,12 @@ async function addProfileToContentCreator(
     _count?: number
   } = { ...content }
 
-  contentWithProfile.createdBy = { ...content.createdBy, location, username }
+  contentWithProfile.createdBy = {
+    ...content.createdBy,
+    location,
+    username,
+    bio,
+  }
   contentWithProfile.totalLikes = content._count.likes
   contentWithProfile.isLikedByCurrentUser = content.likes.some(
     (like) => like.userId === userId

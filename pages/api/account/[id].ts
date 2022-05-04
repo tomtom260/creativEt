@@ -28,7 +28,7 @@ export default async function userHandler(
   switch (req.method) {
     case "GET":
       const { id } = req.query
-      const user = await prisma.user.findUnique({
+      let user = await prisma.user.findUnique({
         where: {
           id,
         },
@@ -39,10 +39,16 @@ export default async function userHandler(
         },
       })
 
+      user = {
+        ...user,
+        location: user?.Profile?.location,
+        username: user?.Profile?.username,
+        bio: user?.Profile?.bio,
+      }
+
       if (!user) {
         return ErrorAPIResponse(res, `User with that id ${id} not found`)
       }
-      console.log(user)
 
       user.isFollowedByCurrentUser = user.following.some(
         (follow) => follow.followerId === session.user.id
@@ -50,6 +56,7 @@ export default async function userHandler(
 
       // delete user.followers
       delete user.following
+      delete user.Profile
 
       return SuccessAPIResponse(res, user)
 

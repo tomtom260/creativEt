@@ -3,7 +3,7 @@ import { useRouter } from "next/router"
 import Image from "next/image"
 import React, { useEffect, useState } from "react"
 import { prisma } from "../../utils/db"
-import { Prisma, Profile, User } from "@prisma/client"
+import { Profile, User } from "@prisma/client"
 import DefaultLayout from "../../layouts/DefaultLayout"
 import Text from "../../components/Typography"
 import { TypographyVariant } from "../../components/Typography/textVariant.enum"
@@ -12,12 +12,18 @@ import ButtonVariants from "../../components/Button/button.enum"
 import Head from "next/head"
 import HorizontalMenu from "../../components/HorizontalMenu"
 import Cards from "../../components/Cards"
-import { getSession, useSession } from "next-auth/react"
+import { getSession } from "next-auth/react"
 import { MailIcon } from "@heroicons/react/outline"
 import { changeDateInJSONToMoment } from "@/utils/changeDateToMoment"
 import { getContents } from "../../module/content/server"
 import { ContentBoughtQuery, ContentLikedQuery } from "@/api/content"
-// import { useContentBoughtQuery, useContentLikedQuery } from "@/api/content"
+import {
+  useUserWithProfileQuery,
+  useFollowUserMutation,
+  useUnfollowUserMutation,
+} from "@/hooks/user"
+import { isFollwingUser } from "module/user/server"
+
 type Contents = Awaited<ReturnType<typeof getContents>>
 type ProfileProps = Awaited<ReturnType<typeof getServerSideProps>>["props"]
 
@@ -29,6 +35,12 @@ enum MenuItems {
 }
 
 function ProfilePage({ profile, myProfile, contents }: ProfileProps) {
+  const profileQuery = useUserWithProfileQuery(profile.id, {
+    placeholderData: { data: { data: { ...profile } } },
+  })
+  if (profile) {
+    console.log("profile", profile)
+  }
   const [selectedMenuItem, setSelectedMenuItem] = useState<number>(0)
   const [filteredContents, setFilteredContents] = useState<Contents>([])
   const [loading, setLoading] = useState(false)
@@ -56,25 +68,24 @@ function ProfilePage({ profile, myProfile, contents }: ProfileProps) {
     }
   }, [selectedMenuItem])
 
-  if (router.isFallback) {
-    return <div>Loading...</div>
-  }
+  const followMutation = useFollowUserMutation(profileQuery.data.id)
+  const unFollowMutation = useUnfollowUserMutation(profileQuery.data.id)
 
-  if (!profile) {
+  if (!profileQuery.data) {
     return <div>NO User with that username exists</div>
   }
 
   return (
     <>
       <Head>
-        <title>{profile.name} | creativET</title>
+        <title>{profileQuery.data.name} | creativET</title>
       </Head>
       <DefaultLayout>
         <div className="flex flex-col w-full">
           <div className="flex mx-auto">
             <div className="relative w-20 md:w-32 h-20 md:h-32 mr-12">
               <Image
-                src={profile.image!}
+                src={profileQuery.data.image!}
                 className="rounded-full"
                 layout="fill"
                 alt="profile image"
@@ -82,28 +93,39 @@ function ProfilePage({ profile, myProfile, contents }: ProfileProps) {
             </div>
             <div className="flex flex-col flex-1   justify-between min-h-20 md:min-h-32">
               <Text className="" varaint={TypographyVariant.H1}>
-                {profile.name}
+                {profileQuery.data.name}
               </Text>
-              {profile.location && (
+              {profileQuery.data.location && (
                 <Text
                   className="capitalize mb-1 "
                   varaint={TypographyVariant.Body1}
                 >
-                  {profile.location}
+                  {profileQuery.data.location}
                 </Text>
               )}
               {myProfile ? (
-                <Button onClick={() => {}} variant={ButtonVariants.OUTLINED}>
+                <Button
+                  onClick={() => {
+                    router.push("/account/Profile")
+                  }}
+                  variant={ButtonVariants.OUTLINED}
+                >
                   Edit Profile
                 </Button>
               ) : (
                 <div className="flex gap-4 ">
                   <Button
                     className="w-min"
-                    onClick={() => {}}
+                    onClick={() => {
+                      profileQuery.data.isFollowedByCurrentUser
+                        ? unFollowMutation.mutate(profileQuery.data.id)
+                        : followMutation.mutate(profileQuery.data.id)
+                    }}
                     variant={ButtonVariants.OUTLINED}
                   >
-                    Follow
+                    {profileQuery.data.isFollowedByCurrentUser
+                      ? "Following"
+                      : "Follow"}
                   </Button>
                   <Button
                     appendComponent={<MailIcon />}
@@ -169,6 +191,10 @@ export async function getServerSideProps(
       },
     },
   })
+  profile.isFollowedByCurrentUser = await isFollwingUser(
+    session?.user.id,
+    profile?.user.id
+  )
   const contents = await getContents(session?.user.id, profile?.user.id)
   const formattedProfileObject = formatProfileObject(profile)
 
@@ -190,6 +216,6 @@ function formatProfileObject(
   delete newProfile["user"]
   return {
     ...newProfile,
-    ...profile.user,
+    ...profile?.user,
   }
 }

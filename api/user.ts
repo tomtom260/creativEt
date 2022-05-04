@@ -1,5 +1,10 @@
 import axios, { AxiosResponse } from "axios"
-import { useMutation, UseMutationOptions, useQuery } from "react-query"
+import {
+  QueryOptions,
+  useMutation,
+  UseMutationOptions,
+  useQuery,
+} from "react-query"
 import { User } from "types/user"
 
 type CustomUseMutationOptions = UseMutationOptions<
@@ -11,14 +16,6 @@ type CustomUseMutationOptions = UseMutationOptions<
 
 export function transformUserResponse(res: AxiosResponse<any, any>): User {
   let userData = res.data.data
-  const { location, username, bio } = userData.Profile
-  userData = {
-    ...userData,
-    location: location || null,
-    username,
-    bio,
-  }
-  delete userData["Profile"]
   return userData
 }
 
@@ -71,10 +68,11 @@ export async function unfollowUser(followingId: string) {
   ).data.data
 }
 
-export const useGetUserQuery = (id: string) => {
+export const useGetUserQuery = (id: string, options?: QueryOptions) => {
   return useQuery(["user", id], () => fetchUserWithProfile(id), {
     refetchOnWindowFocus: false,
     select: transformUserResponse,
+    ...options,
   })
 }
 
