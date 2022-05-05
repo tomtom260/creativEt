@@ -15,3 +15,7 @@ export async function isFollwingUser(
   })
   return !!result
 }
+
+export async function getProfile(){
+  
+}
