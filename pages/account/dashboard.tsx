@@ -10,8 +10,8 @@ import Text from "@/components/Typography"
 import { TypographyVariant } from "@/components/Typography/textVariant.enum"
 import Button from "@/components/Button"
 import ButtonVariants from "@/components/Button/button.enum"
-import { Line } from "react-chartjs-2"
-import faker from "faker"
+import { useMediaQuery } from "react-responsive"
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -38,19 +38,20 @@ const stats = { Followers: 12, Following: 20, Likes: 8 }
 
 function Dashboard() {
   const { data: user } = useGetCurrentUser()
+  const isSmallScreen = useMediaQuery({ query: "(max-width: 500px)" })
 
   return (
     <DefaultLayout>
       <div className="grid grid-cols-4">
-        <div className=" col-span-3">
+        <div className="col-span-4 md:col-span-3">
           <Stats />
           <div className="mt-12 ">
-            <div className="flex md:flex-row flex-col gap-12">
-              <div>
+            <div className="flex md:flex-row items-center flex-col gap-12 overflow-x-auto pb-10">
+              <div className="">
                 <Text className="mb-4" varaint={TypographyVariant.Body1}>
                   Total Revenue
                 </Text>
-                <AreaChart width={500} height={200} />
+                <AreaChart width={isSmallScreen ? 300 : 500} height={200} />
               </div>
               <div>
                 <Text
@@ -64,8 +65,8 @@ function Dashboard() {
             </div>
           </div>
         </div>
-        <div className=" pl-12 py-8 ">
-          <div className="hidden xl:flex flex-col items-center">
+        <div className=" hidden xl:block pl-12 py-8 ">
+          <div className="flex-col flex justify-center items-center">
             <div className="relative w-20 md:w-32 h-20 md:h-32 rounded-full overflow-hidden">
               <ImageWithSkeleton layout="fill" src={user?.image!} />
             </div>
@@ -98,12 +99,12 @@ function Dashboard() {
             </div>
           </div>
         </div>
-        <div className="col-span-4 flex md:flex-row  flex-col gap-14 my-12 items-center md:items-end ">
-          <div className="mt-12  ">
+        <div className="pb-8 col-span-4 flex md:flex-row  flex-col gap-4 md:gap-12 overflow-x-auto my-4 md:my-12 items-center md:items-end ">
+          <div className="  ">
             <Text className="mb-4" varaint={TypographyVariant.Body1}>
               Total Likes
             </Text>
-            <AreaChart width={500} height={200} />
+            <AreaChart width={isSmallScreen ? 300 : 500} height={200} />
           </div>
           <div className=" shadow-xl rounded-lg p-4 pt-8">
             <Text className="" varaint={TypographyVariant.Body1}>
@@ -138,12 +139,12 @@ function Dashboard() {
             </div>
           </div>
         </div>
-        <div className="col-span-4 flex md:flex-row flex-col  gap-14 items-center md:items-end  ">
+        <div className="pb-8 col-span-4 flex md:flex-row flex-col gap-4  md:gap-14 overflow-x-auto items-center md:items-end  ">
           <div className="mt-12  ">
             <Text className="mb-4" varaint={TypographyVariant.Body1}>
               Total Likes
             </Text>
-            <AreaChart width={500} height={200} />
+            <AreaChart width={isSmallScreen ? 300 : 500} height={200} />
           </div>
           <div className=" shadow-xl rounded-lg p-4 pt-8">
             <Text className="" varaint={TypographyVariant.Body1}>

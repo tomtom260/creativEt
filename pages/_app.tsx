@@ -11,6 +11,8 @@ import { ReactQueryDevtools } from "react-query/devtools"
 import { useGetCurrentUser } from "@/hooks/user"
 import Modal from "@/components/Dialog/Modal"
 import { useAppSelector } from "@/hooks/redux"
+import Script from "next/script"
+import Pusher from "pusher-js"
 
 function MyApp({ Component, pageProps }: AppProps) {
   const queryClient = useRef(
@@ -31,6 +33,7 @@ function MyApp({ Component, pageProps }: AppProps) {
             <Component {...pageProps} />
           </App>
           <Modal />
+          <Script src="https://js.pusher.com/7.0/pusher.min.js" />
         </Provider>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
@@ -48,6 +51,18 @@ const App = ({
   const { status, data: session } = useSession()
   const router = useRouter()
   const { isModalVisible } = useAppSelector((state) => state.modal)
+
+  useEffect(() => {
+    Pusher.logToConsole = true
+    const pusher = new Pusher("0c546e08fa8322bc1318", {
+      cluster: "ap2",
+    })
+
+    const channel = pusher.subscribe("my-channel")
+    channel.bind("my-event", function (data) {
+      alert(JSON.stringify(data))
+    })
+  }, [])
 
   useEffect(() => {
     if (isModalVisible) {
