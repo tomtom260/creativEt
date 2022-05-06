@@ -55,7 +55,7 @@ function BaseInput({
         {label}
       </Text>
       <div
-        className={`flex flex-1 items-center  relative  rounded-full focus:border-transparent ${
+        className={`flex flex-1 bg-white items-center  relative  rounded-full focus:border-transparent ${
           noBorder
             ? "border-0"
             : "border  hover:ring-1 focus:ring-1  hover:border-transparent  border-gray-normal  !ring-secondary-normal"

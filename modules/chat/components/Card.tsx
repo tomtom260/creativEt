@@ -6,7 +6,7 @@ import React from "react"
 
 function Card() {
   return (
-    <div className="flex justify-between p-2">
+    <div className="flex justify-between bg-white p-2">
       <div className="flex gap-4">
         <div className="relative w-min ">
           <div className=" relative w-16 h-16 rounded-full ">

@@ -6,8 +6,8 @@ import React from "react"
 function SearchInput(props: Omit<InputProps, "variant">) {
   return (
     <Input
-      inputContainerStyle="hover:!ring-0 hover:!border-gray-normal !rounded-full"
-      className=" !rounded-full placeholder:black placeholder:font-semibold placeholder:uppercase"
+      inputContainerStyle="hover:!ring-0 hover:!border-gray-normal !rounded-full w-64"
+      className=" !rounded-full placeholder:black placeholder:font-semibold placeholder:uppercase "
       variant={InputType.NORMAL}
       placeholder="Search"
       prependComponent={
