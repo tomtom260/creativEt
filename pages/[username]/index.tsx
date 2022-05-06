@@ -15,14 +15,14 @@ import Cards from "../../components/Cards"
 import { getSession } from "next-auth/react"
 import { MailIcon } from "@heroicons/react/outline"
 import { changeDateInJSONToMoment } from "@/utils/changeDateToMoment"
-import { getContents } from "../../module/content/server"
+import { getContents } from "../../modules/content/server"
 import { ContentBoughtQuery, ContentLikedQuery } from "@/api/content"
 import {
   useUserWithProfileQuery,
   useFollowUserMutation,
   useUnfollowUserMutation,
 } from "@/hooks/user"
-import { isFollwingUser } from "module/user/server"
+import { isFollwingUser } from "modules/user/server"
 
 type Contents = Awaited<ReturnType<typeof getContents>>
 type ProfileProps = Awaited<ReturnType<typeof getServerSideProps>>["props"]

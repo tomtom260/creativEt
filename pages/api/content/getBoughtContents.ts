@@ -1,4 +1,4 @@
-import { getBoughtContents } from "module/content/server"
+import { getBoughtContents } from "modules/content/server"
 import { NextApiRequest, NextApiResponse } from "next"
 import { getSession } from "next-auth/react"
 import {

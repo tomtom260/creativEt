@@ -1,4 +1,4 @@
-import { getLikedContents } from "module/content/server"
+import { getLikedContents } from "modules/content/server"
 import { NextApiRequest, NextApiResponse } from "next"
 import { getSession } from "next-auth/react"
 import {

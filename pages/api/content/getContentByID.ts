@@ -5,7 +5,7 @@ import {
   wrongRequestMethodError,
 } from "../../../utils/apiResponses"
 import { prisma } from "../../../utils/db"
-import { getContent } from "module/content/server"
+import { getContent } from "modules/content/server"
 
 export default async function userHandler(
   req: NextApiRequest,
