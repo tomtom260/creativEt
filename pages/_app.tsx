@@ -54,19 +54,20 @@ const App = ({
 
   useEffect(() => {
     Pusher.logToConsole = true
-    const pusher = new Pusher("0c546e08fa8322bc1318", {
-      cluster: "ap2",
-      forceTLS: true,
+    const pusher = new Pusher(process.env.NEXT_PUBLIC_KEY!, {
+      cluster: process.env.NEXT_PUBLIC_CLUSTER,
+      forceTLS: process.env.NEXT_PUBLIC_FORCETLS,
       channelAuthorization: {
-        endpoint: "http://localhost:5000/pusher/auth",
+        endpoint: `${process.env.NEXT_PUBLIC_URL}/api/auth/pusher`,
         transport: "ajax",
       },
     })
 
-    const channel = pusher.subscribe("my-channel")
+    const channel = pusher.subscribe("presence-quickstart")
     channel.bind("my-event", function (data) {
       alert(JSON.stringify(data))
     })
+    channel.bind("pusher:member_added", (member) => console.log(member))
   }, [])
 
   useEffect(() => {
