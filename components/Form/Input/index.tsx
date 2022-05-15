@@ -1,4 +1,4 @@
-import React, { HTMLAttributes } from "react"
+import React, { forwardRef } from "react"
 import { BaseInputProps } from "./BaseInput"
 import { InputType, InputVariant } from "./Input.enum"
 import BaseInput from "./BaseInput"
@@ -9,17 +9,23 @@ export type InputProps = Omit<BaseInputProps, "children"> & {
   noBorder?: boolean
 }
 
-function Input({ variant, ...rest }: InputProps) {
+const InputComp = forwardRef(function Input(props: InputProps, ref) {
+  const { variant, ...rest } = props
   switch (variant) {
     case InputType.NORMAL:
-      return <BaseInput {...rest}>{(prop) => <input {...prop} />}</BaseInput>
+      return (
+        <BaseInput ref={ref} {...rest}>
+          {(prop) => <input ref={ref} {...prop} />}
+        </BaseInput>
+      )
     case InputType.PASSWORD:
-      return <PasswordInput {...rest} />
+      return <PasswordInput ref={ref} {...rest} />
     case InputType.TEXTAREA:
       return (
-        <BaseInput {...rest}>
+        <BaseInput ref={ref} {...rest}>
           {(prop) => (
             <textarea
+              ref={ref}
               {...prop}
               className={`${prop.className} !h-28 resize-none `}
             />
@@ -27,6 +33,6 @@ function Input({ variant, ...rest }: InputProps) {
         </BaseInput>
       )
   }
-}
+})
 
-export default React.memo(Input)
+export default React.memo(InputComp)

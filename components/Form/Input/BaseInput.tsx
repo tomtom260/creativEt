@@ -11,7 +11,7 @@ import {
 } from "@/components/Typography/textVariant.enum"
 
 type BaseInputCustomProps = {
-  label: string
+  label?: string
   error?: string
   value: string
   inputContainerStyle?: string
@@ -31,7 +31,7 @@ export type BaseInputProps = Omit<
 > &
   BaseInputCustomProps
 
-function BaseInput({
+const BaseInputComp = React.forwardRef(function BaseInput({
   error,
   description = "",
   label,
@@ -45,17 +45,18 @@ function BaseInput({
   ...rest
 }: BaseInputProps) {
   const Container = useCallback(children, [])
-  console.log(inputContainerStyle, className)
   return (
     <div className="flex-1">
-      <Text
-        className="!font-mono  !text-xl mb-2 sm:mb-4"
-        varaint={TypographyVariant.Body1}
-      >
-        {label}
-      </Text>
+      {label && (
+        <Text
+          className="!font-mono  !text-xl mb-2 sm:mb-4"
+          varaint={TypographyVariant.Body1}
+        >
+          {label}
+        </Text>
+      )}
       <div
-        className={`flex flex-1 bg-white items-center  relative  rounded-full focus:border-transparent ${
+        className={`flex flex-1 overflow-hidden bg-white items-center  relative  rounded-full focus:border-transparent ${
           noBorder
             ? "border-0"
             : "border  hover:ring-1 focus:ring-1  hover:border-transparent  border-gray-normal  !ring-secondary-normal"
@@ -80,6 +81,6 @@ function BaseInput({
       </Text>
     </div>
   )
-}
+})
 
-export default BaseInput
+export default BaseInputComp

@@ -6,10 +6,14 @@ import { InputVariant } from "./Input.enum"
 
 export type PasswordInputProps = BaseInputProps & Omit<BaseInputProps, "type">
 
-function PasswordInput(props: Omit<PasswordInputProps, "children">) {
+const PasswordInputComp = React.forwardRef(function PasswordInput(
+  props: Omit<PasswordInputProps, "children">,
+  ref
+) {
   const [isPasswordVisible, setPasswordVisible] = useState<boolean>()
   return (
     <BaseInput
+      ref={ref}
       {...props}
       type={isPasswordVisible ? "text" : "password"}
       appendComponent={
@@ -24,6 +28,6 @@ function PasswordInput(props: Omit<PasswordInputProps, "children">) {
       {(props) => <input {...props} />}
     </BaseInput>
   )
-}
+})
 
-export default PasswordInput
+export default PasswordInputComp

@@ -56,6 +56,11 @@ const App = ({
     Pusher.logToConsole = true
     const pusher = new Pusher("0c546e08fa8322bc1318", {
       cluster: "ap2",
+      forceTLS: true,
+      channelAuthorization: {
+        endpoint: "http://localhost:5000/pusher/auth",
+        transport: "ajax",
+      },
     })
 
     const channel = pusher.subscribe("my-channel")
