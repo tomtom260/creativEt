@@ -4,9 +4,9 @@ import { changeDateInJSONToMoment } from "@/utils/changeDateToMoment"
 import { Content } from "types/content"
 import { getContents } from "modules/content/server"
 import { getSession } from "next-auth/react"
-import { useQueries, useQuery, useQueryClient } from "react-query"
+import { useQueries, useQuery } from "react-query"
 import { getContentById } from "@/api/content"
-import { fetchUserWithProfile, transformUserResponse } from "api/user"
+import { transformUserResponse } from "api/user"
 
 type HomeProps = {
   contents: Content[]
@@ -30,10 +30,7 @@ export default function Home({ contents }: HomeProps) {
       <DefaultLayout>
         <div className="flex mb-40 gap-8  grid-cols-1  flex-wrap">
           {contentsQuery.map((content) => (
-            <Cards
-              key={content.data.id}
-              content={content.data}
-            />
+            <Cards key={content.data.id} content={content.data} />
           ))}
         </div>
       </DefaultLayout>

@@ -1,4 +1,8 @@
-import { fetchUserWithProfile, transformUserResponse } from "api/user"
+import {
+  fetchUserWithProfile,
+  searchUsers,
+  transformUserResponse,
+} from "api/user"
 import {
   useMutation,
   UseMutationOptions,
@@ -36,7 +40,6 @@ export function useGetCurrentUser() {
       enabled: enabled,
     }
   )
-
   return query
 }
 
@@ -49,6 +52,15 @@ export const useUserWithProfileQuery = (
     ...options,
   })
 }
+
+export const useSearchUsers = (username: string, options: UseQueryOptions) => {
+  return useQuery(["user:search", username], () => searchUsers(username), {
+    select: transformUserResponse,
+    ...options,
+    enabled: !!username,
+  })
+}
+
 export const useFollowUserMutation = (
   id: string,
   props?: CustomUseMutationOptions

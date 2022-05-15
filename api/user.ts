@@ -24,6 +24,11 @@ export async function fetchUserWithProfile(id: string) {
   return user
 }
 
+export async function searchUsers(username: string) {
+  const users = await axios.get(`/api/account/searchUsers?username=${username}`)
+  return users
+}
+
 export async function getUser(id: string) {
   const user = await axios
     .get(`/api/auth/user?id=${id}`)

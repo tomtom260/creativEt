@@ -4,16 +4,21 @@ import Text from "@/components/Typography"
 import { TypographyVariant } from "@/components/Typography/textVariant.enum"
 import React from "react"
 
-function Card() {
+type UserCardProps = {
+  image: string
+  name: string
+  username: string
+  searchString: string
+}
+
+function Card({ image, name, username, searchString }: UserCardProps) {
   return (
     <div className="flex justify-between bg-white p-2">
       <div className="flex gap-4">
         <div className="relative w-min ">
           <div className=" relative w-16 h-16 rounded-full ">
             <ImageWithSkeleton
-              src={
-                "https://res.cloudinary.com/dlqzrhr6r/image/upload/v1648297324/profile/22-223968_default-profile-picture-circle-hd-png-download_xrlhqm.png"
-              }
+              src={image}
               layout="fill"
               className="rounded-full"
             />
@@ -22,10 +27,13 @@ function Card() {
         </div>
         <div className="flex flex-col">
           <Text className="!text-xl" varaint={TypographyVariant.H2}>
-            Thomas
+            {name}
           </Text>
           <Text className="text-gray-dark" varaint={TypographyVariant.Body2}>
-            Hey There
+            <span className="text-secondary-dark font-medium">
+              {searchString}
+            </span>
+            {username.replace(searchString, "")}
           </Text>
         </div>
       </div>

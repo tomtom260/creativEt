@@ -62,7 +62,6 @@ const App = ({
         transport: "ajax",
       },
     })
-
     const channel = pusher.subscribe("presence-quickstart")
     channel.bind("my-event", function (data) {
       alert(JSON.stringify(data))
@@ -83,11 +82,10 @@ const App = ({
   if (privatePage) {
     if (status === "unauthenticated") {
       router.push("/auth/signin")
-      return null
+      return
     }
+    if (!userQuery.data) return <div>Loading...</div>
   }
-
-  if (!userQuery.data) return <div>Loading...</div>
 
   return <div>{Children}</div>
 }

@@ -12,10 +12,13 @@ import ImageWithSkeleton from "@/components/ImageWithSkeleton"
 import Text from "@/components/Typography"
 import { TypographyVariant } from "@/components/Typography/textVariant.enum"
 import { DotsVerticalIcon, SearchIcon } from "@heroicons/react/outline"
+import { NextPageContext } from "next"
+import { searchUsers } from "modules/user/server"
+import { useSearchUsers } from "@/hooks/user"
 
 function Chat() {
-  console.log()
   const [search, setSearch] = useState("")
+  const [newMessage, setNewMessage] = useState("")
   const [messages, setMessages] = useState<MessageProps[]>([
     {
       message: "dfjgnkjfd",
@@ -30,6 +33,8 @@ function Chat() {
       id: 58,
     },
   ])
+
+  const searchUserQuery = useSearchUsers(search, {})
 
   function sendMessage(message: string) {
     setMessages([
@@ -85,9 +90,18 @@ function Chat() {
         <div className="flex gap-x-6">
           <div className="hidden flex-shrink-0 min-w-[280px] md:flex flex-col  px-2 ">
             <div className=" divide-y-2  rounded-xl overflow-hidden ">
-              <Card />
-              <Card />
-              <Card />
+              {searchUserQuery.data &&
+                searchUserQuery.data.map((user) => {
+                  return (
+                    <Card
+                      key={user.id}
+                      username={user.username}
+                      name={user.name}
+                      searchString={search}
+                      image={user.image}
+                    />
+                  )
+                })}
             </div>
           </div>
           <div className="bg-white rounded-xl md:px-4 md:pt-4 p-0 col-span-8 md:col-span-5 w-full flex flex-col">
@@ -99,18 +113,17 @@ function Chat() {
             <div className="flex flex-1 gap-4  items-end">
               <MessageInput
                 label=""
-                value={search}
-                onChange={(val) => setSearch(val)}
+                value={newMessage}
+                onChange={(val) => setNewMessage(val)}
                 onKeyPress={(e) => {
-                  console.log(e)
                   if (e.code === "Enter") {
-                    sendMessage(search)
+                    sendMessage(newMessage)
                   }
                 }}
               />
               <Button
                 className="text-white mb-1 flex-shrink-0 !pb-4 bg-secondary-normal hover:bg-secondary-normal p-2 !w-12 !h-12 rotate-45"
-                onClick={() => sendMessage(search)}
+                onClick={() => sendMessage(newMessage)}
                 variant={ButtonVariants.ICON}
               >
                 <PaperAirplaneIcon />
@@ -121,6 +134,16 @@ function Chat() {
       </div>
     </DefaultLayout>
   )
+}
+
+export async function getServerSideProps(ctx: NextPageContext) {
+  const users = await searchUsers("t")
+  console.log(users)
+  return {
+    props: {
+      protected: true,
+    },
+  }
 }
 
 export default Chat
