@@ -28,8 +28,8 @@ function BaseNavigation({
         as="header"
         className={({ open }) =>
           classNames(
-            open ? "fixed inset-0 z-40 overflow-y-auto" : "",
-            "bg-white shadow-sm lg:static lg:overflow-y-visible"
+            open ? "inset-0 z-40 overflow-y-auto" : "",
+            "bg-white fixed w-full shadow-sm lg:static lg:overflow-y-visible"
           )
         }
       >
