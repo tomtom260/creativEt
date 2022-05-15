@@ -51,20 +51,23 @@ model Profile {
 }
 
 model User {
-  id            String        @id @default(cuid())
-  name          String
-  email         String?       @unique
-  emailVerified DateTime?     @default(now())
-  image         String?       @default("https://res.cloudinary.com/dlqzrhr6r/image/upload/v1648297324/profile/22-223968_default-profile-picture-circle-hd-png-download_xrlhqm.png")
-  accounts      Account[]
-  sessions      Session[]
-  Profile       Profile?
-  Content       Content[]
-  Likes         Likes[]
-  followers     Follow[]      @relation("follower")
-  following     Follow[]      @relation("following")
-  boughtfrom    Transaction[] @relation("buyer")
-  soldTo        Transaction[] @relation("seller")
+  id              String        @id @default(cuid())
+  name            String
+  email           String?       @unique
+  emailVerified   DateTime?     @default(now())
+  image           String?       @default("https://res.cloudinary.com/dlqzrhr6r/image/upload/v1648297324/profile/22-223968_default-profile-picture-circle-hd-png-download_xrlhqm.png")
+  accounts        Account[]
+  sessions        Session[]
+  Profile         Profile?
+  Content         Content[]
+  Likes           Likes[]
+  followers       Follow[]      @relation("follower")
+  following       Follow[]      @relation("following")
+  boughtfrom      Transaction[] @relation("buyer")
+  soldTo          Transaction[] @relation("seller")
+  Message         Message[]
+  MessagesSent    Message[]     @relation("sender")
+  MessageRecieved Message[]     @relation("reciever")
 }
 
 model VerificationToken {
@@ -94,6 +97,7 @@ model Content {
   likes       Likes[]
   price       Int           @default(0)
   Transaction Transaction[]
+  Message     Message[]
 }
 
 model Likes {
@@ -130,4 +134,19 @@ model Transaction {
   amount    Int
 
   @@unique([contentId, buyerId])
+}
+
+model Message {
+  id         String   @id @default(cuid())
+  message    String   @db.LongText
+  senderId   String
+  sender     User     @relation("sender", fields: [senderId], references: [id])
+  recieverId String
+  reciever   User     @relation("reciever", fields: [recieverId], references: [id])
+  createdAt  DateTime @default(now())
+  seen       Boolean  @default(false)
+  User       User?    @relation(fields: [userId], references: [id])
+  userId     String?
+  Content    Content? @relation(fields: [contentId], references: [id])
+  contentId  String?
 }
