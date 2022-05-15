@@ -6,6 +6,7 @@ import {
   wrongRequestMethodError,
 } from "../../../utils/apiResponses"
 import Pusher from "pusher"
+import pusher from "@/utils/pusher"
 
 export default async function userHandler(
   req: NextApiRequest,
@@ -13,14 +14,6 @@ export default async function userHandler(
 ) {
   const session = await getSession({ req })
   const userId = session?.user?.id!
-
-  const pusher = new Pusher({
-    appId: process.env.NEXT_PUBLIC_APP_ID!,
-    key: process.env.NEXT_PUBLIC_KEY!,
-    secret: process.env.NEXT_PUBLIC_SECRET!,
-    cluster: process.env.NEXT_PUBLIC_CLUSTER!,
-    useTLS: process.env.NEXT_PUBLIC_FORCETLS,
-  })
   switch (req.method) {
     case "POST":
       const socketId = req.body.socket_id
