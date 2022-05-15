@@ -69,3 +69,20 @@ export async function searchUsers(username: string) {
     location: profile.location,
   }))
 }
+
+export async function searchUser(username: string) {
+  const profiles = await prisma.profile.findMany({
+    include: {
+      user: true,
+    },
+    where: {
+      username,
+    },
+  })
+  return profiles.map((profile) => ({
+    ...profile.user,
+    username: profile.username,
+    bio: profile.bio,
+    location: profile.location,
+  }))
+}

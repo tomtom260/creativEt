@@ -3,12 +3,22 @@ import Card from "@/modules/chat/components/Card"
 import SearchInput from "modules/chat/components/SearchInput"
 import React, { useState } from "react"
 import { NextPageContext } from "next"
-import { searchUsers } from "modules/user/server"
+import { searchUser } from "modules/user/server"
 import { useSearchUsers } from "@/hooks/user"
-import ChatBox from "@/modules/chat/components/ChatBox"
+import ChatBox, { ChatBoxProps } from "@/modules/chat/components/ChatBox"
+import { TypographyVariant } from "@/components/Typography/textVariant.enum"
+import Text from "@/components/Typography"
+import { changeDateInJSONToMoment } from "@/utils/changeDateToMoment"
 
-function Chat() {
+type ChatPageProps = {
+  user: ChatBoxProps
+}
+
+function Chat({ user }: ChatPageProps) {
   const [search, setSearch] = useState("")
+  const [selectedUser, setSelectedUser] = useState<ChatBoxProps>(
+    user || undefined
+  )
   const searchUserQuery = useSearchUsers(search, {})
 
   return (
@@ -31,6 +41,7 @@ function Chat() {
                   searchUserQuery.data.map((user) => {
                     return (
                       <Card
+                        changeSelectedUser={(val) => setSelectedUser(val)}
                         key={user.id}
                         username={user.username}
                         name={user.name}
@@ -43,17 +54,23 @@ function Chat() {
             </div>
           </div>
         </div>
-        <ChatBox />
+        {selectedUser ? (
+          <ChatBox name={selectedUser.name} image={selectedUser.image} />
+        ) : (
+          <Text className="mx-auto mt-32" varaint={TypographyVariant.Body1}>
+            Select a chat to start messaging
+          </Text>
+        )}
       </div>
     </DefaultLayout>
   )
 }
 
-export async function getServerSideProps(ctx: NextPageContext) {
-  const users = await searchUsers("t")
-  console.log(users)
+export async function getServerSideProps({ query }: NextPageContext) {
+  const [user] = await searchUser(query.username!)
   return {
     props: {
+      user: changeDateInJSONToMoment(user || null),
       protected: true,
     },
   }

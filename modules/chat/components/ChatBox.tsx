@@ -10,7 +10,12 @@ import { DotsVerticalIcon, SearchIcon } from "@heroicons/react/outline"
 import Button from "@/components/Button"
 import ButtonVariants from "@/components/Button/button.enum"
 
-function ChatBox() {
+export type ChatBoxProps = {
+  name: string
+  image: string
+}
+
+function ChatBox({ name, image }: ChatBoxProps) {
   const [newMessage, setNewMessage] = useState("")
 
   const [messages, setMessages] = useState<MessageProps[]>([
@@ -129,13 +134,10 @@ function ChatBox() {
       <div className="flex gap-4 px-2 bg-gray-light justify-between items-center flex-1">
         <div className="flex gap-4 h-[70px] items-center ">
           <div className="relative w-14  h-14 rounded-full overflow-hidden">
-            <ImageWithSkeleton
-              src="https://lh3.googleusercontent.com/a/AATXAJxxsj5_nasdaBu5jQwXqgCusNJt9v8lSDl2eKU-=s96-c"
-              layout="fill"
-            />
+            <ImageWithSkeleton src={image} layout="fill" />
           </div>
           <div className="flex flex-col">
-            <Text varaint={TypographyVariant.H2}>Yeab G</Text>
+            <Text varaint={TypographyVariant.H2}>{name}</Text>
             <Text
               className="text-gray-normal"
               varaint={TypographyVariant.Body2}
