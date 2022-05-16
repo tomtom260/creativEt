@@ -1,27 +1,29 @@
 import ImageWithSkeleton from "@/components/ImageWithSkeleton"
 import Text from "@/components/Typography"
 import { TypographyVariant } from "@/components/Typography/textVariant.enum"
+import moment from "moment"
 import React from "react"
 
 export type MessageProps = {
   type: "Sent" | "Recieved"
   message: string
   time: string
-  id: number
 }
 
 function Message({ type, message, time }: MessageProps) {
   const isSentMessage = type === "Sent"
   return (
     <div
-      className={`flex  gap-3 ${isSentMessage ? "self-end text-white" : ""} `}
+      className={`flex   gap-3 ${
+        isSentMessage ? "self-end flex-row-reverse text-white" : ""
+      } `}
     >
-      {/* <div className="relative w-14 h-14 rounded-full overflow-hidden">
+      <div className="relative w-14 h-14 rounded-full overflow-hidden">
         <ImageWithSkeleton
           src="https://lh3.googleusercontent.com/a/AATXAJxxsj5_nasdaBu5jQwXqgCusNJt9v8lSDl2eKU-=s96-c"
           layout="fill"
         />
-      </div> */}
+      </div>
       <div
         className={` ${
           isSentMessage
@@ -36,7 +38,7 @@ function Message({ type, message, time }: MessageProps) {
           }  self-end`}
           varaint={TypographyVariant.Body2}
         >
-          {time}
+          {moment(time).format("h:MM A")}
         </Text>
       </div>
     </div>

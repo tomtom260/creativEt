@@ -13,6 +13,7 @@ import Modal from "@/components/Dialog/Modal"
 import { useAppSelector } from "@/hooks/redux"
 import Script from "next/script"
 import Pusher from "pusher-js"
+import { pusherClient } from "@/utils/pusher"
 
 function MyApp({ Component, pageProps }: AppProps) {
   const queryClient = useRef(
@@ -54,15 +55,7 @@ const App = ({
 
   useEffect(() => {
     Pusher.logToConsole = true
-    const pusher = new Pusher(process.env.NEXT_PUBLIC_KEY!, {
-      cluster: process.env.NEXT_PUBLIC_CLUSTER,
-      forceTLS: process.env.NEXT_PUBLIC_FORCETLS,
-      channelAuthorization: {
-        endpoint: `${process.env.NEXT_PUBLIC_URL}/api/auth/pusher`,
-        transport: "ajax",
-      },
-    })
-    const channel = pusher.subscribe("presence-quickstart")
+    const channel = pusherClient.subscribe("presence-quickstart")
     channel.bind("my-event", function (data) {
       alert(JSON.stringify(data))
     })

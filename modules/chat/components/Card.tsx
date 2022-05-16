@@ -12,6 +12,8 @@ type UserCardProps = {
   username: string
   searchString: string
   changeSelectedUser: (user: ChatBoxProps) => void
+  id: string
+  roomId: string
 }
 
 function Card({
@@ -20,6 +22,8 @@ function Card({
   username,
   searchString,
   changeSelectedUser,
+  id,
+  roomId,
 }: UserCardProps) {
   const router = useRouter()
   return (
@@ -28,9 +32,11 @@ function Card({
         changeSelectedUser({
           name,
           image,
+          roomId,
+          id,
         })
         router.replace({
-          pathname: `/message`,
+          pathname: `/chat`,
           query: { username },
         })
       }}

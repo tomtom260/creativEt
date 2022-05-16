@@ -9,129 +9,35 @@ import { TypographyVariant } from "@/components/Typography/textVariant.enum"
 import { DotsVerticalIcon, SearchIcon } from "@heroicons/react/outline"
 import Button from "@/components/Button"
 import ButtonVariants from "@/components/Button/button.enum"
+import { useGetMessagesWithRoomId, useSendMessage } from "../hooks"
+import { useGetCurrentUser } from "@/hooks/user"
 
 export type ChatBoxProps = {
   name: string
   image: string
+  roomId: string
+  id: string
 }
 
-function ChatBox({ name, image }: ChatBoxProps) {
+function ChatBox({ name, image, id, roomId }: ChatBoxProps) {
   const [newMessage, setNewMessage] = useState("")
+  const messagesQuery = useGetMessagesWithRoomId(roomId)
+  const { id: currentUserid } = useGetCurrentUser().data
 
-  const [messages, setMessages] = useState<MessageProps[]>([
-    {
-      message: "dfjgnkjfd",
-      type: "Recieved",
-      time: moment(moment.now()).format("HH:mm A"),
-      id: 445,
-    },
-    {
-      message: "dfjgnkjfd",
-      type: "Recieved",
-      time: moment(moment.now()).format("HH:mm A"),
-      id: 445,
-    },
-    {
-      message: "dfjgnkjfd",
-      type: "Recieved",
-      time: moment(moment.now()).format("HH:mm A"),
-      id: 445,
-    },
-    {
-      message: "dfjgnkjfd",
-      type: "Recieved",
-      time: moment(moment.now()).format("HH:mm A"),
-      id: 445,
-    },
-    {
-      message: "dfjgnkjfd",
-      type: "Recieved",
-      time: moment(moment.now()).format("HH:mm A"),
-      id: 445,
-    },
-    {
-      message: "dfjgnkjfd",
-      type: "Recieved",
-      time: moment(moment.now()).format("HH:mm A"),
-      id: 445,
-    },
-    {
-      message: "dfjgnkjfd",
-      type: "Recieved",
-      time: moment(moment.now()).format("HH:mm A"),
-      id: 445,
-    },
-    {
-      message: "dfjgnkjfd",
-      type: "Recieved",
-      time: moment(moment.now()).format("HH:mm A"),
-      id: 445,
-    },
-    {
-      message: "dfjgnkjfd",
-      type: "Sent",
-      time: moment(moment.now() - 1100000000000).format("HH:mm A"),
-      id: 58,
-    },
-    {
-      message: "dfjgnkjfd",
-      type: "Sent",
-      time: moment(moment.now() - 1100000000000).format("HH:mm A"),
-      id: 58,
-    },
-    {
-      message: "dfjgnkjfd",
-      type: "Sent",
-      time: moment(moment.now() - 1100000000000).format("HH:mm A"),
-      id: 58,
-    },
-    {
-      message: "dfjgnkjfd",
-      type: "Sent",
-      time: moment(moment.now() - 1100000000000).format("HH:mm A"),
-      id: 58,
-    },
-    {
-      message: "dfjgnkjfd",
-      type: "Sent",
-      time: moment(moment.now() - 1100000000000).format("HH:mm A"),
-      id: 58,
-    },
-    {
-      message: "dfjgnkjfd",
-      type: "Sent",
-      time: moment(moment.now() - 1100000000000).format("HH:mm A"),
-      id: 58,
-    },
-    {
-      message: "dfjgnkjfd",
-      type: "Sent",
-      time: moment(moment.now() - 1100000000000).format("HH:mm A"),
-      id: 58,
-    },
-  ])
+  const sendMessage = useSendMessage({
+    roomId,
+    id,
+  })
 
-  function sendMessage(message: string) {
-    setMessages([
-      ...messages,
-      {
-        message,
-        type: "Sent",
-        time: moment(moment.now()).format("HH:mm A"),
-        id: Math.random() * 10000,
-      },
-    ])
-    setNewMessage("")
-  }
   const messageBoxRef = useRef<HTMLDivElement>({} as HTMLDivElement)
 
   useEffect(() => {
     messageBoxRef.current.scrollTop = messageBoxRef.current.scrollHeight
-  }, [])
+  }, [messagesQuery])
 
   return (
     <div className="flex flex-col flex-1 gap-4">
-      <div className="flex gap-4 px-2 bg-gray-light justify-between items-center flex-1">
+      <div className="flex gap-4 px-2 bg-gray-light justify-between items-center">
         <div className="flex gap-4 h-[70px] items-center ">
           <div className="relative w-14  h-14 rounded-full overflow-hidden">
             <ImageWithSkeleton src={image} layout="fill" />
@@ -156,13 +62,16 @@ function ChatBox({ name, image }: ChatBoxProps) {
         </div>
       </div>
       <div className="bg-white h-[calc(100vh)] md:h-[calc(100vh-192px)]   md:rounded-xl md:px-4 md:pt-4 p-2 col-span-8 md:col-span-5 w-full flex flex-col">
-        <div
-          ref={messageBoxRef}
-          className="flex flex-col overflow-scroll gap-4"
-        >
-          {messages.map((message) => (
-            <Message key={message.id} {...message} />
-          ))}
+        <div ref={messageBoxRef} className="flex flex-col overflow-auto gap-4">
+          {messagesQuery.data &&
+            messagesQuery.data.map(({ message, id, createdAt, senderId }) => (
+              <Message
+                key={message.id}
+                message={message}
+                type={senderId === currentUserid ? "Sent" : "Recieved"}
+                time={createdAt}
+              />
+            ))}
         </div>
         <div className="flex flex-1 gap-4 mt-4  items-end">
           <MessageInput

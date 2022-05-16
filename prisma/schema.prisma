@@ -140,7 +140,7 @@ model Message {
   senderId  String
   sender    User     @relation("sender", fields: [senderId], references: [id])
   roomId    String
-  room      Room     @relation(fields: [roomId], references: [id])
+  room      Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   seen      Boolean  @default(false)
 }
@@ -148,7 +148,6 @@ model Message {
 model Room {
   id        String    @id @default(cuid())
   members   User[]
-  senderId  String
   createdAt DateTime  @default(now())
   Message   Message[]
 }
