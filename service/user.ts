@@ -9,7 +9,7 @@ function useUserService() {
 
   const saveUserProfileToDBMutation = useUpdateUserProfile({
     onSuccess: (res) => {
-      queryClient.setQueryData(["user", user?.id!], res)
+      queryClient.refetchQueries(["currentUser"])
     },
   })
 
