@@ -43,7 +43,7 @@ function Cards({
     {
       initialData: { data: { data: createdBy } },
     }
-  ).data.data
+  )
 
   const [isCardSeen, setIsCardSeen] = useState<boolean>(false)
   const [getBest3ContentsQueryEnabled, setGetBest3ContentsQueryEnabled] =
@@ -85,6 +85,8 @@ function Cards({
       ? unfollowMutation.mutate(createdBy.id)
       : followMutation.mutate(createdBy.id)
   }
+
+  if (!createdByQuery.data) return null
 
   return (
     <div ref={ref} className="w-[375px]  flex flex-col">

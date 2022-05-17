@@ -38,9 +38,9 @@ function ProfilePage({ profile, myProfile, contents }: ProfileProps) {
   const profileQuery = useUserWithProfileQuery(profile.id, {
     placeholderData: { data: { data: { ...profile } } },
   })
-  if (profile) {
-    console.log("profile", profile)
-  }
+
+  console.log("filteredContents", contents)
+
   const [selectedMenuItem, setSelectedMenuItem] = useState<number>(0)
   const [filteredContents, setFilteredContents] = useState<Contents>([])
   const [loading, setLoading] = useState(false)
@@ -203,6 +203,7 @@ export async function getServerSideProps(
       profile: formattedProfileObject,
       myProfile: formattedProfileObject.id === session?.user.id,
       contents,
+      protected: true,
     }),
   }
 }

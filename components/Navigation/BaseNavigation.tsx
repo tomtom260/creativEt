@@ -41,9 +41,9 @@ function BaseNavigation({
                   <div className="flex-shrink-0 flex items-center">
                     <a href="#">
                       <Image
-                        width={32}
-                        height={32}
-                        src="https://tailwindui.com/img/logos/workflow-mark.svg?color=indigo&shade=600"
+                        width={82}
+                        height={50}
+                        src="/assets/images/logo.png"
                         alt="Workflow"
                       />
                     </a>
