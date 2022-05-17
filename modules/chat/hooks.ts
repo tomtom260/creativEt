@@ -5,6 +5,7 @@ import {
   useMutation,
   UseMutationOptions,
   useQuery,
+  useQueryClient,
   UseQueryOptions,
 } from "react-query"
 import {
@@ -62,6 +63,7 @@ export function useSendMessage({
       setRoom(res.data.data.id)
     },
   })
+  const queryClient = useQueryClient()
 
   async function sendMessage(message: string) {
     if (!room) {

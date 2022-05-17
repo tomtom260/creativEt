@@ -1,7 +1,7 @@
 import "../styles/globals.css"
 import "react-loading-skeleton/dist/skeleton.css"
 import type { AppProps } from "next/app"
-import { ReactNode, useEffect, useRef, useState } from "react"
+import { ReactNode, useContext, useEffect, useRef } from "react"
 import { SessionProvider, useSession } from "next-auth/react"
 import { Provider } from "react-redux"
 import { store } from "store"
@@ -11,9 +11,7 @@ import { ReactQueryDevtools } from "react-query/devtools"
 import { useGetCurrentUser } from "@/hooks/user"
 import Modal from "@/components/Dialog/Modal"
 import { useAppSelector } from "@/hooks/redux"
-import Script from "next/script"
-import Pusher from "pusher-js"
-import { pusherClient } from "@/utils/pusher"
+import PusherProvider, { PusherContext } from "@/hooks/pusher"
 
 function MyApp({ Component, pageProps }: AppProps) {
   const queryClient = useRef(
@@ -30,11 +28,12 @@ function MyApp({ Component, pageProps }: AppProps) {
     <SessionProvider session={pageProps.session}>
       <QueryClientProvider client={queryClient}>
         <Provider store={store}>
-          <App privatePage={pageProps.protected}>
-            <Component {...pageProps} />
-          </App>
-          <Modal />
-          <Script src="https://js.pusher.com/7.0/pusher.min.js" />
+          <PusherProvider>
+            <App privatePage={pageProps.protected}>
+              <Component {...pageProps} />
+            </App>
+            <Modal />
+          </PusherProvider>
         </Provider>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
@@ -52,15 +51,7 @@ const App = ({
   const { status, data: session } = useSession()
   const router = useRouter()
   const { isModalVisible } = useAppSelector((state) => state.modal)
-
-  useEffect(() => {
-    Pusher.logToConsole = true
-    const channel = pusherClient.subscribe("presence-quickstart")
-    channel.bind("my-event", function (data) {
-      alert(JSON.stringify(data))
-    })
-    channel.bind("pusher:member_added", (member) => console.log(member))
-  }, [])
+  const pusherClient = useContext(PusherContext)
 
   useEffect(() => {
     if (isModalVisible) {
@@ -69,6 +60,10 @@ const App = ({
       document.body.style.overflow = "visible"
     }
   }, [isModalVisible])
+
+  useEffect(() => {
+    return () => pusherClient.disconnect()
+  }, [])
 
   const userQuery = useGetCurrentUser()
 

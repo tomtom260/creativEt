@@ -56,12 +56,13 @@ export async function getRoomWithMembers(id: string) {
 }
 
 export async function toggleSeen({ id }: ToggleSeenUpdate) {
-  return await prisma.message.update({
-    where: {
-      id,
-    },
-    data: {
-      seen: true,
-    },
-  })
+  console.log(id)
+  // return await prisma.message.update({
+  //   where: {
+  //     id,
+  //   },
+  //   data: {
+  //     seen: true,
+  //   },
+  // })
 }

@@ -1,7 +1,7 @@
 import DefaultLayout from "@/layouts/DefaultLayout"
 import Card from "@/modules/chat/components/Card"
 import SearchInput from "modules/chat/components/SearchInput"
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { NextPageContext } from "next"
 import { searchUser } from "modules/user/server"
 import { useGetCurrentUser, useSearchUsers } from "@/hooks/user"
@@ -11,8 +11,8 @@ import Text from "@/components/Typography"
 import { changeDateInJSONToMoment } from "@/utils/changeDateToMoment"
 import { getAllRooms } from "@/modules/chat/server/controller"
 import { getSession } from "next-auth/react"
-import { pusherClient } from "@/utils/pusher"
 import { useQueryClient } from "react-query"
+import { PusherContext } from "@/hooks/pusher"
 
 type ChatPageProps = {
   user: ChatBoxProps
@@ -23,6 +23,7 @@ function Chat({ user, rooms }: ChatPageProps) {
   const [selectedUser, setSelectedUser] = useState<ChatBoxProps>()
   const searchUserQuery = useSearchUsers(search, {})
   const { id } = useGetCurrentUser().data
+  const pusherClient = useContext(PusherContext)
 
   useEffect(() => {
     rooms.map(({ id }) => {

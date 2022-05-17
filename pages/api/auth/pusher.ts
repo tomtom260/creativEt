@@ -1,12 +1,8 @@
 /* eslint-disable no-case-declarations */
 import { NextApiRequest, NextApiResponse } from "next"
 import { getSession } from "next-auth/react"
-import {
-  SuccessAPIResponse,
-  wrongRequestMethodError,
-} from "../../../utils/apiResponses"
-import Pusher from "pusher"
-import pusher from "@/utils/pusher"
+import { wrongRequestMethodError } from "../../../utils/apiResponses"
+import { pusherServer } from "@/utils/pusher"
 
 export default async function userHandler(
   req: NextApiRequest,
@@ -23,7 +19,7 @@ export default async function userHandler(
         user_id: session?.user?.id!,
         user_info: { ...session?.user },
       }
-      const authResponse = pusher.authorizeChannel(
+      const authResponse = pusherServer.authorizeChannel(
         socketId,
         channel,
         presenceData

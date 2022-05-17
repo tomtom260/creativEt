@@ -67,9 +67,12 @@ function ChatBox({ name, image, id, roomId }: ChatBoxProps) {
             messagesQuery.data.map(({ message, id, createdAt, senderId }) => (
               <Message
                 key={message.id}
+                id={message.id}
                 message={message}
                 type={senderId === currentUserid ? "Sent" : "Recieved"}
                 time={createdAt}
+                image={image}
+                seen={message.seen}
               />
             ))}
         </div>

@@ -10,11 +10,9 @@ import {
 
 export async function createNewMessage(newMessage: createNewMessageParams) {
   const message = await createMessage(newMessage)
-  pusherServer.trigger(
-    `presence-room-${message.roomId}`,
-    "message:new",
-    message
-  )
+  pusherServer
+    .trigger(`presence-room-${message.roomId}`, "message:new", message)
+    .catch((err) => console.log(err))
   return message
 }
 
@@ -25,7 +23,7 @@ export async function getMessagesWithRoomId(id: string) {
 
 export async function toggleMessageSeen(id: ToggleSeenUpdate["id"]) {
   const message = await toggleSeen({ id })
-  pusherServer.trigger(`room:${message.roomId}`, "message:seen", message)
+  // pusherServer.trigger(`room:${message.roomId}`, "message:seen", message)
   return message
 }
 
