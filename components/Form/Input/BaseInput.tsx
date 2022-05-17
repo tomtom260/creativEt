@@ -56,7 +56,7 @@ const BaseInputComp = React.forwardRef(function BaseInput({
         </Text>
       )}
       <div
-        className={`flex flex-1 overflow-hidden bg-white items-center  relative  rounded-full focus:border-transparent ${
+        className={`flex flex-1 overflow-hidden bg-white items-center  relative  rounded-lg focus:border-transparent ${
           noBorder
             ? "border-0"
             : "border  hover:ring-1 focus:ring-1  hover:border-transparent  border-gray-normal  !ring-secondary-normal"

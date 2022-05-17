@@ -122,7 +122,7 @@ function Profile() {
                 </Text>
               </div>
               <Button
-                className="w-min"
+                className="w-min my-4"
                 onClick={uploadImage}
                 variant={ButtonVariants.PRIMARY}
               >
