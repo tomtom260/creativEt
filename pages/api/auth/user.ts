@@ -76,7 +76,8 @@ export default async function userHandler(
             </div>
         </div>`,
       })
-      return res.status(200).json({})
+      return res.redirect("/auth/signin")
+
     case "GET":
       const session = await getSession({ req })
       if (!session?.user) {
@@ -97,13 +98,12 @@ export default async function userHandler(
           followers: true,
         },
       })
-      console.log(User)
 
       // if (User) {
       //   User.isFollowedByCurrentUser = true
       // }
       return User
     default:
-      wrongRequestMethodError(res, ["POST"])
+      wrongRequestMethodError(res, ["POST", "GET"])
   }
 }

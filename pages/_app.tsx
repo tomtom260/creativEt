@@ -70,7 +70,6 @@ const App = ({
   if (privatePage) {
     if (status === "unauthenticated") {
       router.push("/auth/signin")
-      return
     }
     if (!userQuery.data) return <div>Loading...</div>
   }

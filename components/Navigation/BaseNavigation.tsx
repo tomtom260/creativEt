@@ -17,7 +17,7 @@ function BaseNavigation({
   userNavigation,
 }: BaseNavigationProps) {
   const navigation = [
-    { name: "Marketplace", href: "#", current: true },
+    { name: "Marketplace", href: "/", current: true },
     { name: "Hire Artists", href: "#", current: false },
   ]
 

@@ -4,7 +4,10 @@ import { Content } from "types/content"
 import { User } from "types/user"
 import { ErrorObject } from "types/error"
 
-export async function getContents(userId: string, creatorId?: string) {
+export async function getContents(userId?: string, creatorId?: string) {
+  if (!userId) {
+    return []
+  }
   const contents = await prisma.content.findMany({
     include: {
       tags: true,
