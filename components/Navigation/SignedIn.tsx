@@ -13,8 +13,8 @@ import { signOut } from "next-auth/react"
 function SignedInNavigation() {
   const { data: user } = useGetCurrentUser()
   const userNavigation = [
-    { name: "Your Profile", href: `/${user?.username}`, onClick: () => {} },
-    { name: "Settings", href: "#", onClick: () => {} },
+    { name: "Profile", href: `/${user?.username}`, onClick: () => {} },
+    { name: "Dashboard", href: "/account/dashboard", onClick: () => {} },
     {
       name: "Sign out",
       href: "#",

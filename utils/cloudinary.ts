@@ -7,7 +7,6 @@ import { Position } from "@cloudinary/url-gen/qualifiers/position"
 import { compass } from "@cloudinary/url-gen/qualifiers/gravity"
 import { image, text } from "@cloudinary/url-gen/qualifiers/source"
 import { TextStyle } from "@cloudinary/url-gen/qualifiers/textStyle"
-import { focusOn } from "@cloudinary/url-gen/qualifiers/gravity"
 import { FocusOn } from "@cloudinary/url-gen/qualifiers/focusOn"
 
 const cloudinary = new Cloudinary({
@@ -46,6 +45,9 @@ export const getResponsiveWatermarkedImage = (
     )
     .toURL()
 
+export const getDownloadUrlFromPublicId = (publicId: string) =>
+  cloudinary.image(publicId).addFlag("attachment").toURL()
+
 export function getOptimisedProfileImage(url: string) {
   if (url.includes("cloudinary")) {
     const publicId = getPublicIdFromUrl(url)
@@ -53,6 +55,11 @@ export function getOptimisedProfileImage(url: string) {
   } else {
     return url
   }
+}
+
+export function getDownloadUrl(url: string) {
+  const publicId = getPublicIdFromUrl(url)
+  return getDownloadUrlFromPublicId(publicId)
 }
 
 export default cloudinary

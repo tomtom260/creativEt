@@ -39,14 +39,15 @@ function BaseNavigation({
               <div className="relative flex justify-between xl:grid xl:grid-cols-12 lg:gap-8">
                 <div className="flex md:absolute md:left-0 md:inset-y-0 lg:static xl:col-span-2">
                   <div className="flex-shrink-0 flex items-center">
-                    <a href="#">
-                      <Image
-                        width={82}
-                        height={50}
-                        src="/assets/images/logo.png"
-                        alt="Workflow"
-                      />
-                    </a>
+                    <Link passHref href={"/"}>
+                      <div className="relative w-14 h-8 md:w-20 md:h-12">
+                        <Image
+                          src="/assets/images/logo.png"
+                          alt="logo"
+                          layout="fill"
+                        />
+                      </div>
+                    </Link>
                   </div>
                 </div>
                 <div className="min-w-0 flex-1 md:px-8 lg:px-0 xl:col-span-6">

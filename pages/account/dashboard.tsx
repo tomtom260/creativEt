@@ -173,7 +173,9 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   const id = session?.user.id
 
   return {
-    props: {},
+    props: {
+      protected: true,
+    },
   }
 }
 

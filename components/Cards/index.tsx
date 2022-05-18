@@ -1,24 +1,21 @@
 import { contentSeen, useGetBest3ContentsQuery } from "@/api/content"
 import { getOptimisedProfileImage } from "@/utils/cloudinary"
 import { useInView } from "react-intersection-observer"
-import Image from "next/image"
 import React, { useEffect, useState } from "react"
 import { Content } from "types/content"
 import EyeSVG from "../../assets/icons/EyeOn"
 import HeartFilledSVG from "../../assets/icons/HeartFilled"
-import PlusSVG from "../../assets/icons/Plus"
 import Button from "../Button"
 import ButtonVariants from "../Button/button.enum"
 import ImageWithSkeleton from "../ImageWithSkeleton"
 import Text from "../Typography"
 import { TypographyVariant } from "../Typography/textVariant.enum"
 import useContentService from "@/service/content"
-import useUserService from "@/service/user"
 import { useFollowUserMutation, useUnfollowUserMutation } from "@/hooks/user"
 import { useQuery } from "react-query"
-import { create } from "domain"
-import { fetchUserWithProfile, transformUserResponse } from "@/api/user"
+import { fetchUserWithProfile } from "@/api/user"
 import Skeleton from "react-loading-skeleton"
+import { useRouter } from "next/router"
 
 export type CardsProps = {
   content: Content
@@ -85,11 +82,19 @@ function Cards({
       ? unfollowMutation.mutate(createdBy.id)
       : followMutation.mutate(createdBy.id)
   }
+  const router = useRouter()
 
   if (!createdByQuery.data) return null
 
   return (
-    <div ref={ref} className="w-[375px]  flex flex-col">
+    <div
+      ref={ref}
+      onClick={() => {
+        console.log("uuuu")
+        router.push(`/${createdBy.username}/${id}`)
+      }}
+      className="w-[375px]  flex flex-col"
+    >
       <div className="group hover:cursor-pointer w-full h-[275px] relative bg-white">
         {loading ? (
           <Skeleton height="100%" />

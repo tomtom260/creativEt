@@ -27,13 +27,13 @@ function Message({ type, message, time, image, seen, id }: MessageProps) {
     triggerOnce: true,
   })
 
-  if (!seen && !isSentMessage) {
-    if (inView) {
-      toggleMessageSeenMutation.mutate({
-        id,
-      })
-    }
-  }
+  // if (!seen && !isSentMessage) {
+  //   if (inView) {
+  //     toggleMessageSeenMutation.mutate({
+  //       id,
+  //     })
+  //   }
+  // }
 
   return (
     <div

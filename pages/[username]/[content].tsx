@@ -11,6 +11,7 @@ import BackSVG from "@/assets/icons/Back"
 import { useRouter } from "next/router"
 import FlagSVG from "@/assets/icons/Flag"
 import {
+  getDownloadUrl,
   getPublicIdFromUrl,
   getResponsiveImage,
   getResponsiveWatermarkedImage,
@@ -44,7 +45,6 @@ import {
   useUnfollowUserMutation,
 } from "@/hooks/user"
 import { EyeIcon } from "@heroicons/react/outline"
-import useUserService from "@/service/user"
 
 function Content({ content }: { content: ContentWithProfile }) {
   const { data: user } = useGetCurrentUser()
@@ -56,6 +56,8 @@ function Content({ content }: { content: ContentWithProfile }) {
     }
   )
 
+  console.log("contentQuery", contentQuery)
+
   const router = useRouter()
   const [isImageLoaded, setIsImageLoaded] = useState(false)
   const [contentImage, setContentImage] = useState(contentQuery.data.image)
@@ -64,8 +66,8 @@ function Content({ content }: { content: ContentWithProfile }) {
   const { onContentLiked, onContentDisliked, onContentBuy } =
     useContentService()
 
-  const onFollow = useFollowUserMutation(content.createdBy.id)
-  const onUnfollow = useUnfollowUserMutation(content.createdBy.id)
+  const onFollow = useFollowUserMutation(contentQuery.data.createdBy.id)
+  const onUnfollow = useUnfollowUserMutation(contentQuery.data.createdBy.id)
 
   const publicId = getPublicIdFromUrl(contentQuery.data.createdBy.image)
   const contentPublicId = getPublicIdFromUrl(contentQuery.data.image)
@@ -80,12 +82,20 @@ function Content({ content }: { content: ContentWithProfile }) {
 
   const onFollowButtonClicked = () => {
     contentQuery.data.isFollowedByCurrentUser
-      ? onFollow.mutate(content.createdBy.id)
-      : onUnfollow.mutate(content.createdBy.id)
+      ? onFollow.mutate(contentQuery.data.createdBy.id)
+      : onUnfollow.mutate(contentQuery.data.createdBy.id)
   }
 
   const onBuyClicked = () => {
-    !contentQuery.data.isBoughtByCurrentUser && onContentBuy(content.id)
+    !contentQuery.data.isBoughtByCurrentUser &&
+      onContentBuy(contentQuery.data.id)
+  }
+
+  const onDownloadClick = () => {
+    const link = document.createElement("a")
+    link.href = getDownloadUrl(contentQuery.data.image)
+    link.download = "image"
+    link.click()
   }
 
   return (
@@ -198,7 +208,11 @@ function Content({ content }: { content: ContentWithProfile }) {
             <Button
               className="absolute w-20 sm:hidden z-10 right-4"
               variant={ButtonVariants.PRIMARY}
-              onClick={onBuyClicked}
+              onClick={
+                !contentQuery.data.isBoughtByCurrentUser
+                  ? onBuyClicked
+                  : onDownloadClick
+              }
             >
               {!contentQuery.data.isBoughtByCurrentUser ? " Buy" : "Download"}
             </Button>
@@ -273,7 +287,7 @@ function Content({ content }: { content: ContentWithProfile }) {
                 onClick={onLikeButtonClicked}
                 className={`text-white
             ${
-              content.isLikedByCurrentUser
+              contentQuery.data.isLikedByCurrentUser
                 ? " bg-secondary-normal "
                 : "bg-gray-dark"
             }
@@ -283,7 +297,7 @@ function Content({ content }: { content: ContentWithProfile }) {
                 <HeartFilledSVG />
               </Button>
               <Text className="mt-2" varaint={TypographyVariant.Body1}>
-                {content.totalLikes}
+                {contentQuery.data.totalLikes}
               </Text>
             </div>
             <div className="flex flex-col items-center justify-center ">
@@ -297,14 +311,18 @@ function Content({ content }: { content: ContentWithProfile }) {
                 <EyeIcon className="h-6 w-6" />
               </Button>
               <Text className="mt-2" varaint={TypographyVariant.Body1}>
-                {content.views}
+                {contentQuery.data.views}
               </Text>
             </div>
           </div>
           <Button
             className="w-40 ml-auto mt-10"
             variant={ButtonVariants.PRIMARY}
-            onClick={onBuyClicked}
+            onClick={
+              !contentQuery.data.isBoughtByCurrentUser
+                ? onBuyClicked
+                : onDownloadClick
+            }
           >
             {!contentQuery.data.isBoughtByCurrentUser ? " Buy" : "Download"}
           </Button>
