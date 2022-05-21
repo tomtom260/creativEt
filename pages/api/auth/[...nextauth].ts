@@ -1,4 +1,4 @@
-import NextAuth from "next-auth"
+import NextAuth, { User } from "next-auth"
 import type { NextApiRequest, NextApiResponse } from "next"
 import GoogleProvider from "next-auth/providers/google"
 import FacebookProvider from "next-auth/providers/facebook"
@@ -7,6 +7,8 @@ import EmailProvider from "next-auth/providers/email"
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { prisma } from "../../../utils/db"
 import bcrypt from "bcryptjs"
+
+type ExtendedUserType = User & { uid?: string }
 
 export default async function auth(req: NextApiRequest, res: NextApiResponse) {
   return await NextAuth(req, res, {
@@ -18,18 +20,12 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
       secret: process.env.SECRET,
     },
     callbacks: {
-      async jwt({ token, account }) {
-        // if (token) {
-        // 1. add token.type = account.userType
-        // }
+      async jwt({ token }) {
         return token
       },
       async session({ session, token }) {
-        if (session) {
-          session.user.id = token.sub
-          // add  user type to your session object
-          // 2. add session.user.type = token.type
-        }
+        if (session) (session.user as ExtendedUserType).id = token.sub!
+
         return session
       },
       async signIn({ profile, user, account }) {

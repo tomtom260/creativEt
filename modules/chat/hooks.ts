@@ -15,7 +15,7 @@ import {
   toggleMessageSeen,
 } from "./api"
 
-type CustomUseMutationOptions = UseMutationOptions<
+export type CustomUseMutationOptions = UseMutationOptions<
   unknown,
   unknown,
   unknown,

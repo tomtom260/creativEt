@@ -1,4 +1,4 @@
-import { Likes, Profile, Tags, Transaction } from "@prisma/client"
+import { Likes, Profile, Tags, Transaction, View } from "@prisma/client"
 import { prisma } from "@/utils/db"
 import { Content } from "types/content"
 import { User } from "types/user"
@@ -14,6 +14,7 @@ export async function getContents(userId?: string, creatorId?: string) {
       createdBy: true,
       likes: true,
       Transaction: true,
+      View: true,
       _count: {
         select: { likes: true },
       },
@@ -24,6 +25,7 @@ export async function getContents(userId?: string, creatorId?: string) {
       },
     },
   })
+
   return await Promise.all(
     contents.map(async (content: Exclude<typeof contents[number], void>) => {
       return await addProfileToContentCreator(content, userId)
@@ -38,6 +40,7 @@ export async function getLikedContents(userId: string) {
       createdBy: true,
       likes: true,
       Transaction: true,
+      View: true,
       _count: {
         select: { likes: true },
       },
@@ -64,6 +67,7 @@ export async function getBoughtContents(userId: string) {
       createdBy: true,
       likes: true,
       Transaction: true,
+      View: true,
       _count: {
         select: { likes: true },
       },
@@ -90,6 +94,7 @@ export async function getContent(id: string, userId: string) {
       createdBy: true,
       likes: true,
       Transaction: true,
+      View: true,
       _count: {
         select: { likes: true },
       },
@@ -149,6 +154,9 @@ async function addProfileToContentCreator(
     username,
     bio,
   }
+  contentWithProfile.views = content.View.reduce((acc, red) => {
+    return acc + red.count
+  }, 0)
   contentWithProfile.totalLikes = content._count.likes
   contentWithProfile.isLikedByCurrentUser = content.likes.some(
     (like) => like.userId === userId
@@ -162,6 +170,7 @@ async function addProfileToContentCreator(
 
   delete contentWithProfile._count
   delete contentWithProfile.likes
+  delete contentWithProfile.View
   delete contentWithProfile.Transaction
   return contentWithProfile
 }
@@ -182,6 +191,7 @@ type ContentWithLikesTagsUser =
       tags: Tags[]
       createdBy: User
       likes: Likes[]
+      View: View[]
       Transaction: Transaction[]
       _count: {
         likes: number

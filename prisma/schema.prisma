@@ -67,6 +67,7 @@ model User {
   soldTo        Transaction[] @relation("seller")
   MessagesSent  Message[]     @relation("sender")
   Room          Room[]
+  View          View[]
 }
 
 model VerificationToken {
@@ -92,10 +93,10 @@ model Content {
   tags        Tags[]
   createdBy   User          @relation(fields: [userId], references: [id])
   userId      String
-  views       Int           @default(0)
   likes       Likes[]
   price       Int           @default(0)
   Transaction Transaction[]
+  View        View[]
 }
 
 model Likes {
@@ -150,4 +151,16 @@ model Room {
   members   User[]
   createdAt DateTime  @default(now())
   Message   Message[]
+}
+
+model View {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  contentId String
+  count     Int      @default(1)
+  userId    String
+  content   Content  @relation(fields: [contentId], references: [id])
+  User      User     @relation(fields: [userId], references: [id])
+
+  @@unique([contentId, userId])
 }

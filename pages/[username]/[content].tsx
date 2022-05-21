@@ -373,7 +373,6 @@ export async function getServerSideProps(ctx: CustomNextPageContext) {
   const session = await getSession(ctx)
   try {
     const content = await getContent(id, session?.user?.id)
-    console.log(content)
     return {
       props: {
         content: changeDateInJSONToMoment(content),

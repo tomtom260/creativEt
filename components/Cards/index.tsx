@@ -1,4 +1,4 @@
-import { contentSeen, useGetBest3ContentsQuery } from "@/api/content"
+import { useGetBest3ContentsQuery } from "@/api/content"
 import { getOptimisedProfileImage } from "@/utils/cloudinary"
 import { useInView } from "react-intersection-observer"
 import React, { useEffect, useState } from "react"
@@ -16,6 +16,7 @@ import { useQuery } from "react-query"
 import { fetchUserWithProfile } from "@/api/user"
 import Skeleton from "react-loading-skeleton"
 import { useRouter } from "next/router"
+import { useCreateViewMutation } from "@/modules/views/hooks"
 
 export type CardsProps = {
   content: Content
@@ -51,11 +52,13 @@ function Cards({
   })
 
   const { onContentLiked, onContentDisliked } = useContentService()
+  const createViewMutation = useCreateViewMutation(id)
 
   const ownerImageURL = getOptimisedProfileImage(createdBy.image)
 
-  const onLikePress = () => {
+  const onLikePress: React.MouseEventHandler<HTMLButtonElement> = (e) => {
     isLikedByCurrentUser ? onContentDisliked(id) : onContentLiked(id)
+    e.stopPropagation()
   }
 
   const { ref, inView } = useInView({
@@ -70,7 +73,7 @@ function Cards({
 
   useEffect(() => {
     if (isCardSeen) {
-      contentSeen(id)
+      createViewMutation.mutate(id)
     }
   }, [isCardSeen])
 
@@ -90,7 +93,6 @@ function Cards({
     <div
       ref={ref}
       onClick={() => {
-        console.log("uuuu")
         router.push(`/${createdBy.username}/${id}`)
       }}
       className="w-[375px]  flex flex-col"

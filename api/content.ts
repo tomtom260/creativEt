@@ -57,12 +57,6 @@ export async function getContentById(contentId: string, userId: string) {
   ).data.data
 }
 
-export async function contentSeen(contentId: string) {
-  return await (
-    await axios.get(`/api/content/seen?contentId=${contentId}`)
-  ).data.data
-}
-
 async function getLikedContents() {
   return await (
     await axios.get(`/api/content/getLikedContent`)
@@ -98,10 +92,6 @@ export async function ContentBoughtQuery() {
   //   }))
   // )
   return contents
-}
-
-export function useContentSeenMutation(props: CustomUseMutationOptions) {
-  return useMutation(contentSeen, props)
 }
 
 export function useGetBest3ContentsQuery(

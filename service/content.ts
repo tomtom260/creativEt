@@ -21,11 +21,6 @@ export default function useContentService() {
       queryClient.invalidateQueries(["content", res.data.data.contentId]),
   })
 
-  const contentSeenMutation = useContentSeenMutation({
-    onSuccess: (res) =>
-      queryClient.invalidateQueries(["content", res.data.data.contentId]),
-  })
-
   const buyContentMutatation = useBuyContentMutation({
     onSuccess: (res) =>
       queryClient.invalidateQueries(["content", res.data.data.contentId]),
