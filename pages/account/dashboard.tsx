@@ -24,6 +24,18 @@ import {
 } from "chart.js"
 import Pie from "@/components/Charts/Pie"
 import PieChart from "@/components/Charts/Pie"
+import {
+  getFollowers,
+  getFollowersLastMonth,
+  getFollowing,
+} from "@/modules/follow/server"
+import {
+  getLikesGroupedDay,
+  getMostLikedContent,
+  getTotalLikes,
+  getTotalLikesLastMonth,
+} from "@/modules/likes/server"
+import { getViewsGroupedDay } from "@/modules/views/server"
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -171,7 +183,15 @@ function Dashboard() {
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   const session = await getSession(ctx)
   const id = session?.user.id
-
+  const followers = await (await getFollowers(id)).length
+  const following = await (await getFollowing(id)).length
+  const likes = await (await getTotalLikes(id)).length
+  const followersLastMonth = await (await getFollowersLastMonth(id)).length
+  const likesLastMonth = await (await getTotalLikesLastMonth(id)).length
+  const group = await getLikesGroupedDay(id)
+  const views = await getViewsGroupedDay(id)
+  const liked = await getMostLikedContent(id)
+  console.log("group", liked)
   return {
     props: {
       protected: true,

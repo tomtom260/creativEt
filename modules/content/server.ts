@@ -16,7 +16,7 @@ export async function getContents(userId?: string, creatorId?: string) {
       Transaction: true,
       View: true,
       _count: {
-        select: { likes: true },
+        select: { likes: true, View: true },
       },
     },
     where: {
@@ -25,6 +25,8 @@ export async function getContents(userId?: string, creatorId?: string) {
       },
     },
   })
+
+  console.log(contents)
 
   return await Promise.all(
     contents.map(async (content: Exclude<typeof contents[number], void>) => {
@@ -42,7 +44,7 @@ export async function getLikedContents(userId: string) {
       Transaction: true,
       View: true,
       _count: {
-        select: { likes: true },
+        select: { likes: true, View: true },
       },
     },
     where: {
@@ -69,7 +71,7 @@ export async function getBoughtContents(userId: string) {
       Transaction: true,
       View: true,
       _count: {
-        select: { likes: true },
+        select: { likes: true, View: true },
       },
     },
     where: {
@@ -96,7 +98,7 @@ export async function getContent(id: string, userId: string) {
       Transaction: true,
       View: true,
       _count: {
-        select: { likes: true },
+        select: { likes: true, View: true },
       },
     },
     where: {
@@ -154,9 +156,7 @@ async function addProfileToContentCreator(
     username,
     bio,
   }
-  contentWithProfile.views = content.View.reduce((acc, red) => {
-    return acc + red.count
-  }, 0)
+  contentWithProfile.views = content._count.View
   contentWithProfile.totalLikes = content._count.likes
   contentWithProfile.isLikedByCurrentUser = content.likes.some(
     (like) => like.userId === userId
@@ -195,5 +195,6 @@ type ContentWithLikesTagsUser =
       Transaction: Transaction[]
       _count: {
         likes: number
+        View: number
       }
     }

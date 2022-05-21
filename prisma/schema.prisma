@@ -161,6 +161,4 @@ model View {
   userId    String
   content   Content  @relation(fields: [contentId], references: [id])
   User      User     @relation(fields: [userId], references: [id])
-
-  @@unique([contentId, userId])
 }
