@@ -54,9 +54,11 @@ export default withTooltip<AreaProps, TooltipData>(
     tooltipData,
     tooltipTop = 0,
     tooltipLeft = 0,
+    stock = appleStock.slice(80),
   }: AreaProps & WithTooltipProvidedProps<TooltipData>) => {
     if (width < 10) return null
 
+    console.log(stock, appleStock.slice(80))
     // bounds
     const innerWidth = width - margin.left - margin.right
     const innerHeight = height - margin.top - margin.bottom
@@ -212,7 +214,7 @@ export default withTooltip<AreaProps, TooltipData>(
               left={tooltipLeft + 12}
               style={tooltipStyles}
             >
-              {`$${getStockValue(tooltipData)}`}
+              {`${getStockValue(tooltipData)}`}
             </TooltipWithBounds>
             <Tooltip
               top={innerHeight + margin.top - 14}
@@ -222,6 +224,7 @@ export default withTooltip<AreaProps, TooltipData>(
                 minWidth: 72,
                 textAlign: "center",
                 transform: "translateX(-50%)",
+                marginTop: 30,
               }}
             >
               {formatDate(getDate(tooltipData))}

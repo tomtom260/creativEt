@@ -35,7 +35,12 @@ import {
   getTotalLikes,
   getTotalLikesLastMonth,
 } from "@/modules/likes/server"
-import { getViewsGroupedDay } from "@/modules/views/server"
+import {
+  getMostViewedContent,
+  getViewsGroupedDay,
+} from "@/modules/views/server"
+import { changeDateInJSONToMoment } from "@/utils/changeDateToMoment"
+import { useRouter } from "next/router"
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -46,22 +51,28 @@ ChartJS.register(
   Legend
 )
 
-const stats = { Followers: 12, Following: 20, Likes: 8 }
-
-function Dashboard() {
+function Dashboard({
+  profileStats,
+  performanceStats,
+  groupedLikes,
+  groupedViews,
+  mostLikedContent,
+  mostViewedContent,
+}: any) {
   const { data: user } = useGetCurrentUser()
   const isSmallScreen = useMediaQuery({ query: "(max-width: 500px)" })
+  const router = useRouter()
 
   return (
     <DefaultLayout>
       <div className="grid grid-cols-4">
         <div className="col-span-4 md:col-span-3">
-          <Stats />
+          <Stats stats={performanceStats} />
           <div className="mt-12 ">
-            <div className="flex md:flex-row items-center flex-col gap-12 overflow-x-auto pb-10">
+            <div className="flex md:flex-row items-center flex-col gap-12 overflow-x-auto pb-16">
               <div className="">
                 <Text className="mb-4" varaint={TypographyVariant.Body1}>
-                  Total Revenue
+                  Revenue per day
                 </Text>
                 <AreaChart width={isSmallScreen ? 300 : 500} height={200} />
               </div>
@@ -89,9 +100,11 @@ function Dashboard() {
               {user?.bio}
             </Text>
             <div className="flex justify-evenly  w-full mt-8">
-              {Object.keys(stats).map((stat) => (
+              {Object.keys(profileStats).map((stat) => (
                 <div key={stat} className="flex flex-col items-center">
-                  <Text varaint={TypographyVariant.H2}>{stats[stat]}</Text>
+                  <Text varaint={TypographyVariant.H2}>
+                    {profileStats[stat]}
+                  </Text>
                   <Text
                     className="text-gray-dark "
                     varaint={TypographyVariant.Body2}
@@ -102,78 +115,69 @@ function Dashboard() {
               ))}
             </div>
             <div className="flex gap-4 my-12">
-              <Button onClick={() => {}} variant={ButtonVariants.PRIMARY}>
+              <Button
+                onClick={() => {
+                  router.push(`/${user?.username}`)
+                }}
+                variant={ButtonVariants.PRIMARY}
+              >
                 View Profile
               </Button>
-              <Button onClick={() => {}} variant={ButtonVariants.OUTLINED}>
+              <Button
+                onClick={() => {
+                  router.push("/account/Profile")
+                }}
+                variant={ButtonVariants.OUTLINED}
+              >
                 Edit Profile
               </Button>
             </div>
           </div>
         </div>
-        <div className="pb-8 col-span-4 flex md:flex-row  flex-col gap-4 md:gap-12 overflow-x-auto my-4 md:my-12 items-center md:items-end ">
+        <div className="pb-16 col-span-4 flex md:flex-row  flex-col gap-4 md:gap-12 overflow-x-auto my-4 md:my-12 items-center md:items-end ">
           <div className="  ">
             <Text className="mb-4" varaint={TypographyVariant.Body1}>
-              Total Likes
+              Likes per day
             </Text>
-            <AreaChart width={isSmallScreen ? 300 : 500} height={200} />
+            <AreaChart
+              stock={groupedLikes}
+              width={isSmallScreen ? 300 : 500}
+              height={200}
+            />
           </div>
-          <div className=" shadow-xl rounded-lg p-4 pt-8">
-            <Text className="" varaint={TypographyVariant.Body1}>
-              Highest Grossing Post
-            </Text>
-            <Text className="mt-2 mb-4" varaint={TypographyVariant.H1}>
-              700$
-            </Text>
-            <div className="relative w-[275px] h-[200px] bg-red-700">
-              {/* <ImageWithSkeleton
-              src={
-                "https://res.cloudinary.com/dlqzrhr6r/image/upload/v1651138184/image-content/inibz1jn5egwscfi9rcp.jpg"
-              }
-              layout="fill"
-            /> */}
-            </div>
-          </div>
-          <div className=" shadow-xl rounded-lg p-4 pt-8">
-            <Text className="" varaint={TypographyVariant.Body1}>
-              Highest Grossing Post
-            </Text>
-            <Text className="mt-2 mb-4" varaint={TypographyVariant.H1}>
-              700$
-            </Text>
-            <div className="relative w-[275px] h-[200px] bg-red-700">
-              {/* <ImageWithSkeleton
-              src={
-                "https://res.cloudinary.com/dlqzrhr6r/image/upload/v1651138184/image-content/inibz1jn5egwscfi9rcp.jpg"
-              }
-              layout="fill"
-            /> */}
-            </div>
-          </div>
+          <Card
+            title="Most Liked Content"
+            name={mostLikedContent.title}
+            image={mostLikedContent.image}
+            label="likes"
+            value={mostLikedContent._count.likes}
+          />
+          <Card
+            title="Most Viewed Content"
+            name={mostViewedContent.title}
+            image={mostViewedContent.image}
+            label="views"
+            value={mostViewedContent._count.View}
+          />
         </div>
-        <div className="pb-8 col-span-4 flex md:flex-row flex-col gap-4  md:gap-14 overflow-x-auto items-center md:items-end  ">
+        <div className="pb-16 col-span-4 flex md:flex-row flex-col gap-4  md:gap-14 overflow-x-auto items-center md:items-end  ">
           <div className="mt-12  ">
             <Text className="mb-4" varaint={TypographyVariant.Body1}>
-              Total Likes
+              Views per day
             </Text>
-            <AreaChart width={isSmallScreen ? 300 : 500} height={200} />
+            <AreaChart
+              stock={groupedViews}
+              width={isSmallScreen ? 300 : 500}
+              height={200}
+            />
           </div>
-          <div className=" shadow-xl rounded-lg p-4 pt-8">
-            <Text className="" varaint={TypographyVariant.Body1}>
-              Highest Grossing Post
-            </Text>
-            <Text className="mt-2 mb-4" varaint={TypographyVariant.H1}>
-              700$
-            </Text>
-            <div className="relative w-[275px] h-[200px] bg-red-700">
-              {/* <ImageWithSkeleton
-              src={
-                "https://res.cloudinary.com/dlqzrhr6r/image/upload/v1651138184/image-content/inibz1jn5egwscfi9rcp.jpg"
-              }
-              layout="fill"
-            /> */}
-            </div>
-          </div>
+          <Card
+            title="Most Viewed Content"
+            name={mostViewedContent.title}
+            image={mostViewedContent.image}
+            label="views"
+            value={mostViewedContent._count.View}
+          />
         </div>
       </div>
     </DefaultLayout>
@@ -183,20 +187,91 @@ function Dashboard() {
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   const session = await getSession(ctx)
   const id = session?.user.id
-  const followers = await (await getFollowers(id)).length
-  const following = await (await getFollowing(id)).length
-  const likes = await (await getTotalLikes(id)).length
-  const followersLastMonth = await (await getFollowersLastMonth(id)).length
-  const likesLastMonth = await (await getTotalLikesLastMonth(id)).length
-  const group = await getLikesGroupedDay(id)
-  const views = await getViewsGroupedDay(id)
-  const liked = await getMostLikedContent(id)
-  console.log("group", liked)
-  return {
-    props: {
-      protected: true,
+
+  const [
+    followers,
+    following,
+    likes,
+    followersLastMonth,
+    likesLastMonth,
+    groupedLikes,
+    groupedViews,
+    mostLikedContent,
+    mostViewedContent,
+  ] = await Promise.all([
+    await (await getFollowers(id)).length,
+    await (await getFollowing(id)).length,
+    await (await getTotalLikes(id)).length,
+    await (await getFollowersLastMonth(id)).length,
+    await (await getTotalLikesLastMonth(id)).length,
+    await getLikesGroupedDay(id),
+    await getViewsGroupedDay(id),
+    await getMostLikedContent(id),
+    await getMostViewedContent(id),
+  ])
+
+  const profileStats = { followers, following, likes }
+  const performanceStats = [
+    {
+      name: "Total Revenue",
+      stat: "71,897",
+      previousStat: "70,946",
     },
+    {
+      name: "Total Followers",
+      stat: followers,
+      previousStat: followersLastMonth,
+    },
+    {
+      name: "Total Likes",
+      stat: likes,
+      previousStat: likesLastMonth,
+    },
+  ]
+
+  return {
+    props: changeDateInJSONToMoment({
+      protected: true,
+      profileStats,
+      performanceStats,
+      groupedLikes,
+      groupedViews,
+      mostLikedContent,
+      mostViewedContent,
+    }),
   }
 }
 
 export default Dashboard
+
+type CardProps = {
+  title: string
+  image: string
+  name: string
+  label: string
+  value: number
+}
+
+function Card({ title, image, name, label, value }: CardProps) {
+  return (
+    <div className=" shadow-xl rounded-lg p-4 pt-8">
+      <Text className="" varaint={TypographyVariant.Body1}>
+        {title}
+      </Text>
+      <div className="flex justify-between">
+        <Text varaint={TypographyVariant.H1}>{name}</Text>
+        <div className="flex gap-2 mb-4 items-end">
+          <Text className=" " varaint={TypographyVariant.H1}>
+            {value.toString()}
+          </Text>
+          <Text className="" varaint={TypographyVariant.Body1}>
+            {label}
+          </Text>
+        </div>
+      </div>
+      <div className="relative w-[275px] h-[200px]">
+        <ImageWithSkeleton src={image} layout="fill" />
+      </div>
+    </div>
+  )
+}

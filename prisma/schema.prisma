@@ -159,6 +159,6 @@ model View {
   contentId String
   count     Int      @default(1)
   userId    String
-  content   Content  @relation(fields: [contentId], references: [id])
+  content   Content  @relation(fields: [contentId], references: [id], onDelete: Cascade)
   User      User     @relation(fields: [userId], references: [id])
 }
