@@ -4,14 +4,22 @@ import { Content } from "types/content"
 import { User } from "types/user"
 import { ErrorObject } from "types/error"
 
-export async function getContents(userId?: string, creatorId?: string) {
+export async function getContents(
+  userId?: string,
+  creatorId?: string,
+  tag?: string
+) {
   if (!userId) {
     return []
   }
   const contents = await prisma.content.findMany({
     include: {
       tags: true,
-      createdBy: true,
+      createdBy: {
+        include: {
+          followers: true,
+        },
+      },
       likes: true,
       Transaction: true,
       View: true,
@@ -22,11 +30,19 @@ export async function getContents(userId?: string, creatorId?: string) {
     where: {
       createdBy: {
         id: creatorId,
+        followers: {
+          some: {
+            id: userId,
+          },
+        },
+      },
+      tags: {
+        some: {
+          name: tag,
+        },
       },
     },
   })
-
-  console.log(contents)
 
   return await Promise.all(
     contents.map(async (content: Exclude<typeof contents[number], void>) => {
@@ -133,6 +149,24 @@ async function addUserFollowsContentCreator(
       },
     },
   }))
+}
+
+export async function getTags(take: number) {
+  return (
+    await prisma.tags.findMany({
+      select: {
+        name: true,
+        _count: {
+          select: {
+            contents: true,
+          },
+        },
+      },
+    })
+  )
+    .sort((a, b) => b._count.contents - a._count.contents)
+    .slice(0, take)
+    .map((tag) => tag.name)
 }
 
 async function addProfileToContentCreator(
