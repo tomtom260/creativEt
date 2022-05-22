@@ -24,6 +24,11 @@ module.exports = {
           "very-light": "#DEACF5",
         },
         gray: { light: "#e7e7e9", normal: "#9e9ea7", dark: "#8b8b8b" },
+        cPurple: {
+          light: '#F6F5F9',
+          DEFAULT: '#AA9ECD',
+          dark: '#5738B3'
+        }
       },
 
       maxWidth: ({ theme }) => ({

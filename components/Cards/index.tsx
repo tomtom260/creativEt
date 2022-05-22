@@ -96,6 +96,7 @@ function Cards({
         router.push(`/${createdBy.username}/${id}`)
       }}
       className="w-[375px]  flex flex-col"
+      className="w-[250px]  flex flex-col"
     >
       <div className="group hover:cursor-pointer w-full h-[275px] relative bg-white">
         {loading ? (
