@@ -7,6 +7,7 @@ import Select from "@/components/Form/Select"
 import Text from "@/components/Typography"
 import { TypographyVariant } from "@/components/Typography/textVariant.enum"
 import DefaultLayout from "@/layouts/DefaultLayout"
+import { getTags } from "@/modules/content/server"
 import useContentService from "@/service/content"
 import { images } from "@/utils/images"
 import Image from "next/image"
@@ -15,15 +16,14 @@ import React, { useState } from "react"
 import Dropzone from "react-dropzone"
 
 const MAX_IMAGE_SIZE = 1024 * 1024 * 10
-const OPTIONS = ["Nature", "Art", "Photography", "Night"]
 
-function Upload() {
+function Upload({ tags }) {
   const [imageToBeUploaded, setImageToBeUploaded] = useState<File | null>(null)
   const [imageError, setImageError] = useState<string[]>([])
   const [imagePreview, setImagePreview] = useState<string>()
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
-  const [tags, setTags] = useState<string[]>([])
+  const [selectedTags, setSelectedTags] = useState<string[]>([])
   const { uploadContent } = useContentService()
 
   const errorMessage = (code: string) => {
@@ -54,7 +54,7 @@ function Upload() {
   const onUpload = () => {
     uploadContent({
       imageToBeUploaded: imageToBeUploaded!,
-      tags,
+      tags: selectedTags,
       title,
       description,
     }).then(() => {
@@ -163,9 +163,9 @@ function Upload() {
       {imagePreview ? (
         <>
           <Select
-            selectedOptions={tags}
-            setSelectedOptions={setTags}
-            options={OPTIONS}
+            selectedOptions={selectedTags}
+            setSelectedOptions={setSelectedTags}
+            options={tags}
           />
           <Input
             variant={InputType.TEXTAREA}
@@ -189,10 +189,13 @@ function Upload() {
 }
 
 export async function getStaticProps() {
+  const tags = await getTags()
   return {
     props: {
       protected: true,
+      tags,
     },
+    revalidate: 60 * 60 * 24,
   }
 }
 

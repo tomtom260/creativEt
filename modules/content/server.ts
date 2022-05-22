@@ -30,11 +30,11 @@ export async function getContents(
     where: {
       createdBy: {
         id: creatorId,
-        followers: {
-          some: {
-            id: userId,
-          },
-        },
+        // followers: {
+        //   some: {
+        //     id: userId,
+        //   },
+        // },
       },
       tags: {
         some: {
@@ -151,7 +151,7 @@ async function addUserFollowsContentCreator(
   }))
 }
 
-export async function getTags(take: number) {
+export async function getTags(take?: number) {
   return (
     await prisma.tags.findMany({
       select: {

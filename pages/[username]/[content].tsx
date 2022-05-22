@@ -101,7 +101,7 @@ function Content({ content }: { content: ContentWithProfile }) {
   return (
     <DefaultLayout>
       <div className=" w-full h-[calc(100vh-100px)] sm:h-[70vh] grow grid grid-col-1 sm:grid-cols-2 ">
-        <div className="flex-1 flex-shrink-0  relative ">
+        <div className="flex-1 flex-shrink-0  relative  ">
           <div className={`${!isImageLoaded ? "hidden" : "block"} `}>
             <Button
               className="absolute z-10  sm:top-6 left-2 text-gray-dark bg-gray-light"
@@ -241,7 +241,6 @@ function Content({ content }: { content: ContentWithProfile }) {
             }}
             src={contentImage}
             layout="fill"
-            objectFit="contain"
           />
         </div>
         <div className="hidden sm:block flex-1 py-6 px-12 ">
