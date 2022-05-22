@@ -1,4 +1,4 @@
-import { getLikedContents } from "modules/content/server"
+import { getContents, getLikedContents } from "modules/content/server"
 import { NextApiRequest, NextApiResponse } from "next"
 import { getSession } from "next-auth/react"
 import {
@@ -12,11 +12,13 @@ export default async function userHandler(
 ) {
   const session = await getSession({ req })
   const userId = session?.user?.id!
-
-  let contents = []
   switch (req.method) {
     case "GET":
-      contents = await getLikedContents(userId)
+      const contents = await getContents(
+        userId,
+        req.query.creatorId,
+        req.query.tag
+      )
       return SuccessAPIResponse(res, contents)
     default:
       wrongRequestMethodError(res, ["GET"])

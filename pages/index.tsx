@@ -4,8 +4,7 @@ import { changeDateInJSONToMoment } from "@/utils/changeDateToMoment"
 import { Content } from "types/content"
 import { getContents, getTags } from "modules/content/server"
 import { getSession } from "next-auth/react"
-import { useQueries, useQuery } from "react-query"
-import { getContentById } from "@/api/content"
+import { useQuery } from "react-query"
 import { transformUserResponse } from "api/user"
 import Button from "@/components/Button"
 import ButtonVariants from "@/components/Button/button.enum"
@@ -15,6 +14,7 @@ import { TypographyVariant } from "@/components/Typography/textVariant.enum"
 import ListBox from "@/components/Form/ListBox"
 import { useState } from "react"
 import classNames from "@/utils/classNames"
+import { useGetContentsQuery } from "@/modules/content/hooks"
 
 type HomeProps = {
   contents: Content[]
@@ -24,22 +24,18 @@ type HomeProps = {
 const filterOptions = ["All", "Following", "Popular", "New"]
 
 export default function Home({ contents, tags }: HomeProps) {
-  const { data: user } = useQuery(["currentUser"], {
-    select: transformUserResponse,
-  })
-
-  const contentsQuery = useQueries(
-    contents.map((content) => ({
-      queryFn: () => getContentById(content.id, user.id),
-      queryKey: ["content", content.id],
-      initialData: content,
-    }))
-  )
+  // const { data: user } = useQuery(["currentUser"], {
+  //   select: transformUserResponse,
+  // })
 
   const [selectedFilterOption, setSelectedFilterOption] = useState(
     filterOptions[0]
   )
   const [selectedTag, setSelectedTag] = useState(tags[0])
+  const getContentsQuery = useGetContentsQuery(
+    contents,
+    selectedTag !== "All" ? selectedTag : undefined
+  )
 
   return (
     <>
@@ -72,9 +68,13 @@ export default function Home({ contents, tags }: HomeProps) {
             Filters
           </Button>
         </div>
-        <div className="grid mb-40 gap-8  mx-auto  grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4  flex-wrap">
-          {contentsQuery.map((content) => (
-            <Cards key={content.data.id} content={content.data} />
+        <div className="grid mb-40  mt-8 md:mt-14 gap-8  mx-auto  grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4  flex-wrap">
+          {getContentsQuery.data?.map((content) => (
+            <Cards
+              loading={getContentsQuery.isFetching}
+              key={content.id}
+              content={content}
+            />
           ))}
         </div>
       </DefaultLayout>

@@ -99,7 +99,7 @@ function Cards({
       className="max-w-[400px]  overflow-hidden  w-full  flex flex-col"
     >
       <div className="group hover:cursor-pointer w-full h-[380px] sm:h-[250px] lg:h-[220px] relative bg-white">
-        <div className="z-50 absolute right-4 top-4 px-2 bg-secondary-normal  opacity-70  ">
+        <div className="z-10 absolute right-4 top-4 px-2 bg-secondary-normal  opacity-70  ">
           <Text
             className="font-extrabold  tracking-wider text-white "
             varaint={TypographyVariant.Body1}
