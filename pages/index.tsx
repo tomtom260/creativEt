@@ -28,7 +28,7 @@ export default function Home({ contents }: HomeProps) {
   return (
     <>
       <DefaultLayout>
-        <div className="flex mb-40 gap-8  grid-cols-1  flex-wrap">
+        <div className="grid mb-40 gap-8  mx-auto  grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4  flex-wrap">
           {contentsQuery.map((content) => (
             <Cards key={content.data.id} content={content.data} />
           ))}

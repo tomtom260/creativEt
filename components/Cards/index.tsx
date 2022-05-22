@@ -63,6 +63,7 @@ function Cards({
 
   const { ref, inView } = useInView({
     threshold: 1,
+    triggerOnce: true,
   })
 
   useEffect(() => {
@@ -95,9 +96,17 @@ function Cards({
       onClick={() => {
         router.push(`/${createdBy.username}/${id}`)
       }}
-      className="w-[375px]  flex flex-col"
+      className="max-w-[400px]  overflow-hidden  w-full  flex flex-col"
     >
-      <div className="group hover:cursor-pointer w-full h-[275px] relative bg-white">
+      <div className="group hover:cursor-pointer w-full h-[380px] sm:h-[250px] lg:h-[220px] relative bg-white">
+        <div className="z-50 absolute right-4 top-4 px-2 bg-secondary-normal  opacity-70  ">
+          <Text
+            className="font-extrabold  tracking-wider text-white "
+            varaint={TypographyVariant.Body1}
+          >
+            BOOSTED
+          </Text>
+        </div>
         {loading ? (
           <Skeleton height="100%" />
         ) : (
@@ -134,13 +143,13 @@ function Cards({
       {loading ? (
         <Skeleton className="mt-4 h-6" />
       ) : (
-        <div className="flex justify-between items-center mt-2 px-2">
+        <div className="flex justify-between items-center mt-2 pl-1 pr-2">
           <div className="flex flex-col relative group">
             <div
               onMouseEnter={() => {
                 setGetBest3ContentsQueryEnabled(true)
               }}
-              className="flex flex-row items-center focus:cursor-pointer z-10"
+              className="flex  items-center focus:cursor-pointer z-10"
             >
               <div className="relative w-[25px] h-[25px]">
                 <ImageWithSkeleton
@@ -150,7 +159,7 @@ function Cards({
                 />
               </div>
               <Text
-                className="mb-1 ml-3 font-medium cursor-pointer"
+                className="ml-3 whitespace-nowrap !w-[15ch] flex-shrink overflow-hidden  text-ellipsis font-medium cursor-pointer"
                 varaint={TypographyVariant.Body1}
               >
                 {createdBy.name}
@@ -225,7 +234,7 @@ function Cards({
             <div className="flex items-center mr-1">
               <Button
                 title="Like this content?"
-                className={`mx-1 ${
+                className={`mx-1 !h-5 !w-5 ${
                   isLikedByCurrentUser
                     ? "text-secondary-light"
                     : "text-gray-normal"
@@ -241,8 +250,12 @@ function Cards({
               </Text>
             </div>
             <div className="flex items-center">
-              <div className="mx-1 text-gray-normal">
-                <Button onClick={() => {}} variant={ButtonVariants.ICON}>
+              <div className="mx-1  text-gray-normal">
+                <Button
+                  className="!h-5 !w-5"
+                  onClick={() => {}}
+                  variant={ButtonVariants.ICON}
+                >
                   <EyeSVG />
                 </Button>
               </div>
