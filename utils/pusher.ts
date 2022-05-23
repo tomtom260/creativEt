@@ -1,5 +1,4 @@
 import Pusher from "pusher"
-import PusherJs from "pusher-js"
 
 console.log("pusher run")
 

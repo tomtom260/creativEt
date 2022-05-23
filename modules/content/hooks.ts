@@ -2,7 +2,7 @@ import { getContentById } from "@/api/content"
 import axios from "axios"
 import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react"
-import { useQueries, useQuery } from "react-query"
+import { useMutation, useQueries, useQuery, useQueryClient } from "react-query"
 import { Content } from "types/content"
 
 export function useGetContentsQuery(
@@ -42,7 +42,6 @@ export function useGetContentsQuery(
 }
 
 async function getContents(tag?: string, filter?: string) {
-  console.log("filter", filter)
   return await (
     await axios.get(
       `/api/content/getContents?${tag ? `tag=${tag}` : ""}${
@@ -50,4 +49,35 @@ async function getContents(tag?: string, filter?: string) {
       }${filter ? `filter=${filter}` : ""}`
     )
   ).data.data
+}
+
+async function deleteContent(id: string) {
+  console.log("delete", id)
+  return await (
+    await axios.delete(`/api/content/deleteContent?id=${id}`)
+  ).data.data
+}
+
+async function boostContent(id: string) {
+  return await (
+    await axios.get(`/api/content/boostContent?id=${id}`)
+  ).data.data
+}
+
+export function useDeleteContentMutation(id: string) {
+  const queryClient = useQueryClient()
+  return useMutation(() => deleteContent(id), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["myContents"])
+    },
+  })
+}
+
+export function useBoostContentMutation(id: string) {
+  const queryClient = useQueryClient()
+  return useMutation(() => boostContent(id), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["myContents", "boost"])
+    },
+  })
 }

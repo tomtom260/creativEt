@@ -12,6 +12,36 @@ enum FILTERS {
   FOLLOWING = "Following",
 }
 
+export async function boostContent(id: string) {
+  const boost = await prisma.boost.findUnique({
+    where: {
+      contentId: id,
+    },
+  })
+  if (!boost)
+    return await prisma.boost.create({
+      data: {
+        contentId: id,
+      },
+    })
+
+  return await prisma.boost.update({
+    data: {
+      boostedAt: new Date(),
+    },
+    where: {
+      contentId: id,
+    },
+  })
+}
+export async function deleteContent(id: string) {
+  return await prisma.content.delete({
+    where: {
+      id,
+    },
+  })
+}
+
 export async function getContents(
   userId?: string,
   creatorId?: string,
@@ -33,6 +63,7 @@ export async function getContents(
       likes: true,
       Transaction: true,
       View: true,
+      Boost: true,
       _count: {
         select: { likes: true, View: true },
       },
@@ -40,7 +71,7 @@ export async function getContents(
     where: {
       createdBy: {
         id: creatorId,
-        followers:
+        following:
           filter === FILTERS.FOLLOWING
             ? {
                 some: {
@@ -84,6 +115,7 @@ export async function getLikedContents(userId: string) {
       likes: true,
       Transaction: true,
       View: true,
+      Boost: true,
       _count: {
         select: { likes: true, View: true },
       },
@@ -111,6 +143,7 @@ export async function getBoughtContents(userId: string) {
       likes: true,
       Transaction: true,
       View: true,
+      Boost: true,
       _count: {
         select: { likes: true, View: true },
       },
@@ -138,6 +171,7 @@ export async function getContent(id: string, userId: string) {
       likes: true,
       Transaction: true,
       View: true,
+      Boost: true,
       _count: {
         select: { likes: true, View: true },
       },
@@ -223,7 +257,9 @@ async function addProfileToContentCreator(
   contentWithProfile.isBoughtByCurrentUser = content.Transaction.some(
     (trans) => trans.buyerId === userId
   )
-
+  contentWithProfile.isBoosted = moment(
+    contentWithProfile?.Boost?.boostedAt || 0
+  ).isAfter(moment().diff(7, "days"))
   contentWithProfile.createdBy.isFollowedByCurrentUser =
     await addUserFollowsContentCreator(userId, contentWithProfile.createdBy.id)
 
@@ -231,6 +267,7 @@ async function addProfileToContentCreator(
   delete contentWithProfile.likes
   delete contentWithProfile.View
   delete contentWithProfile.Transaction
+  delete contentWithProfile.Boost
   return contentWithProfile
 }
 

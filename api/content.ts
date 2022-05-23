@@ -1,3 +1,4 @@
+import { useGetCurrentUser } from "@/hooks/user"
 import axios from "axios"
 import {
   useMutation,
@@ -82,16 +83,17 @@ export async function getBoughtContents() {
 }
 
 export async function ContentBoughtQuery() {
-  const contents = await getBoughtContents()
-  // return useQueries(
-  //   contents.map((content) => ({
-  //     queryFn: () => getContentById(content.id, userId),
+  // const { id } = useGetCurrentUser().data!
+  // const contentsQuery = useQuery(["myContents", "like"], getBoughtContents)
+  // useQueries(
+  //   contentsQuery.data.map((content) => ({
+  //     queryFn: () => getContentById(content.id, id),
   //     queryKey: ["content", content.id],
   //     initialData: content,
-  //     ...options,
   //   }))
   // )
-  return contents
+  // return contentsQuery.data
+  return await getBoughtContents()
 }
 
 export function useGetBest3ContentsQuery(

@@ -43,7 +43,7 @@ export default function useContentService() {
     formData.append("file", imageToBeUploaded)
     formData.append("upload_preset", "image-content")
     const cloudinaryResponse = await uploadImageMutation.mutateAsync(formData)
-    createContentMutation.mutate({
+    return await createContentMutation.mutateAsync({
       title,
       description,
       tags,

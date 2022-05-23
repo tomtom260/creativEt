@@ -25,18 +25,18 @@ function MyApp({ Component, pageProps }: AppProps) {
   ).current
 
   return (
-    <SessionProvider session={pageProps.session}>
-      <QueryClientProvider client={queryClient}>
-        <Provider store={store}>
-          <PusherProvider>
+    <PusherProvider>
+      <SessionProvider session={pageProps.session}>
+        <QueryClientProvider client={queryClient}>
+          <Provider store={store}>
             <App privatePage={pageProps.protected}>
               <Component {...pageProps} />
             </App>
-          </PusherProvider>
-        </Provider>
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
-    </SessionProvider>
+          </Provider>
+          <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
+      </SessionProvider>
+    </PusherProvider>
   )
 }
 

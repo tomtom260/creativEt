@@ -59,8 +59,8 @@ function Upload({ tags }) {
       title,
       description,
     }).then(() => {
+      queryClient.removeQueries(["contents"])
       router.push("/")
-      queryClient.refetchQueries(["contents"])
     })
   }
   const router = useRouter()

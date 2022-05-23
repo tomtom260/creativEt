@@ -7,11 +7,12 @@ import { useAppDispatch, useAppSelector } from "@/hooks/redux"
 import useContentService from "@/service/content"
 import React from "react"
 import { hideModal, ModalType } from "store/modalSlice"
+import { useBoostContentMutation } from "../hooks"
 
 function BoostModal() {
   const { modalPayload, modalType } = useAppSelector((state) => state.modal)
   const dispatch = useAppDispatch()
-  const { onContentBuy } = useContentService()
+  const boostContentMutation = useBoostContentMutation(modalPayload?.id)
   const isModalVisible = modalType === ModalType.BOOST_MODAL
 
   return (
@@ -21,8 +22,8 @@ function BoostModal() {
         <Text className="mt-4 mb-6" varaint={TypographyVariant.Body1}>
           Are you sure you want to
           <span className="font-bold uppercase"> boost </span> this post for
-          <span className="font-bold"> 50 ETB</span>. It&apos;ll last for a week,
-          and it&apos;s not refundable.
+          <span className="font-bold"> 50 ETB</span>. It&apos;ll last for a
+          week, and it&apos;s not refundable.
         </Text>
         <div className="flex gap-20">
           <Button
@@ -37,6 +38,7 @@ function BoostModal() {
           <Button
             onClick={() => {
               //   onContentBuy(modalPayload.id)
+              boostContentMutation.mutate()
               dispatch(hideModal())
             }}
             variant={ButtonVariants.PRIMARY}

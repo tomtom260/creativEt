@@ -1,4 +1,4 @@
-import { createContext, useRef } from "react"
+import { createContext, useEffect, useRef } from "react"
 import PusherJs from "pusher-js"
 
 export const PusherContext = createContext<PusherJs>({} as PusherJs)
@@ -15,6 +15,10 @@ function PusherProvider({ children }) {
       },
     })
   ).current
+
+  useEffect(() => {
+    return pusherClient.disconnect
+  }, [])
 
   return (
     <PusherContext.Provider value={pusherClient}>

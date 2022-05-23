@@ -7,11 +7,12 @@ import { useAppDispatch, useAppSelector } from "@/hooks/redux"
 import useContentService from "@/service/content"
 import React from "react"
 import { hideModal, ModalType } from "store/modalSlice"
+import { useDeleteContentMutation } from "../hooks"
 
 function DeleteModal() {
   const { modalPayload, modalType } = useAppSelector((state) => state.modal)
   const dispatch = useAppDispatch()
-  const { onContentBuy } = useContentService()
+  const deleteContentMutation = useDeleteContentMutation(modalPayload?.id)
   const isModalVisible = modalType === ModalType.DELETE_MODAL
 
   return (
@@ -38,6 +39,7 @@ function DeleteModal() {
           <Button
             onClick={() => {
               //   onContentBuy(modalPayload.id)
+              deleteContentMutation.mutate()
               dispatch(hideModal())
             }}
             className="bg-red-600"

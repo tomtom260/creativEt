@@ -97,15 +97,16 @@ model Content {
   price       Int           @default(0)
   Transaction Transaction[]
   View        View[]
+  Boost       Boost?
 }
 
 model Likes {
   id        String   @id @default(cuid())
   likedAt   DateTime @default(now())
   contentId String
-  content   Content  @relation(fields: [contentId], references: [id])
+  content   Content  @relation(fields: [contentId], references: [id], onDelete: Cascade)
   userId    String
-  User      User     @relation(fields: [userId], references: [id])
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, contentId])
 }
@@ -129,7 +130,7 @@ model Transaction {
   seller    User     @relation("seller", fields: [sellerId], references: [id])
   soldAt    DateTime @default(now())
   contentId String
-  content   Content  @relation(fields: [contentId], references: [id])
+  content   Content  @relation(fields: [contentId], references: [id], onDelete: Cascade)
   amount    Int
 
   @@unique([contentId, buyerId])
@@ -157,8 +158,14 @@ model View {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   contentId String
-  count     Int      @default(1)
   userId    String
   content   Content  @relation(fields: [contentId], references: [id], onDelete: Cascade)
   User      User     @relation(fields: [userId], references: [id])
+}
+
+model Boost {
+  id        String   @id @default(cuid())
+  boostedAt DateTime @default(now())
+  contentId String   @unique
+  content   Content  @relation(fields: [contentId], references: [id], onDelete: Cascade)
 }

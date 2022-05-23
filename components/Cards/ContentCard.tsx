@@ -84,14 +84,16 @@ function ContentCard({
       content={content}
       hoverComponent={
         <>
-          <div className="z-10 absolute right-4 top-4 px-2 bg-secondary-normal  opacity-70  ">
-            <Text
-              className="font-extrabold  tracking-wider text-white "
-              varaint={TypographyVariant.Body1}
-            >
-              BOOSTED
-            </Text>
-          </div>
+          {content.isBoosted && (
+            <div className="z-10 absolute right-4 top-4 px-2 bg-secondary-normal  opacity-70  ">
+              <Text
+                className="font-extrabold  tracking-wider text-white "
+                varaint={TypographyVariant.Body1}
+              >
+                BOOSTED
+              </Text>
+            </div>
+          )}
           <div className="absolute flex flex-col-reverse bottom-0 w-full h-20 z-1 group-hover:bg-gradient-to-t  from-gray-dark">
             <div className="hidden group-hover:flex flex-row m-4 justify-between items-center">
               <Text
