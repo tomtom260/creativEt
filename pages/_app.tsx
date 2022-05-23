@@ -32,7 +32,6 @@ function MyApp({ Component, pageProps }: AppProps) {
             <App privatePage={pageProps.protected}>
               <Component {...pageProps} />
             </App>
-            <Modal />
           </PusherProvider>
         </Provider>
         <ReactQueryDevtools initialIsOpen={false} />

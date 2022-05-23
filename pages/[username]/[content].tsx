@@ -45,6 +45,9 @@ import {
   useUnfollowUserMutation,
 } from "@/hooks/user"
 import { EyeIcon } from "@heroicons/react/outline"
+import BuyModal from "@/modules/content/components/BuyModal"
+import { useAppDispatch } from "@/hooks/redux"
+import { ModalType, showModal } from "store/modalSlice"
 
 function Content({ content }: { content: ContentWithProfile }) {
   const { data: user } = useGetCurrentUser()
@@ -56,15 +59,13 @@ function Content({ content }: { content: ContentWithProfile }) {
     }
   )
 
-  console.log("contentQuery", contentQuery)
-
+  const dispatch = useAppDispatch()
   const router = useRouter()
   const [isImageLoaded, setIsImageLoaded] = useState(false)
   const [contentImage, setContentImage] = useState(contentQuery.data.image)
   const [isShareMode, setIsShareMode] = useState(false)
 
-  const { onContentLiked, onContentDisliked, onContentBuy } =
-    useContentService()
+  const { onContentLiked, onContentDisliked } = useContentService()
 
   const onFollow = useFollowUserMutation(contentQuery.data.createdBy.id)
   const onUnfollow = useUnfollowUserMutation(contentQuery.data.createdBy.id)
@@ -88,7 +89,15 @@ function Content({ content }: { content: ContentWithProfile }) {
 
   const onBuyClicked = () => {
     !contentQuery.data.isBoughtByCurrentUser &&
-      onContentBuy(contentQuery.data.id)
+      dispatch(
+        showModal({
+          modalType: ModalType.BUY_MODAL,
+          payload: {
+            id: contentQuery.data.id,
+            price: contentQuery.data.price,
+          },
+        })
+      )
   }
 
   const onDownloadClick = () => {
@@ -99,114 +108,238 @@ function Content({ content }: { content: ContentWithProfile }) {
   }
 
   return (
-    <DefaultLayout>
-      <div className=" w-full h-[calc(100vh-100px)] sm:h-[70vh] grow grid grid-col-1 sm:grid-cols-2 ">
-        <div className="flex-1 flex-shrink-0  relative  ">
-          <div className={`${!isImageLoaded ? "hidden" : "block"} `}>
-            <Button
-              className="absolute z-10  sm:top-6 left-2 text-gray-dark bg-gray-light"
-              onClick={router.back}
-              variant={ButtonVariants.ICON}
-            >
-              <BackSVG />
-            </Button>
-            <div className="absolute z-10 bottom-0 right-0 flex sm:hidden flex-col gap-3">
-              {!isShareMode ? (
-                <>
-                  <Button
-                    onClick={onFollowButtonClicked}
-                    className=" relative rounded-full   right-0  text-gray-dark bg-gray-light"
-                    variant={ButtonVariants.ICON}
-                  >
-                    <ImageWithSkeleton
-                      layout="fill"
-                      className="rounded-full"
-                      src={userImage}
-                    />
-                    <div className="absolute bottom-0 translate-y-1/2 left-1/2 -translate-x-1/2 bg-secondary-normal text-white rounded-full">
-                      <PlusSVG className="!h-3 !w-3" />
-                    </div>
-                  </Button>
-                  <Button
-                    onClick={onLikeButtonClicked}
-                    className={`right-5 ${
-                      contentQuery.data.isLikedByCurrentUser
-                        ? "bg-secondary-normal !text-white "
-                        : "bg-gray-light"
-                    }  text-gray-dark bg-gray-light`}
-                    variant={ButtonVariants.ICON}
-                  >
-                    <HeartFilledSVG />
-                  </Button>
-                  <Button
-                    className="   right-5  text-gray-dark bg-gray-light"
-                    variant={ButtonVariants.ICON}
-                  >
-                    <WarnSVG />
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <CopyToClipboard text={shareUrl}>
+    <>
+      <DefaultLayout>
+        <div className=" w-full h-[calc(100vh-100px)] sm:h-[70vh] grow grid grid-col-1 sm:grid-cols-2 ">
+          <div className="flex-1 flex-shrink-0  relative  ">
+            <div className={`${!isImageLoaded ? "hidden" : "block"} `}>
+              <Button
+                className="absolute z-10  sm:top-6 left-2 text-gray-dark bg-gray-light"
+                onClick={router.back}
+                variant={ButtonVariants.ICON}
+              >
+                <BackSVG />
+              </Button>
+              <div className="absolute z-10 bottom-0 right-0 flex sm:hidden flex-col gap-3">
+                {!isShareMode ? (
+                  <>
+                    <Button
+                      onClick={onFollowButtonClicked}
+                      className=" relative rounded-full   right-0  text-gray-dark bg-gray-light"
+                      variant={ButtonVariants.ICON}
+                    >
+                      <ImageWithSkeleton
+                        layout="fill"
+                        className="rounded-full"
+                        src={userImage}
+                      />
+                      <div className="absolute bottom-0 translate-y-1/2 left-1/2 -translate-x-1/2 bg-secondary-normal text-white rounded-full">
+                        <PlusSVG className="!h-3 !w-3" />
+                      </div>
+                    </Button>
+                    <Button
+                      onClick={onLikeButtonClicked}
+                      className={`right-5 ${
+                        contentQuery.data.isLikedByCurrentUser
+                          ? "bg-secondary-normal !text-white "
+                          : "bg-gray-light"
+                      }  text-gray-dark bg-gray-light`}
+                      variant={ButtonVariants.ICON}
+                    >
+                      <HeartFilledSVG />
+                    </Button>
                     <Button
                       className="   right-5  text-gray-dark bg-gray-light"
                       variant={ButtonVariants.ICON}
                     >
-                      <LinkSVG />
+                      <WarnSVG />
                     </Button>
-                  </CopyToClipboard>
-                  <Button
-                    className="   right-5  text-gray-dark bg-gray-light"
-                    variant={ButtonVariants.ICON}
-                  >
-                    <TwitterShare shareUrl={shareUrl} />
-                  </Button>
-                  <Button
-                    className="   right-5  text-gray-dark bg-gray-light"
-                    variant={ButtonVariants.ICON}
-                  >
-                    <FacebookShare shareUrl={shareUrl} />
-                  </Button>
-                  <Button
-                    className="   right-5  text-gray-dark bg-gray-light"
-                    variant={ButtonVariants.ICON}
-                  >
-                    <EmailShare shareUrl={shareUrl} />
-                  </Button>
-                </>
-              )}
+                  </>
+                ) : (
+                  <>
+                    <CopyToClipboard text={shareUrl}>
+                      <Button
+                        className="   right-5  text-gray-dark bg-gray-light"
+                        variant={ButtonVariants.ICON}
+                      >
+                        <LinkSVG />
+                      </Button>
+                    </CopyToClipboard>
+                    <Button
+                      className="   right-5  text-gray-dark bg-gray-light"
+                      variant={ButtonVariants.ICON}
+                    >
+                      <TwitterShare shareUrl={shareUrl} />
+                    </Button>
+                    <Button
+                      className="   right-5  text-gray-dark bg-gray-light"
+                      variant={ButtonVariants.ICON}
+                    >
+                      <FacebookShare shareUrl={shareUrl} />
+                    </Button>
+                    <Button
+                      className="   right-5  text-gray-dark bg-gray-light"
+                      variant={ButtonVariants.ICON}
+                    >
+                      <EmailShare shareUrl={shareUrl} />
+                    </Button>
+                  </>
+                )}
 
+                <Button
+                  onClick={() => setIsShareMode((state) => !state)}
+                  className="   right-5  text-gray-dark bg-gray-light"
+                  variant={ButtonVariants.ICON}
+                >
+                  <ShareSVG />
+                </Button>
+              </div>
+              <div className="absolute z-10 right-5 gap-4 hidden sm:flex flex-col top-[50%] w-min  -translate-y-1/2">
+                <Button
+                  className="   right-5 rotate-[90deg]  text-gray-dark bg-gray-light"
+                  variant={ButtonVariants.ICON}
+                >
+                  <BackSVG />
+                </Button>
+                <Button
+                  className="  right-5  rotate-[270deg]  text-gray-dark bg-gray-light"
+                  variant={ButtonVariants.ICON}
+                >
+                  <BackSVG />
+                </Button>
+              </div>
               <Button
-                onClick={() => setIsShareMode((state) => !state)}
-                className="   right-5  text-gray-dark bg-gray-light"
-                variant={ButtonVariants.ICON}
+                className="absolute hidden  sm:flex z- right-4 top-6"
+                variant={ButtonVariants.PRIMARY}
+                appendComponent={<WarnSVG />}
               >
-                <ShareSVG />
+                Report
+              </Button>
+              <Button
+                className="absolute w-20 sm:hidden z-10 right-4"
+                variant={ButtonVariants.PRIMARY}
+                onClick={
+                  !contentQuery.data.isBoughtByCurrentUser
+                    ? onBuyClicked
+                    : onDownloadClick
+                }
+              >
+                {!contentQuery.data.isBoughtByCurrentUser ? " Buy" : "Download"}
               </Button>
             </div>
-            <div className="absolute z-10 right-5 gap-4 hidden sm:flex flex-col top-[50%] w-min  -translate-y-1/2">
+            <div className="absolute sm:hidden  z-10 bottom-0">
+              <Text varaint={TypographyVariant.Body1}>
+                @{contentQuery.data.createdBy.username}
+              </Text>
+              <Text className="mt-2" varaint={TypographyVariant.Body1}>
+                {contentQuery.data.description}
+              </Text>
+              {contentQuery.data.tags.map((tag) => (
+                <Text
+                  key={tag.id}
+                  className="font-bold"
+                  varaint={TypographyVariant.Body1}
+                >
+                  #{tag.name}
+                </Text>
+              ))}
+            </div>
+            <ImageWithSkeleton
+              imageLoaded={() => {
+                setIsImageLoaded(true)
+              }}
+              loader={({ width }) => {
+                const image = contentQuery.data.isBoughtByCurrentUser
+                  ? getResponsiveImage(contentPublicId, width)
+                  : getResponsiveWatermarkedImage(contentPublicId, width)
+                setContentImage(image)
+                return image
+              }}
+              src={contentImage}
+              layout="fill"
+            />
+          </div>
+          <div className="hidden sm:block flex-1 py-6 px-12 ">
+            <div className="flex flex-1 justify-between items-center">
+              <div className="flex items-center gap-4">
+                <div className="relative w-10 h-10 rounded-full overflow-hidden ">
+                  <ImageWithSkeleton
+                    layout="fill"
+                    className="rounded-full"
+                    src={userImage}
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <Text className="semi-bold" varaint={TypographyVariant.H2}>
+                    {contentQuery.data.createdBy.username}
+                  </Text>
+                  <div className="flex gap-2 text-gray-dark">
+                    <Text className="" varaint={TypographyVariant.Body2}>
+                      {contentQuery.data.createdBy.name}
+                    </Text>
+                    <Text varaint={TypographyVariant.Body2}>
+                      {moment(contentQuery.data.createdAt).fromNow()}
+                    </Text>
+                  </div>
+                </div>
+              </div>
               <Button
-                className="   right-5 rotate-[90deg]  text-gray-dark bg-gray-light"
-                variant={ButtonVariants.ICON}
+                onClick={onFollowButtonClicked}
+                variant={ButtonVariants.OUTLINED}
               >
-                <BackSVG />
-              </Button>
-              <Button
-                className="  right-5  rotate-[270deg]  text-gray-dark bg-gray-light"
-                variant={ButtonVariants.ICON}
-              >
-                <BackSVG />
+                Follow
               </Button>
             </div>
+            <Text className="mt-4" varaint={TypographyVariant.Body1}>
+              {contentQuery.data.description}
+            </Text>
+            <div className="flex gap-2">
+              {contentQuery.data.tags.map((tag) => (
+                <Text
+                  key={tag.id}
+                  className="font-bold"
+                  varaint={TypographyVariant.Body1}
+                >
+                  #{tag.name}
+                </Text>
+              ))}
+            </div>
+            <div className="flex my-4 gap-4  text-gray-dark">
+              <div className="flex flex-col items-center justify-center">
+                <Button
+                  onClick={onLikeButtonClicked}
+                  className={`text-white
+            ${
+              contentQuery.data.isLikedByCurrentUser
+                ? " bg-secondary-normal "
+                : "bg-gray-dark"
+            }
+              `}
+                  variant={ButtonVariants.ICON}
+                >
+                  <HeartFilledSVG />
+                </Button>
+                <Text className="mt-2" varaint={TypographyVariant.Body1}>
+                  {contentQuery.data.totalLikes}
+                </Text>
+              </div>
+              <div className="flex flex-col items-center justify-center ">
+                <Button
+                  onClick={() => {}}
+                  className={`first-letter:
+            
+            `}
+                  variant={ButtonVariants.ICON}
+                >
+                  <EyeIcon className="h-6 w-6" />
+                </Button>
+                <Text className="mt-2" varaint={TypographyVariant.Body1}>
+                  {contentQuery.data.views}
+                </Text>
+              </div>
+            </div>
             <Button
-              className="absolute hidden  sm:flex z-10 right-4 top-6"
-              variant={ButtonVariants.PRIMARY}
-              appendComponent={<WarnSVG />}
-            >
-              Report
-            </Button>
-            <Button
-              className="absolute w-20 sm:hidden z-10 right-4"
+              className="w-40 ml-auto mt-10"
               variant={ButtonVariants.PRIMARY}
               onClick={
                 !contentQuery.data.isBoughtByCurrentUser
@@ -216,145 +349,38 @@ function Content({ content }: { content: ContentWithProfile }) {
             >
               {!contentQuery.data.isBoughtByCurrentUser ? " Buy" : "Download"}
             </Button>
-          </div>
-          <div className="absolute sm:hidden  z-10 bottom-0">
-            <Text varaint={TypographyVariant.Body1}>
-              @{contentQuery.data.createdBy.username}
-            </Text>
-            <Text className="mt-2" varaint={TypographyVariant.Body1}>
-              {contentQuery.data.description || "hello ብብት"}
-            </Text>
-            <Text className=" font-semibold" varaint={TypographyVariant.Body1}>
-              #nature
-            </Text>
-          </div>
-          <ImageWithSkeleton
-            imageLoaded={() => {
-              setIsImageLoaded(true)
-            }}
-            loader={({ width }) => {
-              const image = contentQuery.data.isBoughtByCurrentUser
-                ? getResponsiveImage(contentPublicId, width)
-                : getResponsiveWatermarkedImage(contentPublicId, width)
-              setContentImage(image)
-              return image
-            }}
-            src={contentImage}
-            layout="fill"
-          />
-        </div>
-        <div className="hidden sm:block flex-1 py-6 px-12 ">
-          <div className="flex flex-1 justify-between items-center">
-            <div className="flex items-center gap-4">
-              <div className="relative w-10 h-10 rounded-full overflow-hidden ">
-                <ImageWithSkeleton
-                  layout="fill"
-                  className="rounded-full"
-                  src={userImage}
-                />
-              </div>
-              <div className="flex flex-col">
-                <Text className="semi-bold" varaint={TypographyVariant.H2}>
-                  {contentQuery.data.createdBy.username}
-                </Text>
-                <div className="flex gap-2 text-gray-dark">
-                  <Text className="" varaint={TypographyVariant.Body2}>
-                    {contentQuery.data.createdBy.name}
-                  </Text>
-                  <Text varaint={TypographyVariant.Body2}>
-                    {moment(contentQuery.data.createdAt).fromNow()}
-                  </Text>
-                </div>
-              </div>
-            </div>
-            <Button
-              onClick={onFollowButtonClicked}
-              variant={ButtonVariants.OUTLINED}
-            >
-              Follow
-            </Button>
-          </div>
-          <Text className="mt-4" varaint={TypographyVariant.Body1}>
-            {contentQuery.data.description || "hello ብብት "}
-          </Text>
-          <Text className="font-bold" varaint={TypographyVariant.Body1}>
-            #nature
-          </Text>
-          <div className="flex my-4 gap-4  text-gray-dark">
-            <div className="flex flex-col items-center justify-center">
-              <Button
-                onClick={onLikeButtonClicked}
-                className={`text-white
-            ${
-              contentQuery.data.isLikedByCurrentUser
-                ? " bg-secondary-normal "
-                : "bg-gray-dark"
-            }
-              `}
-                variant={ButtonVariants.ICON}
-              >
-                <HeartFilledSVG />
-              </Button>
-              <Text className="mt-2" varaint={TypographyVariant.Body1}>
-                {contentQuery.data.totalLikes}
-              </Text>
-            </div>
-            <div className="flex flex-col items-center justify-center ">
-              <Button
-                onClick={() => {}}
-                className={`first-letter:
-            
-            `}
-                variant={ButtonVariants.ICON}
-              >
-                <EyeIcon className="h-6 w-6" />
-              </Button>
-              <Text className="mt-2" varaint={TypographyVariant.Body1}>
-                {contentQuery.data.views}
-              </Text>
-            </div>
-          </div>
-          <Button
-            className="w-40 ml-auto mt-10"
-            variant={ButtonVariants.PRIMARY}
-            onClick={
-              !contentQuery.data.isBoughtByCurrentUser
-                ? onBuyClicked
-                : onDownloadClick
-            }
-          >
-            {!contentQuery.data.isBoughtByCurrentUser ? " Buy" : "Download"}
-          </Button>
-          <div className="relative mt-24">
-            <Input
-              value={shareUrl}
-              onChange={() => {}}
-              inputContainerStyle="hover:!ring-0 hover:!border-gray-normal"
-              label="Share"
-              disabled
-              className="rounded-none"
-              variant={InputType.NORMAL}
-              appendComponent={
-                <CopyToClipboard text={shareUrl}>
-                  <Button
-                    className="!h-[50px] !outline-0 font-semibold"
-                    variant={ButtonVariants.OUTLINED}
-                  >
-                    Copy Link
-                  </Button>
-                </CopyToClipboard>
-              }
-            />
+            <div className="relative mt-24">
+              <Input
+                value={shareUrl}
+                onChange={() => {}}
+                inputContainerStyle="hover:!ring-0 hover:!border-gray-normal"
+                label="Share"
+                disabled
+                className="rounded-none"
+                variant={InputType.NORMAL}
+                appendComponent={
+                  <CopyToClipboard text={shareUrl}>
+                    <Button
+                      className="!h-[50px] !outline-0 font-semibold"
+                      variant={ButtonVariants.OUTLINED}
+                    >
+                      Copy Link
+                    </Button>
+                  </CopyToClipboard>
+                }
+              />
 
-            <div className="absolute top-0 right-0 flex gap-2 ">
-              <FacebookShare shareUrl={shareUrl} />
-              <TwitterShare shareUrl={shareUrl} />
-              <EmailShare shareUrl={shareUrl} />
+              <div className="absolute top-0 right-0 flex gap-2 ">
+                <FacebookShare shareUrl={shareUrl} />
+                <TwitterShare shareUrl={shareUrl} />
+                <EmailShare shareUrl={shareUrl} />
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </DefaultLayout>
+      </DefaultLayout>
+      <BuyModal />
+    </>
   )
 }
 

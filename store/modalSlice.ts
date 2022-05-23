@@ -1,26 +1,36 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
-export type ModalSlice = {
-  isModalVisible: boolean
-  modalPayload: null | {}
+export enum ModalType {
+  BUY_MODAL,
+}
+
+type ModalSlice = {
+  modalPayload: null | Record<string, unknown>
+  modalType: ModalType | null
 }
 
 const initialState: ModalSlice = {
-  isModalVisible: false,
   modalPayload: null,
+  modalType: null,
 }
 
 export const modalSlice = createSlice({
   name: "modal",
   initialState,
   reducers: {
-    showModal(state, action) {
-      state.isModalVisible = true
-      state.modalPayload = action.payload
+    showModal<T extends Record<string, unknown>>(
+      state: ModalSlice,
+      action: PayloadAction<{
+        modalType: ModalType
+        payload: T
+      }>
+    ) {
+      state.modalType = action.payload.modalType
+      state.modalPayload = action.payload.payload
     },
     hideModal(state) {
-      state.isModalVisible = false
       state.modalPayload = null
+      state.modalType = null
     },
   },
 })
