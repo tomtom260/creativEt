@@ -24,6 +24,8 @@ import {
 } from "@/hooks/user"
 import { isFollwingUser } from "modules/user/server"
 import MyContent from "@/components/Cards/MyContent"
+import BoostModal from "@/modules/content/components/BoostModal"
+import DeleteModal from "@/modules/content/components/DeleteModal"
 
 type Contents = Awaited<ReturnType<typeof getContents>>
 type ProfileProps = Awaited<ReturnType<typeof getServerSideProps>>["props"]
@@ -72,7 +74,7 @@ function ProfilePage({ profile, myProfile, contents }: ProfileProps) {
   const followMutation = useFollowUserMutation(profileQuery.data.id)
   const unFollowMutation = useUnfollowUserMutation(profileQuery.data.id)
 
-  const [flippedCard, setFlippedCard] = useState<string>(null)
+  const [flippedCard, setFlippedCard] = useState<string | null>(null)
 
   if (!profileQuery.data) {
     return <div>NO User with that username exists</div>
@@ -165,6 +167,8 @@ function ProfilePage({ profile, myProfile, contents }: ProfileProps) {
           </div>
         </div>
       </DefaultLayout>
+      <BoostModal />
+      <DeleteModal />
     </>
   )
 }

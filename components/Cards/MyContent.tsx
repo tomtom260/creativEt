@@ -4,9 +4,11 @@ import Cards, { CardsProps } from "./BaseCard"
 import Skeleton from "../Skeleton"
 import Text from "../Typography"
 import { TypographyVariant } from "../Typography/textVariant.enum"
+import { useAppDispatch } from "@/hooks/redux"
+import { ModalType, showModal } from "store/modalSlice"
 
 type MyContentProps = {
-  flippedCard: string
+  flippedCard: string | null
   setFlippedCard: Dispatch<SetStateAction<string | null>>
 } & Pick<CardsProps, "loading" | "content">
 
@@ -17,6 +19,9 @@ function MyContent({
   setFlippedCard,
 }: MyContentProps) {
   const isFlipped = flippedCard === content.id
+
+  const dispatch = useAppDispatch()
+
   return (
     <Cards
       loading={loading}
@@ -28,14 +33,39 @@ function MyContent({
             onClick={() => setFlippedCard(null)}
             className=" text-gray-dark cursor-pointer  self-end h-6 w-6 -mr-5 -mt-2  z-20"
           />
-          <Text varaint={TypographyVariant.Body1}>Edit</Text>
+          <Text className="cursor-pointer" varaint={TypographyVariant.Body1}>
+            Edit
+          </Text>
           <Text
-            className=" text-secondary-light     "
+            onClick={() => {
+              dispatch(
+                showModal({
+                  payload: {
+                    id: content.id,
+                  },
+                  modalType: ModalType.BOOST_MODAL,
+                })
+              )
+            }}
+            className=" text-secondary-light cursor-pointer    "
             varaint={TypographyVariant.Body1}
           >
             Boost
           </Text>
-          <Text className="text-red-600" varaint={TypographyVariant.Body1}>
+          <Text
+            onClick={() => {
+              dispatch(
+                showModal({
+                  payload: {
+                    id: content.id,
+                  },
+                  modalType: ModalType.DELETE_MODAL,
+                })
+              )
+            }}
+            className="text-red-600 cursor-pointer"
+            varaint={TypographyVariant.Body1}
+          >
             Delete
           </Text>
         </div>
