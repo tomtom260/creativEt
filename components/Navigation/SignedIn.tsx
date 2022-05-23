@@ -1,5 +1,4 @@
-import React from "react"
-import { Fragment } from "react"
+import React, { Fragment } from "react"
 import { Menu, Transition } from "@headlessui/react"
 import { BellIcon } from "@heroicons/react/outline"
 import Image from "next/image"
@@ -58,12 +57,11 @@ function SignedInNavigation() {
         )}
         NavigationRightSide={() => (
           <div className="hidden lg:flex lg:items-center lg:justify-end xl:col-span-4">
-            <a
-              href="#"
-              className="ml-5 flex-shrink-0 bg-white rounded-full p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              <BellIcon className="h-6 w-6" aria-hidden="true" />
-            </a>
+            <Link href={"#"} passHref>
+              <a className="ml-5 flex-shrink-0 bg-white rounded-full p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <BellIcon className="h-6 w-6" aria-hidden="true" />
+              </a>
+            </Link>
             {/* Profile dropdown */}
             <Menu as="div" className="flex-shrink-0 relative ml-5">
               <div>
@@ -90,16 +88,17 @@ function SignedInNavigation() {
                   {userNavigation.map((item) => (
                     <Menu.Item key={item.name}>
                       {({ active }) => (
-                        <a
-                          onClick={item.onClick}
-                          href={item.href}
-                          className={classNames(
-                            active ? "bg-gray-100" : "",
-                            "block py-2 px-4 text-sm text-gray-700"
-                          )}
-                        >
-                          {item.name}
-                        </a>
+                        <Link passHref href={item.href}>
+                          <a
+                            onClick={item.onClick}
+                            className={classNames(
+                              active ? "bg-gray-100" : "",
+                              "block py-2 px-4 text-sm text-gray-700"
+                            )}
+                          >
+                            {item.name}
+                          </a>
+                        </Link>
                       )}
                     </Menu.Item>
                   ))}

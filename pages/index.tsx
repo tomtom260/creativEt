@@ -68,8 +68,8 @@ export default function Home({ contents, tags }: HomeProps) {
         <div className="grid mb-96  mt-8 md:mt-14 gap-8  mx-auto  grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4  flex-wrap">
           {getContentsQuery.data?.map((content) => (
             <Cards
-              loading={getContentsQuery.isFetching}
               key={content.id}
+              loading={getContentsQuery.isFetching}
               content={content}
             />
           ))}

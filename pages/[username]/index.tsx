@@ -147,7 +147,7 @@ function ProfilePage({ profile, myProfile, contents }: ProfileProps) {
               (item) => typeof item === "string"
             )}
           />
-          <div className="grid md:grid-cols-2 justify-items-center lg:grid-cols-3 gap-4 gap-y-8  mt-12">
+          <div className="grid mb-96  mt-8 md:mt-14 gap-8  mx-auto  grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4  flex-wrap">
             {filteredContents?.map((content) => {
               return (
                 <Cards key={content.id} loading={loading} content={content} />

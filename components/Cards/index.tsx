@@ -32,7 +32,7 @@ function Cards({ loading = false, content }: CardsProps) {
     title,
     image,
     totalLikes,
-  } = useQuery(["content", content.id]).data as Content
+  } = (useQuery(["content", content.id]).data as Content) || content
 
   const createdByQuery = useQuery(
     ["user", createdBy.id],
@@ -43,7 +43,6 @@ function Cards({ loading = false, content }: CardsProps) {
     }
   )
 
-  console.log("createdByQuery", createdByQuery)
 
   const [isCardSeen, setIsCardSeen] = useState<boolean>(false)
   const [getBest3ContentsQueryEnabled, setGetBest3ContentsQueryEnabled] =
@@ -93,8 +92,11 @@ function Cards({ loading = false, content }: CardsProps) {
   if (!createdByQuery.data) return null
 
   return (
-    <div ref={ref} className="max-w-[400px]   w-full  flex flex-col">
-      <div className="group hover:cursor-pointer w-full h-[380px] sm:h-[250px] lg:h-[220px] relative bg-white">
+    <div
+      ref={ref}
+      className="max-w-[400px] min-w-[280px]   w-full  flex flex-col"
+    >
+      <div className="group hover:cursor-pointer w-full  h-[380px] sm:h-[250px] lg:h-[220px] relative bg-white">
         <div className="z-10 absolute right-4 top-4 px-2 bg-secondary-normal  opacity-70  ">
           <Text
             className="font-extrabold  tracking-wider text-white "
@@ -104,7 +106,7 @@ function Cards({ loading = false, content }: CardsProps) {
           </Text>
         </div>
         {loading ? (
-          <Skeleton height="100%" />
+          <Skeleton height="100%" width="100" />
         ) : (
           <ImageWithSkeleton
             onClick={() => {
