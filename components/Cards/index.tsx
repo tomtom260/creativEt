@@ -96,7 +96,7 @@ function Cards({
       onClick={() => {
         router.push(`/${createdBy.username}/${id}`)
       }}
-      className="max-w-[400px]  overflow-hidden  w-full  flex flex-col"
+      className="max-w-[400px]   w-full  flex flex-col"
     >
       <div className="group hover:cursor-pointer w-full h-[380px] sm:h-[250px] lg:h-[220px] relative bg-white">
         <div className="z-10 absolute right-4 top-4 px-2 bg-secondary-normal  opacity-70  ">

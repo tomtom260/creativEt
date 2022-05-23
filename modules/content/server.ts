@@ -30,17 +30,21 @@ export async function getContents(
     where: {
       createdBy: {
         id: creatorId,
-        // followers: {
-        //   some: {
-        //     id: userId,
-        //   },
-        // },
+        // followers: userId
+        //   ? {
+        //       some: {
+        //         id: userId,
+        //       },
+        //     }
+        //   : undefined,
       },
-      tags: {
-        some: {
-          name: tag,
-        },
-      },
+      tags: tag
+        ? {
+            some: {
+              name: tag,
+            },
+          }
+        : undefined,
     },
   })
 

@@ -14,6 +14,7 @@ import Image from "next/image"
 import { useRouter } from "next/router"
 import React, { useState } from "react"
 import Dropzone from "react-dropzone"
+import { useQueryClient } from "react-query"
 
 const MAX_IMAGE_SIZE = 1024 * 1024 * 10
 
@@ -59,10 +60,11 @@ function Upload({ tags }) {
       description,
     }).then(() => {
       router.push("/")
+      queryClient.refetchQueries(["contents"])
     })
   }
-
   const router = useRouter()
+  const queryClient = useQueryClient()
 
   return (
     <DefaultLayout>
