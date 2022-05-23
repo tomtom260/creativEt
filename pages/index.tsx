@@ -1,5 +1,5 @@
 import DefaultLayout from "../layouts/DefaultLayout"
-import Cards from "@/components/Cards"
+import Cards from "@/components/Cards/BaseCard"
 import { changeDateInJSONToMoment } from "@/utils/changeDateToMoment"
 import { Content } from "types/content"
 import { getContents, getTags } from "modules/content/server"
@@ -15,6 +15,7 @@ import ListBox from "@/components/Form/ListBox"
 import { useState } from "react"
 import classNames from "@/utils/classNames"
 import { useGetContentsQuery } from "@/modules/content/hooks"
+import ContentCard from "@/components/Cards/ContentCard"
 
 type HomeProps = {
   contents: Content[]
@@ -67,7 +68,7 @@ export default function Home({ contents, tags }: HomeProps) {
         </div>
         <div className="grid mb-96  mt-8 md:mt-14 gap-8  mx-auto  grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4  flex-wrap">
           {getContentsQuery.data?.map((content) => (
-            <Cards
+            <ContentCard
               key={content.id}
               loading={getContentsQuery.isFetching}
               content={content}
