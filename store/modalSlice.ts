@@ -2,6 +2,8 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
 export enum ModalType {
   BUY_MODAL,
+  BOOST_MODAL,
+  DELETE_MODAL,
 }
 
 type ModalSlice = {
