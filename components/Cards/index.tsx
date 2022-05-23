@@ -13,7 +13,7 @@ import { TypographyVariant } from "../Typography/textVariant.enum"
 import useContentService from "@/service/content"
 import { useFollowUserMutation, useUnfollowUserMutation } from "@/hooks/user"
 import { useQuery } from "react-query"
-import { fetchUserWithProfile } from "@/api/user"
+import { fetchUserWithProfile, transformUserResponse } from "@/api/user"
 import Skeleton from "react-loading-skeleton"
 import { useRouter } from "next/router"
 import { useCreateViewMutation } from "@/modules/views/hooks"
@@ -23,25 +23,27 @@ export type CardsProps = {
   loading?: boolean
 }
 
-function Cards({
-  loading = false,
-  content: {
+function Cards({ loading = false, content }: CardsProps) {
+  const {
+    views,
+    id,
+    isLikedByCurrentUser,
     createdBy,
     title,
     image,
     totalLikes,
-    views,
-    id,
-    isLikedByCurrentUser,
-  },
-}: CardsProps) {
+  } = useQuery(["content", content.id]).data as Content
+
   const createdByQuery = useQuery(
     ["user", createdBy.id],
     () => fetchUserWithProfile(createdBy.id),
     {
       initialData: { data: { data: createdBy } },
+      select: transformUserResponse,
     }
   )
+
+  console.log("createdByQuery", createdByQuery)
 
   const [isCardSeen, setIsCardSeen] = useState<boolean>(false)
   const [getBest3ContentsQueryEnabled, setGetBest3ContentsQueryEnabled] =
@@ -91,13 +93,7 @@ function Cards({
   if (!createdByQuery.data) return null
 
   return (
-    <div
-      ref={ref}
-      onClick={() => {
-        router.push(`/${createdBy.username}/${id}`)
-      }}
-      className="max-w-[400px]   w-full  flex flex-col"
-    >
+    <div ref={ref} className="max-w-[400px]   w-full  flex flex-col">
       <div className="group hover:cursor-pointer w-full h-[380px] sm:h-[250px] lg:h-[220px] relative bg-white">
         <div className="z-10 absolute right-4 top-4 px-2 bg-secondary-normal  opacity-70  ">
           <Text
@@ -111,6 +107,9 @@ function Cards({
           <Skeleton height="100%" />
         ) : (
           <ImageWithSkeleton
+            onClick={() => {
+              router.push(`/${createdBy.username}/${id}`)
+            }}
             src={image}
             className=" rounded-lg overflow-hidden"
             layout="fill"
@@ -195,7 +194,6 @@ function Cards({
                   </div>
                   <Button
                     onClick={onFollowButtonCliked}
-                    // appendComponent={<PlusSVG />}
                     className={`${
                       createdByQuery.data.isFollowedByCurrentUser
                         ? "bg-secondary-normal"
@@ -221,6 +219,7 @@ function Cards({
                           src={content.image}
                           alt=""
                           layout="fill"
+                          objectFit="cover"
                           className="rounded-md"
                         />
                       </div>

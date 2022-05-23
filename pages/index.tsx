@@ -24,17 +24,14 @@ type HomeProps = {
 const filterOptions = ["All", "Following", "Popular", "New"]
 
 export default function Home({ contents, tags }: HomeProps) {
-  // const { data: user } = useQuery(["currentUser"], {
-  //   select: transformUserResponse,
-  // })
-
   const [selectedFilterOption, setSelectedFilterOption] = useState(
     filterOptions[0]
   )
   const [selectedTag, setSelectedTag] = useState(tags[0])
   const getContentsQuery = useGetContentsQuery(
     contents,
-    selectedTag !== "All" ? selectedTag : undefined
+    selectedTag !== "All" ? selectedTag : undefined,
+    selectedFilterOption !== "All" ? selectedFilterOption : undefined
   )
 
   return (
@@ -68,7 +65,7 @@ export default function Home({ contents, tags }: HomeProps) {
             Filters
           </Button>
         </div>
-        <div className="grid mb-40  mt-8 md:mt-14 gap-8  mx-auto  grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4  flex-wrap">
+        <div className="grid mb-96  mt-8 md:mt-14 gap-8  mx-auto  grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4  flex-wrap">
           {getContentsQuery.data?.map((content) => (
             <Cards
               loading={getContentsQuery.isFetching}

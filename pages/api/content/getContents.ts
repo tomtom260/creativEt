@@ -17,7 +17,8 @@ export default async function userHandler(
       const contents = await getContents(
         userId,
         req.query.creatorId,
-        req.query.tag
+        req.query.tag,
+        req.query.filter
       )
       return SuccessAPIResponse(res, contents)
     default:

@@ -3,15 +3,25 @@ import { prisma } from "@/utils/db"
 import { Content } from "types/content"
 import { User } from "types/user"
 import { ErrorObject } from "types/error"
+import moment from "moment"
+
+enum FILTERS {
+  ALL = "All",
+  NEW = "New",
+  POPULAR = "Popular",
+  FOLLOWING = "Following",
+}
 
 export async function getContents(
   userId?: string,
   creatorId?: string,
-  tag?: string
+  tag?: string,
+  filter?: string
 ) {
   if (!userId) {
     return []
   }
+  console.log(filter)
   const contents = await prisma.content.findMany({
     include: {
       tags: true,
@@ -30,14 +40,21 @@ export async function getContents(
     where: {
       createdBy: {
         id: creatorId,
-        // followers: userId
-        //   ? {
-        //       some: {
-        //         id: userId,
-        //       },
-        //     }
-        //   : undefined,
+        followers:
+          filter === FILTERS.FOLLOWING
+            ? {
+                some: {
+                  id: userId,
+                },
+              }
+            : undefined,
       },
+      createdAt:
+        filter === FILTERS.NEW
+          ? {
+              gte: moment().subtract(1, "day").startOf("d").toDate(),
+            }
+          : undefined,
       tags: tag
         ? {
             some: {
@@ -47,6 +64,10 @@ export async function getContents(
         : undefined,
     },
   })
+
+  if (filter === FILTERS.POPULAR) {
+    contents.sort((a, b) => b._count.likes - a._count.likes)
+  }
 
   return await Promise.all(
     contents.map(async (content: Exclude<typeof contents[number], void>) => {

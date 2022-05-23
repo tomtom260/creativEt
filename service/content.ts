@@ -13,8 +13,10 @@ export default function useContentService() {
   const uploadImageMutation = useUploadImageMutation({})
   const createContentMutation = useCreateContentMutation({})
   const likeContentMutation = useLikeContentMutation({
-    onSuccess: (res) =>
-      queryClient.invalidateQueries(["content", res.data.data.contentId]),
+    onSuccess: (res) => {
+      console.log("res", ["content", res.data.data.contentId])
+      queryClient.invalidateQueries(["content", res.data.data.contentId])
+    },
   })
   const dislikeContentMutation = useDislikeContentMutation({
     onSuccess: (res) =>
