@@ -189,7 +189,7 @@ function ContentCard({
                   </div>
                   <div className="grid grid-cols-3 h-full gap-5 mt-5">
                     {getBest3ContentsQuery.isFetching ? (
-                      <p>Fetcghing</p>
+                      <p>Fetching</p>
                     ) : (
                       getBest3ContentsQuery.data?.map((content) => (
                         <div
