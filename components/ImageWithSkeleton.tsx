@@ -34,7 +34,7 @@ function ImageWithSkeleton({
           }}
           className={`${className} ${
             showSkeleton ? "opacity-0" : "opacity-100"
-          }`}
+          } object-cover min-h-full min-w-full`}
         />
       </div>
     </div>
