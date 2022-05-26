@@ -1,8 +1,15 @@
 function userNav() {
     return (
-        <div className='w-full h-32 bg-white flex flex-col p-3'>
+        <div className='w-full bg-white flex flex-col p-3 z-[60] sticky -top-10'>
 
-            <div className="w-full h-14 flex justify-between items-center">
+            <div className="w-full flex justify-end space-x-4 items-center text-sm">
+                <button>Advertise</button>
+                <button>Hire a Creator</button>
+            </div>
+            
+            <hr className="my-2"></hr>
+
+            <div className="w-full h-10 flex justify-between items-center">
                 <div className="h-full w-auto flex items-center justify-center">
                     <img className="w-auto h-full" src="/assets/images/logo.png"/>
                 </div>
@@ -24,7 +31,7 @@ function userNav() {
                     </label>
                     <input
                         name="navSearch"
-                        className="w-[500px] h-10 border-2 rounded-md px-10"
+                        className="sm:w-[200px] md:w-[500px] h-10 border-2 rounded-md px-10"
                         placeholder="Search"
                     ></input>
 
@@ -43,13 +50,7 @@ function userNav() {
                     </button>
                 </div>
             </div>
-
-            <hr className="my-2"></hr>
-
-            <div className="w-full h-14 flex justify-end space-x-4 items-center">
-                <button>Advertise</button>
-                <button>Hire a Creator</button>
-            </div>
+            
         </div>
     );
 }

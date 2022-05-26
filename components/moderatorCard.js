@@ -13,8 +13,8 @@ function moderatorCard({ imgSrc, contentTitle, contentCreator, reportDetail, num
                 <div className='flex justify-between w-full'>
                     <p>{numReport}</p>
                     <div className='flex justify-end space-x-4 px-4'>
-                        <button className='font-bold text-green-500'>Accept</button>
-                        <button className='font-bold text-red-500'>Reject</button>
+                        <button className='font-bold text-green-500'>Allow Content</button>
+                        <button className='font-bold text-red-500'>Reject Content</button>
                     </div>
                 </div>
 

@@ -48,6 +48,7 @@
     "dotenv-cli": "^5.1.0",
     "emoji-picker-react": "^3.5.1",
     "faker": "5.5.3",
+    "framer-motion": "^6.3.3",
     "moment": "^2.29.1",
     "next": "12.1.0",
     "next-auth": "^4.2.1",

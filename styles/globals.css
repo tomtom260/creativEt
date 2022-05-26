@@ -7,7 +7,6 @@
     content-visibility: auto;
   }
 }
-
 @layer components {
   .h1 {
     @apply font-sans;

@@ -16,6 +16,8 @@ import { useState } from "react"
 import classNames from "@/utils/classNames"
 import { useGetContentsQuery } from "@/modules/content/hooks"
 import ContentCard from "@/components/Cards/ContentCard"
+import Landing from '@/components/Landing'
+import NavBar from '@/components/navbar/userNav'
 
 type HomeProps = {
   contents: Content[]
@@ -34,9 +36,10 @@ export default function Home({ contents, tags }: HomeProps) {
     selectedTag !== "All" ? selectedTag : undefined,
     selectedFilterOption !== "All" ? selectedFilterOption : undefined
   )
-
   return (
     <>
+      <NavBar></NavBar>
+      <Landing></Landing>
       <DefaultLayout>
         <div className=" flex flex-1 justify-between  items-center">
           <div className="w-32 ">
