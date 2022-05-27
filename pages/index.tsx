@@ -16,8 +16,8 @@ import { useState } from "react"
 import classNames from "@/utils/classNames"
 import { useGetContentsQuery } from "@/modules/content/hooks"
 import ContentCard from "@/components/Cards/ContentCard"
-import Landing from '@/components/Landing'
-import NavBar from '@/components/navbar/userNav'
+import Landing from "@/components/Landing"
+import NavBar from "@/components/navbar/userNav"
 
 type HomeProps = {
   contents: Content[]
@@ -38,45 +38,63 @@ export default function Home({ contents, tags }: HomeProps) {
   )
   return (
     <>
-      <NavBar></NavBar>
-      <Landing></Landing>
-      <DefaultLayout>
-        <div className=" flex flex-1 justify-between  items-center">
-          <div className="w-32 ">
-            <ListBox
-              selected={selectedFilterOption}
-              changeSelected={(val) => setSelectedFilterOption(val)}
-              options={filterOptions}
-            />
-          </div>
-          <div className="flex self-center  justify-self-center  gap-6">
-            {tags.map((tag) => (
-              <Tag
-                key={tag}
-                tag={tag}
-                selectedTag={selectedTag}
-                changeSelectedTag={() => setSelectedTag(tag)}
+      <DefaultLayout padded={false}>
+        <Landing />
+        <div
+          id="content"
+          className="max-w-7xl mb-[800px] flex flex-col px-2  sm:px-6  md:px-4 lg:px-8 pb-2 md:py-8 mx-auto"
+        >
+          <div className=" flex  sticky top-[60px] py-8 bg-white z-20 w-full  flex-1 justify-between  items-center">
+            <div className="w-32 ">
+              <ListBox
+                selected={selectedFilterOption}
+                changeSelected={(val) => setSelectedFilterOption(val)}
+                options={filterOptions}
               />
+            </div>
+            <div className="  flex self-center  justify-self-center  gap-6">
+              {tags.map((tag) => (
+                <Tag
+                  key={tag}
+                  tag={tag}
+                  selectedTag={selectedTag}
+                  changeSelectedTag={() => setSelectedTag(tag)}
+                />
+              ))}
+            </div>
+            <Button
+              onClick={() => {}}
+              prependComponent={
+                <AdjustmentsIcon className="h-5 w-5 justify-self-end " />
+              }
+              variant={ButtonVariants.OUTLINED}
+            >
+              Filters
+            </Button>
+          </div>
+          <p className="">aaa</p>
+          <div className="mb-[800px]  grid   mt-8 md:mt-14 gap-8  mx-auto grid-rows-2  grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4  flex-wrap">
+            {/* ssss */}
+            {getContentsQuery.data?.map((content) => (
+              <>
+                <ContentCard
+                  key={content.id}
+                  loading={getContentsQuery.isFetching}
+                  content={content}
+                />
+                <ContentCard
+                  key={content.id}
+                  loading={getContentsQuery.isFetching}
+                  content={content}
+                />
+                <ContentCard
+                  key={content.id}
+                  loading={getContentsQuery.isFetching}
+                  content={content}
+                />
+              </>
             ))}
           </div>
-          <Button
-            onClick={() => {}}
-            prependComponent={
-              <AdjustmentsIcon className="h-5 w-5 justify-self-end " />
-            }
-            variant={ButtonVariants.OUTLINED}
-          >
-            Filters
-          </Button>
-        </div>
-        <div className="grid mb-96  mt-8 md:mt-14 gap-8  mx-auto  grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4  flex-wrap">
-          {getContentsQuery.data?.map((content) => (
-            <ContentCard
-              key={content.id}
-              loading={getContentsQuery.isFetching}
-              content={content}
-            />
-          ))}
         </div>
       </DefaultLayout>
     </>

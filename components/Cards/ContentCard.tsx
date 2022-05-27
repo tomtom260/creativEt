@@ -139,7 +139,7 @@ function ContentCard({
                   />
                 </div>
                 <Text
-                  className="ml-3 whitespace-nowrap !w-[15ch] flex-shrink overflow-hidden  text-ellipsis font-medium cursor-pointer"
+                  className="ml-3 whitespace-nowrap !w-[15ch] flex-shrink   text-ellipsis font-medium cursor-pointer"
                   varaint={TypographyVariant.Body1}
                 >
                   {createdBy.name}
