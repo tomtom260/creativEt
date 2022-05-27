@@ -6,6 +6,11 @@
   .h1 {
     content-visibility: auto;
   }
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
 }
 @layer components {
   .h1 {

@@ -9,5 +9,3 @@ export const pusherServer = new Pusher({
   cluster: process.env.NEXT_PUBLIC_CLUSTER!,
   useTLS: process.env.NEXT_PUBLIC_FORCETLS,
 })
-
-
