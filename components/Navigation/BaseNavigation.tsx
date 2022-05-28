@@ -36,7 +36,7 @@ function BaseNavigation({
         }
       >
         {({ open }) => (
-          <div className="bg-white fixed z-50 w-full">
+          <div className="bg-white fixed z-[25] w-full">
             <div className="max-w-7xl      w-full bg-white mx-auto px-4 sm:px-6 lg:px-8">
               <div className="relative flex justify-between xl:grid xl:grid-cols-12 lg:gap-8">
                 <div className="flex md:absolute md:left-0 md:inset-y-0 lg:static xl:col-span-4">

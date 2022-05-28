@@ -15,8 +15,11 @@ export default async function userHandler(
   const session = await getSession({ req })
   switch (req.method) {
     case "POST":
-      await transferMoney({ ...req.body, userId: session?.user.id })
-      return SuccessAPIResponse(res, {})
+      const result = await transferMoney({
+        ...req.body,
+        userId: session?.user.id,
+      })
+      return SuccessAPIResponse(res, result.data.result)
     default:
       wrongRequestMethodError(res, ["POST"])
   }

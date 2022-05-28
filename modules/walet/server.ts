@@ -1,5 +1,6 @@
 import { prisma } from "@/utils/db"
 import { MoneyTransaction } from "@prisma/client"
+import { MoneyTransactionStatus } from "./types"
 
 export async function createMoneyTransaction({
   amount,
@@ -13,6 +14,24 @@ export async function createMoneyTransaction({
       description,
       userId,
       type,
+    },
+  })
+}
+
+export async function updateMoneyTransaction({
+  id,
+  status,
+}: {
+  id: string
+  status: MoneyTransactionStatus
+}) {
+  console.log("idd", id, status)
+  return await prisma.moneyTransaction.update({
+    where: {
+      id,
+    },
+    data: {
+      status,
     },
   })
 }

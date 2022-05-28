@@ -5,6 +5,12 @@ export enum MoneyTransactionType {
   WITHDRAW = "WITHDRAW",
 }
 
+export enum MoneyTransactionStatus {
+  PENDING = "PENDING",
+  SUCCESS = "SUCCESS",
+  CANCELED = "CANCELED",
+}
+
 export type TCreateMoneyTransaction = Pick<
   MoneyTransaction,
   "amount" | "description" | "userId"

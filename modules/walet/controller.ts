@@ -1,5 +1,5 @@
 import { sendMoneyAPI } from "./api"
-import { createMoneyTransaction } from "./server"
+import { createMoneyTransaction, updateMoneyTransaction } from "./server"
 import { TransferMoney, MoneyTransactionType } from "./types"
 
 export async function transferMoney(data: TransferMoney) {

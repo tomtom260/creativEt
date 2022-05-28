@@ -138,14 +138,14 @@ model Transaction {
 }
 
 model MoneyTransaction {
-  id            String               @id @default(cuid())
+  id            String                 @id @default(cuid())
   type          MoneyTransactionType
   amount        Int
   userId        String
-  User          User                 @relation(fields: [userId], references: [id])
+  User          User                   @relation(fields: [userId], references: [id])
   description   String
-  transactionAt DateTime             @default(now())
-  status        String               @default("Pending")
+  transactionAt DateTime               @default(now())
+  status        MoneyTransactionStatus @default(PENDING)
 }
 
 model Message {
@@ -185,4 +185,10 @@ model Boost {
 enum MoneyTransactionType {
   DEPOSIT
   WITHDRAW
+}
+
+enum MoneyTransactionStatus {
+  PENDING
+  SUCCESS
+  CANCELED
 }

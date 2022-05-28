@@ -7,6 +7,7 @@ export function sendMoneyAPI({ id, type, amount, merchantId }: TYenepayApi) {
     {
       process: "Express",
       successUrl: "http://localhost:3000/api/yenepay",
+      cancelUrl: "http://localhost:3000/api/yenepay",
       merchantId,
       merchantOrderId: id,
       expiresAfter: 24,

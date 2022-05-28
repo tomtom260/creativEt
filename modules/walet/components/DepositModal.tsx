@@ -49,11 +49,15 @@ function DepositModal() {
           </Button>
           <Button
             onClick={() => {
-              moneyTransaction.mutate({
-                amount: value,
-                type: MoneyTransactionType.DEPOSIT,
-                description: "Deposit",
-              })
+              moneyTransaction
+                .mutateAsync({
+                  amount: value,
+                  type: MoneyTransactionType.DEPOSIT,
+                  description: "Deposit",
+                })
+                .then((res) => {
+                  window.location.href = res.data.data
+                })
               dispatch(hideModal())
             }}
             variant={ButtonVariants.PRIMARY}

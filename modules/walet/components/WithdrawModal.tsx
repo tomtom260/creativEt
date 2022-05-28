@@ -60,12 +60,16 @@ function WithdrawModal() {
           <Button
             onClick={() => {
               //   onContentBuy(modalPayload.id)
-              moneyTransaction.mutate({
-                type: MoneyTransactionType.WITHDRAW,
-                amount: value,
-                description: "withdraw",
-                merchantId: accountNumber,
-              })
+              moneyTransaction
+                .mutateAsync({
+                  type: MoneyTransactionType.WITHDRAW,
+                  amount: value,
+                  description: "withdraw",
+                  merchantId: accountNumber,
+                })
+                .then((res) => {
+                  window.location.href = res.data.data
+                })
               dispatch(hideModal())
             }}
             variant={ButtonVariants.PRIMARY}
