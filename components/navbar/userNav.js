@@ -1,13 +1,13 @@
 function userNav() {
     return (
-        <div className='w-full bg-white flex flex-col p-3 z-[60] sticky -top-10'>
+        <div className='w-full bg-white flex flex-col p-3 z-[60] sticky '>
 
-            <div className="w-full flex justify-end space-x-4 items-center text-sm">
+            {/* <div className="w-full flex justify-end space-x-4 items-center text-sm">
                 <button>Advertise</button>
                 <button>Hire a Creator</button>
-            </div>
+            </div> */}
             
-            <hr className="my-2"></hr>
+            {/* <hr className="my-2"></hr> */}
 
             <div className="w-full h-10 flex justify-between items-center">
                 <div className="h-full w-auto flex items-center justify-center">
