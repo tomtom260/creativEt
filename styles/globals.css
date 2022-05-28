@@ -26,3 +26,6 @@
     @apply font-mono;
   }
 }
+* {
+  font-family: poppins;
+}
