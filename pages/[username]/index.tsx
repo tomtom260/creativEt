@@ -26,6 +26,7 @@ import { isFollwingUser } from "modules/user/server"
 import MyContent from "@/components/Cards/MyContent"
 import BoostModal from "@/modules/content/components/BoostModal"
 import DeleteModal from "@/modules/content/components/DeleteModal"
+import InsufficientBalanceModal from "@/modules/content/components/InsufficientBalanceModal"
 
 type Contents = Awaited<ReturnType<typeof getContents>>
 type ProfileProps = Awaited<ReturnType<typeof getServerSideProps>>["props"]
@@ -169,6 +170,7 @@ function ProfilePage({ profile, myProfile, contents }: ProfileProps) {
       </DefaultLayout>
       <BoostModal />
       <DeleteModal />
+      <InsufficientBalanceModal />
     </>
   )
 }

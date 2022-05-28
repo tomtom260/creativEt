@@ -14,6 +14,7 @@ function SignedInNavigation() {
   const userNavigation = [
     { name: "Profile", href: `/${user?.username}`, onClick: () => {} },
     { name: "Dashboard", href: "/account/dashboard", onClick: () => {} },
+    { name: "Wallet", href: "/account/wallet", onClick: () => {} },
     {
       name: "Sign out",
       href: "#",

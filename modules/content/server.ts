@@ -23,9 +23,15 @@ export async function boostContent(id: string) {
       data: {
         contentId: id,
       },
+      include: {
+        content: true,
+      },
     })
 
   return await prisma.boost.update({
+    include: {
+      content: true,
+    },
     data: {
       boostedAt: new Date(),
     },

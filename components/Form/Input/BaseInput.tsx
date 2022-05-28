@@ -46,7 +46,7 @@ const BaseInputComp = React.forwardRef(function BaseInput({
 }: BaseInputProps) {
   const Container = useCallback(children, [])
   return (
-    <div className="flex-1">
+    <div className="flex-1 flex flex-col">
       {label && (
         <Text
           className="!font-mono  !text-xl mb-2 sm:mb-4"
@@ -73,7 +73,7 @@ const BaseInputComp = React.forwardRef(function BaseInput({
         {appendComponent}
       </div>
       <Text
-        className="mt-1 text-gray-normal  "
+        className="mt-1 text-red-600 self-start  "
         varaint={TypographyVariant.Body1}
         theme={error ? TextTheme.DANGER : TextTheme.NORMAL}
       >

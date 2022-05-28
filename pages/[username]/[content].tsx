@@ -48,6 +48,7 @@ import { EyeIcon } from "@heroicons/react/outline"
 import BuyModal from "@/modules/content/components/BuyModal"
 import { useAppDispatch } from "@/hooks/redux"
 import { ModalType, showModal } from "store/modalSlice"
+import InsufficientBalanceModal from "@/modules/content/components/InsufficientBalanceModal"
 
 function Content({ content }: { content: ContentWithProfile }) {
   const { data: user } = useGetCurrentUser()
@@ -88,16 +89,24 @@ function Content({ content }: { content: ContentWithProfile }) {
   }
 
   const onBuyClicked = () => {
-    !contentQuery.data.isBoughtByCurrentUser &&
-      dispatch(
-        showModal({
-          modalType: ModalType.BUY_MODAL,
-          payload: {
-            id: contentQuery.data.id,
-            price: contentQuery.data.price,
-          },
-        })
-      )
+    if (!contentQuery.data.isBoughtByCurrentUser) {
+      user?.balance >= contentQuery.data.price
+        ? dispatch(
+            showModal({
+              modalType: ModalType.BUY_MODAL,
+              payload: {
+                id: contentQuery.data.id,
+                price: contentQuery.data.price,
+              },
+            })
+          )
+        : dispatch(
+            showModal({
+              modalType: ModalType.INSUFFICENT_MODAL,
+              payload: {},
+            })
+          )
+    }
   }
 
   const onDownloadClick = () => {
@@ -380,6 +389,7 @@ function Content({ content }: { content: ContentWithProfile }) {
         </div>
       </DefaultLayout>
       <BuyModal />
+      <InsufficientBalanceModal />
     </>
   )
 }

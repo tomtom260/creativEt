@@ -1,3 +1,6 @@
+/* eslint-disable no-case-declarations */
+import { createMoneyTransaction } from "@/modules/walet/server"
+import { MoneyTransactionType } from "@prisma/client"
 import { NextApiRequest, NextApiResponse } from "next"
 import { getSession } from "next-auth/react"
 import {
@@ -38,6 +41,19 @@ export default async function userHandler(
           amount: content.price,
           contentId: content.id,
         },
+      })
+
+      await createMoneyTransaction({
+        amount: content.price,
+        userId: content.createdBy.id,
+        type: MoneyTransactionType.DEPOSIT,
+        description: `Sold ${content.title} `,
+      })
+      await createMoneyTransaction({
+        amount: content.price,
+        userId,
+        type: MoneyTransactionType.WITHDRAW,
+        description: `Bought ${content.title} `,
       })
       return SuccessAPIResponse(res, transaction!)
     default:

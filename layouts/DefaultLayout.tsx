@@ -14,7 +14,7 @@ function DefaultLayout({ children, padded = true }: DefaultLayoutProps) {
       <div
         className={`  ${
           padded
-            ? "max-w-7xl px-2  sm:px-6  md:px-4 lg:px-8 pb-2 pt-12  md:py-8"
+            ? "px-2 md:px-4 max-w-7xl mx-auto sm:px-6 lg:px-8 pb-2 pt-12  md:py-24"
             : ""
         } relative  mx-auto`}
       >

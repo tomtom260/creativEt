@@ -6,6 +6,7 @@ export enum ModalType {
   DELETE_MODAL,
   DEPOSIT_MODAL,
   WITHDRAW_MODAL,
+  INSUFFICENT_MODAL,
 }
 
 type ModalSlice = {

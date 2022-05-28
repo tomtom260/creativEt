@@ -6,6 +6,7 @@ import Text from "../Typography"
 import { TypographyVariant } from "../Typography/textVariant.enum"
 import { useAppDispatch } from "@/hooks/redux"
 import { ModalType, showModal } from "store/modalSlice"
+import { useGetCurrentUser } from "@/hooks/user"
 
 type MyContentProps = {
   flippedCard: string | null
@@ -21,6 +22,7 @@ function MyContent({
   const isFlipped = flippedCard === content.id
 
   const dispatch = useAppDispatch()
+  const user = useGetCurrentUser().data
 
   return (
     <Cards
@@ -38,14 +40,21 @@ function MyContent({
           </Text>
           <Text
             onClick={() => {
-              dispatch(
-                showModal({
-                  payload: {
-                    id: content.id,
-                  },
-                  modalType: ModalType.BOOST_MODAL,
-                })
-              )
+              user?.balance >= 50
+                ? dispatch(
+                    showModal({
+                      payload: {
+                        id: content.id,
+                      },
+                      modalType: ModalType.BOOST_MODAL,
+                    })
+                  )
+                : dispatch(
+                    showModal({
+                      payload: {},
+                      modalType: ModalType.INSUFFICENT_MODAL,
+                    })
+                  )
             }}
             className=" text-secondary-light cursor-pointer    "
             varaint={TypographyVariant.Body1}

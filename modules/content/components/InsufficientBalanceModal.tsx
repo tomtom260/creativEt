@@ -5,25 +5,24 @@ import Text from "@/components/Typography"
 import { TypographyVariant } from "@/components/Typography/textVariant.enum"
 import { useAppDispatch, useAppSelector } from "@/hooks/redux"
 import useContentService from "@/service/content"
+import Router from "next/router"
 import React from "react"
 import { hideModal, ModalType } from "store/modalSlice"
+import { useDeleteContentMutation } from "../hooks"
 
-function BuyModal() {
+function InsufficientBalanceModal() {
   const { modalPayload, modalType } = useAppSelector((state) => state.modal)
   const dispatch = useAppDispatch()
-  const { onContentBuy } = useContentService()
-  const isModalVisible = modalType === ModalType.BUY_MODAL
+  const isModalVisible = modalType === ModalType.INSUFFICENT_MODAL
 
   return (
     <Modal isVisible={isModalVisible}>
       <div className=" w-[500px] px-6 flex flex-col items-center text-center">
-        <Text varaint={TypographyVariant.H2}>Buy Content</Text>
+        <Text varaint={TypographyVariant.H2}>Insufficient Balance</Text>
         <Text className="mt-4 mb-6" varaint={TypographyVariant.Body1}>
-          Are you sure you want to buy this for{" "}
-          <span className="font-bold">
-            {modalPayload && modalPayload.price} ETB
-          </span>
-          . It&apos;s not refundable.
+          your balance is
+          <span className="font-bold uppercase text-black"> low .</span>
+          please top up your account.
         </Text>
         <div className="flex gap-20">
           <Button
@@ -36,12 +35,12 @@ function BuyModal() {
           </Button>
           <Button
             onClick={() => {
-              onContentBuy(modalPayload?.id)
               dispatch(hideModal())
+              Router.push("/account/wallet")
             }}
             variant={ButtonVariants.PRIMARY}
           >
-            Continue
+            Deposit
           </Button>
         </div>
       </div>
@@ -49,4 +48,4 @@ function BuyModal() {
   )
 }
 
-export default BuyModal
+export default InsufficientBalanceModal

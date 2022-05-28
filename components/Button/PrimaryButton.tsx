@@ -8,10 +8,13 @@ type PrimaryButtonCustomProps = {
 export type PrimaryButtonProps = PrimaryButtonCustomProps &
   Omit<ButtonBaseProps, keyof PrimaryButtonCustomProps>
 
-function PrimaryButton({ className, ...rest }: PrimaryButtonProps) {
+function PrimaryButton({ className, disabled, ...rest }: PrimaryButtonProps) {
   return (
     <ButtonBase
-      className={`px-2 md:px-4 text-white !justify-center bg-secondary-normal hover:bg-secondary-light tracking-wider rounded-md ${className}`}
+      disabled={disabled}
+      className={`px-2 md:px-4 text-white !justify-center bg-secondary-normal hover:bg-secondary-light tracking-wider rounded-md ${className} ${
+        disabled ? "!bg-gray-normal" : ""
+      }`}
       {...rest}
     />
   )

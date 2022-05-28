@@ -6,6 +6,7 @@ import { InputType } from "@/components/Form/Input/Input.enum"
 import Text from "@/components/Typography"
 import { TypographyVariant } from "@/components/Typography/textVariant.enum"
 import { useAppDispatch, useAppSelector } from "@/hooks/redux"
+import { useGetCurrentUser } from "@/hooks/user"
 import React, { useState } from "react"
 import { hideModal, ModalType } from "store/modalSlice"
 import { useMoneyTransaction } from "../hooks"
@@ -15,6 +16,7 @@ function WithdrawModal() {
   const { modalPayload, modalType } = useAppSelector((state) => state.modal)
   const [value, setValue] = useState<number>(0)
   const [accountNumber, setAccountNumber] = useState<string>("")
+  const user = useGetCurrentUser().data
 
   const dispatch = useAppDispatch()
   const isModalVisible = modalType === ModalType.WITHDRAW_MODAL
@@ -35,6 +37,8 @@ function WithdrawModal() {
             value={value?.toString()}
             variant={InputType.NORMAL}
             type="number"
+            max={user?.balance}
+            error={user?.balance < value ? "Insufficient balance" : ""}
           />
           <Text className="self-start" varaint={TypographyVariant.Body1}>
             Account Number
@@ -58,6 +62,7 @@ function WithdrawModal() {
             Cancel
           </Button>
           <Button
+            disabled={user?.balance < value }
             onClick={() => {
               //   onContentBuy(modalPayload.id)
               moneyTransaction
