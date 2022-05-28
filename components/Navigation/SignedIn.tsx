@@ -56,7 +56,7 @@ function SignedInNavigation() {
           </div>
         )}
         NavigationRightSide={() => (
-          <div className="hidden lg:flex lg:items-center lg:justify-end xl:col-span-4">
+          <div className="hidden  lg:flex w-min  lg:items-center justify-self-end lg:justify-end xl:col-span-3">
             <Link href={"#"} passHref>
               <a className="ml-5 flex-shrink-0 bg-white rounded-full p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 <BellIcon className="h-6 w-6" aria-hidden="true" />

@@ -34,7 +34,7 @@ export function useGetCurrentUser() {
 
   const query = useQuery(
     ["currentUser"],
-    () => fetchUserWithProfile(data.user.id!),
+    () => fetchUserWithProfile(data.user.id!, true),
     {
       select: transformUserResponse,
       enabled: enabled,

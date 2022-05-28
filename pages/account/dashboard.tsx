@@ -199,15 +199,15 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     mostLikedContent,
     mostViewedContent,
   ] = await Promise.all([
-    await (await getFollowers(id)).length,
-    await (await getFollowing(id)).length,
-    await (await getTotalLikes(id)).length,
-    await (await getFollowersLastMonth(id)).length,
-    await (await getTotalLikesLastMonth(id)).length,
-    await getLikesGroupedDay(id),
-    await getViewsGroupedDay(id),
-    await getMostLikedContent(id),
-    await getMostViewedContent(id),
+    (await getFollowers(id)).length,
+    (await getFollowing(id)).length,
+    (await getTotalLikes(id)).length,
+    (await getFollowersLastMonth(id)).length,
+    (await getTotalLikesLastMonth(id)).length,
+    getLikesGroupedDay(id),
+    getViewsGroupedDay(id),
+    getMostLikedContent(id),
+    getMostViewedContent(id),
   ])
 
   const profileStats = { followers, following, likes }

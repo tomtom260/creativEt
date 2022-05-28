@@ -1,17 +1,23 @@
 import React, { FC, ReactNode } from "react"
 import Navigation from "../components/Navigation"
 import { NavigationVariant } from "../components/Navigation/nav.enum"
-import Skeleton from "../components/Skeleton"
 
 export type DefaultLayoutProps = {
   children: ReactNode
+  padded?: boolean
 }
 
-function DefaultLayout({ children }: DefaultLayoutProps) {
+function DefaultLayout({ children, padded = true }: DefaultLayoutProps) {
   return (
     <>
       <Navigation variant={NavigationVariant.SignedIn} />
-      <div className="px-2 md:px-4  relative max-w-7xl mx-auto sm:px-6 lg:px-8 pb-2 pt-12  md:py-8  overflow-hidden">
+      <div
+        className={`  ${
+          padded
+            ? "max-w-7xl px-2  sm:px-6  md:px-4 lg:px-8 pb-2 pt-12  md:py-8"
+            : ""
+        } relative  mx-auto`}
+      >
         {children}
       </div>
     </>

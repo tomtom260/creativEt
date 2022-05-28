@@ -4,6 +4,8 @@ export enum ModalType {
   BUY_MODAL,
   BOOST_MODAL,
   DELETE_MODAL,
+  DEPOSIT_MODAL,
+  WITHDRAW_MODAL,
 }
 
 type ModalSlice = {

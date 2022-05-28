@@ -4,6 +4,8 @@ import { MenuIcon, XIcon } from "@heroicons/react/outline"
 import Image from "next/image"
 import Link from "next/link"
 import classNames from "../../utils/classNames"
+import Text from "../Typography"
+import { TypographyVariant } from "../Typography/textVariant.enum"
 
 export type BaseNavigationProps = {
   NavigationRightSide: FC
@@ -18,7 +20,7 @@ function BaseNavigation({
 }: BaseNavigationProps) {
   const navigation = [
     { name: "Marketplace", href: "/", current: true },
-    { name: "Hire Artists", href: "#", current: false },
+    { name: "Hire Creators", href: "#", current: false },
   ]
 
   return (
@@ -28,19 +30,19 @@ function BaseNavigation({
         as="header"
         className={({ open }) =>
           classNames(
-            open ? "inset-0 z-40 overflow-y-auto" : "",
-            "bg-white fixed w-full shadow-sm lg:static lg:overflow-y-visible"
+            open ? "inset-0  z-50 overflow-y-auto" : "",
+            "bg-white  w-full shadow-sm lg:static lg:overflow-y-visible"
           )
         }
       >
         {({ open }) => (
-          <>
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-white fixed z-[25] w-full">
+            <div className="max-w-7xl      w-full bg-white mx-auto px-4 sm:px-6 lg:px-8">
               <div className="relative flex justify-between xl:grid xl:grid-cols-12 lg:gap-8">
-                <div className="flex md:absolute md:left-0 md:inset-y-0 lg:static xl:col-span-2">
+                <div className="flex md:absolute md:left-0 md:inset-y-0 lg:static xl:col-span-4">
                   <div className="flex-shrink-0 flex items-center">
                     <Link passHref href={"/"}>
-                      <div className="relative w-14 h-8 md:w-20 md:h-12">
+                      <div className="relative w-16 h-8 md:w-[83px] md:h-[40px]">
                         <Image
                           src="/assets/images/logo.png"
                           alt="logo"
@@ -50,15 +52,18 @@ function BaseNavigation({
                     </Link>
                   </div>
                 </div>
-                <div className="min-w-0 flex-1 md:px-8 lg:px-0 xl:col-span-6">
-                  <div className="flex flex-1 items-center px-6 py-4 md:max-w-3xl md:mx-auto lg:max-w-none lg:mx-0 xl:px-0">
+                <div className="min-w-0 flex-1 md:px-8 lg:px-0  -ml-20 xl:col-span-5">
+                  <div className="flex flex-1 items-center  px-6 py-4 md:max-w-3xl md:mx-auto lg:max-w-none lg:mx-0 xl:px-0">
                     <div className="w-full flex flex-1 justify-center">
-                      <div className=" hidden lg:flex items-center w-3/5 max-w[400px] justify-between">
+                      <div className=" hidden lg:flex items-center  w-3/5 max-w[400px] justify-between">
                         {navigation.map((item) => (
                           <Link key={item.name} href={item.href} passHref>
-                            <p className="font-sans font-medium text-lg whitespace-nowrap cursor-pointer tracking-widest">
+                            <Text
+                              className="!text-lg whitespace-nowrap cursor-pointer tracking-widest"
+                              varaint={TypographyVariant.H2}
+                            >
                               {item.name}
-                            </p>
+                            </Text>
                           </Link>
                         ))}
                       </div>
@@ -113,7 +118,7 @@ function BaseNavigation({
                 </div>
               </div>
             </Popover.Panel>
-          </>
+          </div>
         )}
       </Popover>
     </>

@@ -1,6 +1,7 @@
 import { getSession } from "next-auth/react"
 import { prisma } from "@/utils/db"
 import { ErrorAPIResponse } from "@/utils/apiResponses"
+import { MoneyTransactionStatus, MoneyTransactionType } from "@prisma/client"
 
 export async function isFollwingUser(
   currentUser: string,
@@ -17,7 +18,11 @@ export async function isFollwingUser(
   return !!result
 }
 
-export async function getUserWithProfile(id: string, currentUserId: string) {
+export async function getUserWithProfile(
+  id: string,
+  currentUserId: string,
+  includeTransactions = false
+) {
   let user = await prisma.user.findUnique({
     where: {
       id,
@@ -25,6 +30,7 @@ export async function getUserWithProfile(id: string, currentUserId: string) {
     include: {
       Profile: true,
       // followers: true,
+      MoneyTransaction: !!includeTransactions,
       following: true,
     },
   })
@@ -40,6 +46,18 @@ export async function getUserWithProfile(id: string, currentUserId: string) {
     return ErrorAPIResponse(res, `User with that id ${id} not found`)
   }
 
+  if (user.MoneyTransaction) {
+    user.balance = user.MoneyTransaction.filter(
+      (tran) => tran.status === MoneyTransactionStatus.SUCCESS
+    ).reduce((acc, red) => {
+      if (red.type === MoneyTransactionType.DEPOSIT) {
+        return (acc += red.amount)
+      } else {
+        return (acc -= red.amount)
+      }
+    }, 0)
+    delete user.MoneyTransaction
+  }
   user.isFollowedByCurrentUser = user.following.some(
     (follow) => follow.followerId === currentUserId
   )
