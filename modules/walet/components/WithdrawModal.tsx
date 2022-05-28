@@ -8,15 +8,17 @@ import { TypographyVariant } from "@/components/Typography/textVariant.enum"
 import { useAppDispatch, useAppSelector } from "@/hooks/redux"
 import React, { useState } from "react"
 import { hideModal, ModalType } from "store/modalSlice"
+import { useMoneyTransaction } from "../hooks"
+import { MoneyTransactionType } from "../types"
 
 function WithdrawModal() {
   const { modalPayload, modalType } = useAppSelector((state) => state.modal)
-  const [value, setValue] = useState<number>()
-  const [accountNumber, setAccountNumber] = useState<string>()
+  const [value, setValue] = useState<number>(0)
+  const [accountNumber, setAccountNumber] = useState<string>("")
 
   const dispatch = useAppDispatch()
   const isModalVisible = modalType === ModalType.WITHDRAW_MODAL
-
+  const moneyTransaction = useMoneyTransaction()
   return (
     <Modal isVisible={isModalVisible}>
       <div className=" w-[500px] px-6 flex flex-col items-center text-center">
@@ -58,6 +60,12 @@ function WithdrawModal() {
           <Button
             onClick={() => {
               //   onContentBuy(modalPayload.id)
+              moneyTransaction.mutate({
+                type: MoneyTransactionType.WITHDRAW,
+                amount: value,
+                description: "withdraw",
+                merchantId: accountNumber,
+              })
               dispatch(hideModal())
             }}
             variant={ButtonVariants.PRIMARY}

@@ -8,10 +8,13 @@ import { TypographyVariant } from "@/components/Typography/textVariant.enum"
 import { useAppDispatch, useAppSelector } from "@/hooks/redux"
 import React, { useState } from "react"
 import { hideModal, ModalType } from "store/modalSlice"
+import { useMoneyTransaction } from "../hooks"
+import { MoneyTransactionType } from "../types"
 
 function DepositModal() {
   const { modalPayload, modalType } = useAppSelector((state) => state.modal)
-  const [value, setValue] = useState()
+  const [value, setValue] = useState<number>(0)
+  const moneyTransaction = useMoneyTransaction()
 
   const dispatch = useAppDispatch()
   const isModalVisible = modalType === ModalType.DEPOSIT_MODAL
@@ -46,7 +49,11 @@ function DepositModal() {
           </Button>
           <Button
             onClick={() => {
-              //   onContentBuy(modalPayload.id)
+              moneyTransaction.mutate({
+                amount: value,
+                type: MoneyTransactionType.DEPOSIT,
+                description: "Deposit",
+              })
               dispatch(hideModal())
             }}
             variant={ButtonVariants.PRIMARY}

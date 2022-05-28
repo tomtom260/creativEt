@@ -40,10 +40,7 @@ export default function Home({ contents, tags }: HomeProps) {
     <>
       <DefaultLayout padded={false}>
         <Landing />
-        <div
-          id="content"
-          className="max-w-7xl mb-[800px] flex flex-col px-2  sm:px-6  md:px-4 lg:px-8 pb-2 md:py-8 mx-auto"
-        >
+        <div id='content' className="max-w-7xl mb-[800px] flex flex-col px-2  sm:px-6  md:px-4 lg:px-8 pb-2 md:py-8 mx-auto">
           <div className=" flex  sticky top-[60px] py-8 bg-white z-20 w-full  flex-1 justify-between  items-center">
             <div className="w-32 ">
               <ListBox

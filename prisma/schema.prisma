@@ -51,23 +51,24 @@ model Profile {
 }
 
 model User {
-  id            String        @id @default(cuid())
-  name          String
-  email         String?       @unique
-  emailVerified DateTime?     @default(now())
-  image         String?       @default("https://res.cloudinary.com/dlqzrhr6r/image/upload/v1648297324/profile/22-223968_default-profile-picture-circle-hd-png-download_xrlhqm.png")
-  accounts      Account[]
-  sessions      Session[]
-  Profile       Profile?
-  Content       Content[]
-  Likes         Likes[]
-  followers     Follow[]      @relation("follower")
-  following     Follow[]      @relation("following")
-  boughtfrom    Transaction[] @relation("buyer")
-  soldTo        Transaction[] @relation("seller")
-  MessagesSent  Message[]     @relation("sender")
-  Room          Room[]
-  View          View[]
+  id               String             @id @default(cuid())
+  name             String
+  email            String?            @unique
+  emailVerified    DateTime?          @default(now())
+  image            String?            @default("https://res.cloudinary.com/dlqzrhr6r/image/upload/v1648297324/profile/22-223968_default-profile-picture-circle-hd-png-download_xrlhqm.png")
+  accounts         Account[]
+  sessions         Session[]
+  Profile          Profile?
+  Content          Content[]
+  Likes            Likes[]
+  followers        Follow[]           @relation("follower")
+  following        Follow[]           @relation("following")
+  boughtfrom       Transaction[]      @relation("buyer")
+  soldTo           Transaction[]      @relation("seller")
+  MessagesSent     Message[]          @relation("sender")
+  Room             Room[]
+  View             View[]
+  MoneyTransaction MoneyTransaction[]
 }
 
 model VerificationToken {
@@ -136,6 +137,17 @@ model Transaction {
   @@unique([contentId, buyerId])
 }
 
+model MoneyTransaction {
+  id            String               @id @default(cuid())
+  type          MoneyTransactionType
+  amount        Int
+  userId        String
+  User          User                 @relation(fields: [userId], references: [id])
+  description   String
+  transactionAt DateTime             @default(now())
+  status        String               @default("Pending")
+}
+
 model Message {
   id        String   @id @default(cuid())
   message   String   @db.LongText
@@ -168,4 +180,9 @@ model Boost {
   boostedAt DateTime @default(now())
   contentId String   @unique
   content   Content  @relation(fields: [contentId], references: [id], onDelete: Cascade)
+}
+
+enum MoneyTransactionType {
+  DEPOSIT
+  WITHDRAW
 }
