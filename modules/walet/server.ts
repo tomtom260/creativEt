@@ -25,13 +25,23 @@ export async function updateMoneyTransaction({
   id: string
   status: MoneyTransactionStatus
 }) {
-  console.log("idd", id, status)
   return await prisma.moneyTransaction.update({
     where: {
       id,
     },
     data: {
       status,
+    },
+  })
+}
+
+export async function getMoneyTransaction({ userId }: { userId: string }) {
+  return await prisma.moneyTransaction.findMany({
+    where: {
+      userId,
+      status: {
+        not: MoneyTransactionStatus.PENDING,
+      },
     },
   })
 }

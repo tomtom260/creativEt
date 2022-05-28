@@ -8,4 +8,5 @@ export type User = {
   isEmailVerified: boolean
   location: null | string
   bio: null | string
+  balance?: number
 }

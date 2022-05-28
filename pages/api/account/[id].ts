@@ -11,6 +11,7 @@ import { prisma } from "../../../utils/db"
 type NextApiRequestType = Omit<NextApiRequest, "query"> & {
   query: {
     id?: string
+    includeTransactions: boolean
   }
 }
 
@@ -28,8 +29,12 @@ export default async function userHandler(
   }
   switch (req.method) {
     case "GET":
-      const { id } = req.query
-      const user = await getUserWithProfile(id, session.user.id)
+      const { id, includeTransactions } = req.query
+      const user = await getUserWithProfile(
+        id,
+        session.user.id,
+        includeTransactions
+      )
       return SuccessAPIResponse(res, user)
     default:
       wrongRequestMethodError(res, ["GET"])

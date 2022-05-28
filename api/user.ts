@@ -19,8 +19,15 @@ export function transformUserResponse(res: AxiosResponse<any, any>): User {
   return userData
 }
 
-export async function fetchUserWithProfile(id: string) {
-  const user = await axios.get(`/api/account/${id}`)
+export async function fetchUserWithProfile(
+  id: string,
+  includeTransactions = false
+) {
+  const user = await axios.get(
+    `/api/account/${id}${
+      includeTransactions ? '?includeTransactions="true"}' : ""
+    }`
+  )
   return user
 }
 

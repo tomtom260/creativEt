@@ -1,29 +1,37 @@
+import classNames from "@/utils/classNames"
+import { MoneyTransactionStatus, MoneyTransactionType } from "@prisma/client"
+import moment from "moment"
+
 /* This example requires Tailwind CSS v2.0+ */
-const people = [
+const items = [
   {
-    name: "Lindsay Walton",
-    title: "Front-end Developer",
-    department: "Optimization",
-    email: "lindsay.walton@example.com",
+    description: "Lindsay Walton",
+    amount: 180,
     role: "Tuseday",
-    image:
-      "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
   },
   {
-    name: "Lindsay Walton",
-    title: "Front-end Developer",
-    department: "Optimization",
-    email: "lindsay.walton@example.com",
+    description: "Lindsay Walton",
+    amount: 482,
     role: "Tuseday",
-    image:
-      "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
   },
   // More people...
 ]
 
-export default function Table() {
+type TableProps = {
+  items: {
+    id: string
+    description: string
+    amount: number
+    transactionAt: Date
+    status: MoneyTransactionStatus
+    type: MoneyTransactionType
+  }[]
+  className: string
+}
+
+export default function Table({ items, className }: TableProps) {
   return (
-    <div className="mt-8 flex w-full flex-col">
+    <div className={classNames("mt-8 flex w-full flex-col", className)}>
       <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
           <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
@@ -34,13 +42,13 @@ export default function Table() {
                     scope="col"
                     className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                   >
-                    Name
+                    Description
                   </th>
                   <th
                     scope="col"
                     className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                   >
-                    Title
+                    Amount (ETB)
                   </th>
                   <th
                     scope="col"
@@ -52,7 +60,7 @@ export default function Table() {
                     scope="col"
                     className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                   >
-                    Role
+                    Date
                   </th>
                   <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
                     <span className="sr-only">Edit</span>
@@ -60,29 +68,41 @@ export default function Table() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 bg-white">
-                {people.map((person) => (
-                  <tr key={person.email}>
-                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
+                {items.map((item) => (
+                  <tr key={item.id}>
+                    <td className="whitespace-nowrap  py-4 pl-4 pr-3 text-sm sm:pl-6">
                       <div className="flex items-center">
                         <div className="">
                           <div className="font-medium text-gray-900">
-                            {person.name}
+                            {item.description}
                           </div>
-                          <div className="text-gray-500">{person.email}</div>
                         </div>
                       </div>
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                      <div className="text-gray-900">{person.title}</div>
-                      <div className="text-gray-500">{person.department}</div>
+                      <div className="text-gray-900">
+                        {item.type === MoneyTransactionType.DEPOSIT
+                          ? "+"
+                          : " -"}{" "}
+                        {item.amount}
+                      </div>
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                      <span className="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">
-                        Active
+                      <span
+                        className={classNames(
+                          "inline-flex rounded-full  px-2 text-xs font-semibold leading-5",
+                          item.status === MoneyTransactionStatus.SUCCESS
+                            ? "bg-green-100 text-green-800"
+                            : item.status === MoneyTransactionStatus.CANCELED
+                            ? "bg-red-100 text-red-800"
+                            : "bg-yellow-100 text-yellow-800"
+                        )}
+                      >
+                        {item.status}
                       </span>
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                      {person.role}
+                      {moment(item.transactionAt).format("YYYY-MM-DD")}
                     </td>
                   </tr>
                 ))}
