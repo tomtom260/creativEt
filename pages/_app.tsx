@@ -1,5 +1,6 @@
 import "../styles/globals.css"
 import "react-loading-skeleton/dist/skeleton.css"
+import "react-datepicker/dist/react-datepicker.css"
 import type { AppProps } from "next/app"
 import { ReactNode, useContext, useEffect, useRef } from "react"
 import { SessionProvider, useSession } from "next-auth/react"
@@ -14,11 +15,6 @@ import { useAppSelector } from "@/hooks/redux"
 import PusherProvider, { PusherContext } from "@/hooks/pusher"
 import { ValueOf } from "@visx/scale"
 
-type TOBJ = {
-  a: string
-  b: boolean
-}
-
 function MyApp({ Component, pageProps }: AppProps) {
   const queryClient = useRef(
     new QueryClient({
@@ -30,23 +26,19 @@ function MyApp({ Component, pageProps }: AppProps) {
     })
   ).current
 
-  function get<T extends keyof TOBJ>(key: T, value: TOBJ[T]) {
-    return [key, value]
-  }
-
   return (
-    // <PusherProvider>
-    <SessionProvider session={pageProps.session}>
-      <QueryClientProvider client={queryClient}>
-        <Provider store={store}>
-          <App privatePage={pageProps.protected}>
-            <Component {...pageProps} />
-          </App>
-        </Provider>
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
-    </SessionProvider>
-    // </PusherProvider>
+    <PusherProvider>
+      <SessionProvider session={pageProps.session}>
+        <QueryClientProvider client={queryClient}>
+          <Provider store={store}>
+            <App privatePage={pageProps.protected}>
+              <Component {...pageProps} />
+            </App>
+          </Provider>
+          <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
+      </SessionProvider>
+    </PusherProvider>
   )
 }
 

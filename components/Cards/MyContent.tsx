@@ -80,14 +80,16 @@ function MyContent({
         </div>
       }
       hoverComponent={
-        <div
-          onClick={() => {
-            setFlippedCard(content.id)
-          }}
-          className=" top-4 right-3 absolute z-10"
-        >
-          <DotsVerticalIcon className="h-6 w-6 cursor-pointer text-white " />
-        </div>
+        user?.id === content.createdBy.id && (
+          <div
+            onClick={() => {
+              setFlippedCard(content.id)
+            }}
+            className=" top-4 right-3 absolute z-10"
+          >
+            <DotsVerticalIcon className="h-6 w-6 cursor-pointer text-white " />
+          </div>
+        )
       }
       captionDetail={
         loading ? (

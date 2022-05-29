@@ -16,9 +16,11 @@ function PusherProvider({ children }) {
     })
   ).current
 
-  // useEffect(() => {
-  //   return pusherClient.disconnect
-  // }, [])
+  console.log("run")
+
+  useEffect(() => {
+    return pusherClient.disconnect()
+  }, [])
 
   return (
     <PusherContext.Provider value={pusherClient}>

@@ -1,4 +1,5 @@
 import { Html, Head, Main, NextScript } from "next/document"
+import Script from "next/script"
 
 export default function Document() {
   return (
@@ -18,6 +19,7 @@ export default function Document() {
       <body>
         <Main />
         <NextScript />
+        <Script src="https://unpkg.com/flowbite@1.4.7/dist/datepicker.js" />
       </body>
     </Html>
   )

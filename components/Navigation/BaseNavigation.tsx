@@ -20,7 +20,7 @@ function BaseNavigation({
 }: BaseNavigationProps) {
   const navigation = [
     { name: "Marketplace", href: "/", current: true },
-    { name: "Hire Creators", href: "#", current: false },
+    { name: "Hire Creators", href: "/hire", current: false },
   ]
 
   return (

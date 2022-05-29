@@ -11,7 +11,6 @@ import Button from "../../components/Button"
 import ButtonVariants from "../../components/Button/button.enum"
 import Head from "next/head"
 import HorizontalMenu from "../../components/HorizontalMenu"
-import Cards from "../../components/Cards/BaseCard"
 import { getSession } from "next-auth/react"
 import { MailIcon } from "@heroicons/react/outline"
 import { changeDateInJSONToMoment } from "@/utils/changeDateToMoment"
@@ -21,12 +20,17 @@ import {
   useUserWithProfileQuery,
   useFollowUserMutation,
   useUnfollowUserMutation,
+  useGetCurrentUser,
 } from "@/hooks/user"
 import { isFollwingUser } from "modules/user/server"
 import MyContent from "@/components/Cards/MyContent"
 import BoostModal from "@/modules/content/components/BoostModal"
 import DeleteModal from "@/modules/content/components/DeleteModal"
 import InsufficientBalanceModal from "@/modules/content/components/InsufficientBalanceModal"
+import Toggle from "@/components/Form/Switch"
+import HireModal from "@/modules/user/component/HireModal"
+import { useAppDispatch } from "@/hooks/redux"
+import { ModalType, showModal } from "store/modalSlice"
 
 type Contents = Awaited<ReturnType<typeof getContents>>
 type ProfileProps = Awaited<ReturnType<typeof getServerSideProps>>["props"]
@@ -48,6 +52,7 @@ function ProfilePage({ profile, myProfile, contents }: ProfileProps) {
   const [selectedMenuItem, setSelectedMenuItem] = useState<number>(0)
   const [filteredContents, setFilteredContents] = useState<Contents>([])
   const [loading, setLoading] = useState(false)
+  const [isAvailableForHire, setIsAvailableForHire] = useState<boolean>(false)
   const router = useRouter()
 
   useEffect(() => {
@@ -74,8 +79,8 @@ function ProfilePage({ profile, myProfile, contents }: ProfileProps) {
 
   const followMutation = useFollowUserMutation(profileQuery.data.id)
   const unFollowMutation = useUnfollowUserMutation(profileQuery.data.id)
-
   const [flippedCard, setFlippedCard] = useState<string | null>(null)
+  const dispatch = useAppDispatch()
 
   if (!profileQuery.data) {
     return <div>NO User with that username exists</div>
@@ -109,15 +114,26 @@ function ProfilePage({ profile, myProfile, contents }: ProfileProps) {
                   {profileQuery.data.location}
                 </Text>
               )}
-              {myProfile ? (
-                <Button
-                  onClick={() => {
-                    router.push("/account/Profile")
-                  }}
-                  variant={ButtonVariants.OUTLINED}
-                >
-                  Edit Profile
-                </Button>
+              {!myProfile ? (
+                <div className="flex flex-col gap-4 mt-8 ">
+                  <Button
+                    onClick={() => {
+                      router.push("/account/Profile")
+                    }}
+                    variant={ButtonVariants.OUTLINED}
+                  >
+                    Edit Profile
+                  </Button>
+                  <div className=" flex gap-4">
+                    <Text varaint={TypographyVariant.Body1}>
+                      Available for hire
+                    </Text>
+                    <Toggle
+                      onChange={setIsAvailableForHire}
+                      value={isAvailableForHire}
+                    />
+                  </div>
+                </div>
               ) : (
                 <div className="flex gap-4 ">
                   <Button
@@ -136,23 +152,40 @@ function ProfilePage({ profile, myProfile, contents }: ProfileProps) {
                   <Button
                     appendComponent={<MailIcon />}
                     className=""
-                    onClick={() => {}}
+                    onClick={() => {
+                      dispatch(
+                        showModal({
+                          modalType: ModalType.HIRE_MODAL,
+                          payload: {},
+                        })
+                      )
+                    }}
                     variant={ButtonVariants.PRIMARY}
                   >
-                    Hire Us
+                    Hire
+                  </Button>
+                  <Button
+                    // appendComponent={<MailIcon />}
+                    className=""
+                    onClick={() => {}}
+                    variant={ButtonVariants.OUTLINED}
+                  >
+                    Message
                   </Button>
                 </div>
               )}
             </div>
           </div>
           <div className="mt-8 md:mt-16"></div>
-          <HorizontalMenu
-            setSelectedMenuItem={setSelectedMenuItem}
-            selectedMenuItem={selectedMenuItem}
-            menuItems={Object.values(MenuItems).filter(
-              (item) => typeof item === "string"
-            )}
-          />
+          {myProfile && (
+            <HorizontalMenu
+              setSelectedMenuItem={setSelectedMenuItem}
+              selectedMenuItem={selectedMenuItem}
+              menuItems={Object.values(MenuItems).filter(
+                (item) => typeof item === "string"
+              )}
+            />
+          )}
           <div className="grid mb-96  mt-8 md:mt-14 gap-8  mx-auto  grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4  flex-wrap">
             {filteredContents?.map((content) => {
               return (
@@ -171,6 +204,7 @@ function ProfilePage({ profile, myProfile, contents }: ProfileProps) {
       <BoostModal />
       <DeleteModal />
       <InsufficientBalanceModal />
+      <HireModal />
     </>
   )
 }

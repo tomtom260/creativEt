@@ -25,7 +25,7 @@ export default async function userHandler(
             ? MoneyTransactionStatus.CANCELED
             : MoneyTransactionStatus.PENDING,
       })
-      return res.redirect("/account/walet")
+      return res.redirect("/account/wallet")
     default:
       wrongRequestMethodError(res, ["GET"])
   }
