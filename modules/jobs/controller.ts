@@ -1,8 +1,8 @@
-import { pusherServer } from "@/utils/pusher"
+import Pusher from "@/utils/pusher"
 import { Prisma } from "@prisma/client"
 import { createJob } from "./server"
-
 export async function createJobController(data: Prisma.JobsCreateInput) {
+  const pusherServer = Pusher.getInstance()
   const job = await createJob(data)
   pusherServer
     .trigger(`presence-jobs-${job.employeeId}`, "job:new", job)
