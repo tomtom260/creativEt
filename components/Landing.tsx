@@ -32,7 +32,7 @@ function Landing() {
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         transition={{ duration: "1" }}
-        className="flex flex-col z-[25] items-center space-y-4"
+        className="flex flex-col z-[22] items-center space-y-4"
       >
         <p className=" text-xl text-white">
           {" "}

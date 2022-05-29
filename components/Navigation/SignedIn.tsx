@@ -1,4 +1,4 @@
-import React, { Fragment } from "react"
+import React, { Fragment, useState } from "react"
 import { Menu, Transition } from "@headlessui/react"
 import { BellIcon } from "@heroicons/react/outline"
 import Image from "next/image"
@@ -8,6 +8,7 @@ import BaseNavigation from "./BaseNavigation"
 import { useGetCurrentUser } from "@/hooks/user"
 import { getOptimisedProfileImage } from "@/utils/cloudinary"
 import { signOut } from "next-auth/react"
+import NotificationContainer from "@/modules/notification/components/Container"
 
 function SignedInNavigation() {
   const { data: user } = useGetCurrentUser()
@@ -21,6 +22,7 @@ function SignedInNavigation() {
       onClick: () => signOut(),
     },
   ]
+  const [showNotification, setShowNotification] = useState(false)
 
   const imageUrl = getOptimisedProfileImage(user?.image!)
 
@@ -58,11 +60,33 @@ function SignedInNavigation() {
         )}
         NavigationRightSide={() => (
           <div className="hidden  lg:flex w-min  lg:items-center justify-self-end lg:justify-end xl:col-span-3">
-            <Link href={"#"} passHref>
-              <a className="ml-5 flex-shrink-0 bg-white rounded-full p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            <div className="relative">
+              <div
+                onClick={() => setShowNotification((val) => !val)}
+                className="ml-5 cursor-pointer flex-shrink-0 bg-white rounded-full p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
                 <BellIcon className="h-6 w-6" aria-hidden="true" />
-              </a>
-            </Link>
+                <div className="absolute top-0 text-xs flex items-center justify-center right-px w-4 h-4 rounded-full bg-secondary-normal text-white">
+                  <p className="!m-0 !p-0">3</p>
+                </div>
+              </div>
+
+              {
+                <Transition
+                  enter="transition-opacity duration-[1500]"
+                  enterFrom="opacity-0"
+                  enterTo="opacity-100"
+                  leave="transition-opacity duration-[1500]"
+                  leaveFrom="opacity-100"
+                  leaveTo="opacity-0"
+                  show={showNotification}
+                >
+                  <div className="absolute  -right-20 top-20 ">
+                    <NotificationContainer />
+                  </div>
+                </Transition>
+              }
+            </div>
             {/* Profile dropdown */}
             <Menu as="div" className="flex-shrink-0 relative ml-5">
               <div>
