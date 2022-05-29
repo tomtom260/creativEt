@@ -13,7 +13,7 @@ import { useGetCurrentUser } from "@/hooks/user"
 import Modal from "@/components/Dialog/Modal"
 import { useAppSelector } from "@/hooks/redux"
 import PusherProvider, { PusherContext } from "@/hooks/pusher"
-import { ValueOf } from "@visx/scale"
+import { Jobs } from "@prisma/client"
 
 function MyApp({ Component, pageProps }: AppProps) {
   const queryClient = useRef(
@@ -53,7 +53,6 @@ const App = ({
   const router = useRouter()
   const { isModalVisible } = useAppSelector((state) => state.modal)
   const pusherClient = useContext(PusherContext)
-
   useEffect(() => {
     if (isModalVisible) {
       document.body.style.overflow = "hidden"
@@ -62,9 +61,18 @@ const App = ({
     }
   }, [isModalVisible])
 
-  // useEffect(() => {
-  //   return () => pusherClient.disconnect()
-  // }, [])
+  useEffect(() => {
+    if (status === "authenticated") {
+      const jobsChannel = pusherClient.subscribe(
+        `presence-jobs-${session?.user.id}`
+      )
+      jobsChannel.bind("job:new", (job: Jobs) => {
+        alert("new job")
+        console.log(job)
+      })
+      pusherClient.subscribe(`notifications-${session?.user.id}`)
+    }
+  }, [status])
 
   const userQuery = useGetCurrentUser()
 

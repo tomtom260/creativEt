@@ -5,33 +5,47 @@ import Modal from "@/components/Dialog/Modal"
 import Text from "@/components/Typography"
 import { TypographyVariant } from "@/components/Typography/textVariant.enum"
 import { useAppDispatch, useAppSelector } from "@/hooks/redux"
-import useContentService from "@/service/content"
 import { hideModal, ModalType } from "store/modalSlice"
 import Input from "@/components/Form/Input"
 import { InputType } from "@/components/Form/Input/Input.enum"
 import Script from "next/script"
 import DatePicker from "react-datepicker"
 import { useGetCurrentUser } from "@/hooks/user"
+import { useCreateJobMutatation } from "@/modules/jobs/hooks"
 
 function HireModal() {
   const { modalPayload, modalType } = useAppSelector((state) => state.modal)
   const dispatch = useAppDispatch()
-  const { onContentBuy } = useContentService()
   const isModalVisible = modalType === ModalType.HIRE_MODAL
   const [date, setDate] = useState(new Date())
-  const [description, setDescription] = useState()
+  const [description, setDescription] = useState("")
   const [price, setPrice] = useState(0)
+  const [title, setTitle] = useState("")
+
+  const { userId } = (modalPayload as Record<string, string>) || { userId: "" }
 
   function onChange(date) {
     setDate(date)
   }
 
-  const { balance } = useGetCurrentUser().data
+  const { balance, id } = useGetCurrentUser().data
+  const createJobMutation = useCreateJobMutatation()
 
   return (
     <Modal isVisible={isModalVisible}>
       <div className=" w-[500px] px-6 flex flex-col items-center text-center">
         <Text varaint={TypographyVariant.H2}>Hire Creator</Text>
+        <div className="w-full flex flex-col">
+          <Text className="self-start" varaint={TypographyVariant.Body1}>
+            Title
+          </Text>
+          <Input
+            className="w-full"
+            onChange={(val) => setTitle(val)}
+            value={title}
+            variant={InputType.NORMAL}
+          />
+        </div>
         <div className="w-full flex flex-col">
           <Text className="self-start" varaint={TypographyVariant.Body1}>
             Description
@@ -58,7 +72,7 @@ function HireModal() {
         </div>
         <div className="w-full flex flex-col">
           <Text className="self-start" varaint={TypographyVariant.Body1}>
-            Deadline
+            Due Date
           </Text>
           <DatePicker
             css=""
@@ -81,7 +95,14 @@ function HireModal() {
           <Button
             disabled={balance < price}
             onClick={() => {
-              onContentBuy(modalPayload?.id)
+              createJobMutation.mutate({
+                price: Number(price),
+                description,
+                dueIn: date,
+                title,
+                employeeId: userId,
+                employerId: id,
+              })
               dispatch(hideModal())
             }}
             variant={ButtonVariants.PRIMARY}

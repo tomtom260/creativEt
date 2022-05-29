@@ -69,6 +69,8 @@ model User {
   Room             Room[]
   View             View[]
   MoneyTransaction MoneyTransaction[]
+  employer         Jobs[]             @relation("employer")
+  employee         Jobs[]             @relation("employee")
 }
 
 model VerificationToken {
@@ -182,6 +184,23 @@ model Boost {
   content   Content  @relation(fields: [contentId], references: [id], onDelete: Cascade)
 }
 
+model Jobs {
+  id               String     @id @default(cuid())
+  title            String
+  description      String
+  price            Int
+  status           JobsStatus @default(PENDING)
+  dueIn            DateTime
+  employerId       String
+  employer         User       @relation("employer", fields: [employerId], references: [id])
+  employeeId       String
+  employee         User       @relation("employee", fields: [employeeId], references: [id])
+  closedByEmployee Boolean    @default(false)
+  closedByEmployer Boolean    @default(false)
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+}
+
 enum MoneyTransactionType {
   DEPOSIT
   WITHDRAW
@@ -189,6 +208,13 @@ enum MoneyTransactionType {
 
 enum MoneyTransactionStatus {
   PENDING
+  SUCCESS
+  CANCELED
+}
+
+enum JobsStatus {
+  PENDING
+  IN_PROGRESS
   SUCCESS
   CANCELED
 }

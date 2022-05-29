@@ -156,7 +156,9 @@ function ProfilePage({ profile, myProfile, contents }: ProfileProps) {
                       dispatch(
                         showModal({
                           modalType: ModalType.HIRE_MODAL,
-                          payload: {},
+                          payload: {
+                            userId: profileQuery.data.id,
+                          },
                         })
                       )
                     }}
