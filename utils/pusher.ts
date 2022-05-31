@@ -6,6 +6,7 @@ declare global {
   var pusherServer: Pusher
 }
 
+global.pusherServer && console.log("pusher run")
 
 export const pusherServer =
   global.pusherServer ||

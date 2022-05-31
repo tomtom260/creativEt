@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react"
+import React, { Fragment, useContext, useEffect, useState } from "react"
 import { Menu, Transition } from "@headlessui/react"
 import { BellIcon } from "@heroicons/react/outline"
 import Image from "next/image"
@@ -9,9 +9,27 @@ import { useGetCurrentUser } from "@/hooks/user"
 import { getOptimisedProfileImage } from "@/utils/cloudinary"
 import { signOut } from "next-auth/react"
 import NotificationContainer from "@/modules/notification/components/Container"
+import { useGetNotifictionsQuery } from "@/modules/notification/hooks"
+import { PusherContext } from "@/hooks/pusher"
 
 function SignedInNavigation() {
   const { data: user } = useGetCurrentUser()
+  const notifications = useGetNotifictionsQuery()
+  const pusherClient = useContext(PusherContext)
+
+  useEffect(() => {
+    const notificationsChannel = pusherClient.subscribe(
+      `notifications-${user.id}`
+    )
+    notificationsChannel.bind(
+      "notification:new",
+      (notification: Notification) => {
+        alert("new notification")
+        console.log(notification)
+      }
+    )
+  }, [])
+
   const userNavigation = [
     { name: "Profile", href: `/${user?.username}`, onClick: () => {} },
     { name: "Dashboard", href: "/account/dashboard", onClick: () => {} },
@@ -67,22 +85,26 @@ function SignedInNavigation() {
               >
                 <BellIcon className="h-6 w-6" aria-hidden="true" />
                 <div className="absolute top-0 text-xs flex items-center justify-center right-px w-4 h-4 rounded-full bg-secondary-normal text-white">
-                  <p className="!m-0 !p-0">3</p>
+                  <p className="!m-0 !p-0">{notifications.data?.length}</p>
                 </div>
               </div>
 
               {
                 <Transition
-                  enter="transition-opacity duration-[1500]"
-                  enterFrom="opacity-0"
+                  appear
+                  enter="transition-opacity transition-transform duration-100"
+                  enterFrom="opacity-0 "
                   enterTo="opacity-100"
-                  leave="transition-opacity duration-[1500]"
+                  leave="transition-opacity duration-100"
                   leaveFrom="opacity-100"
                   leaveTo="opacity-0"
+                  className="absolute  -right-20 top-20 "
                   show={showNotification}
                 >
-                  <div className="absolute  -right-20 top-20 ">
-                    <NotificationContainer />
+                  <div>
+                    <NotificationContainer
+                      notifications={notifications.data!}
+                    />
                   </div>
                 </Transition>
               }

@@ -13,7 +13,9 @@ import { useGetCurrentUser } from "@/hooks/user"
 import Modal from "@/components/Dialog/Modal"
 import { useAppSelector } from "@/hooks/redux"
 import PusherProvider, { PusherContext } from "@/hooks/pusher"
-import { Jobs } from "@prisma/client"
+import { Notification } from "@prisma/client"
+import { useGetNotifictionsQuery } from "@/modules/notification/hooks"
+import ToastContainer from "@/components/Dialog/Toast/Container"
 
 function MyApp({ Component, pageProps }: AppProps) {
   const queryClient = useRef(
@@ -34,6 +36,7 @@ function MyApp({ Component, pageProps }: AppProps) {
             <App privatePage={pageProps.protected}>
               <Component {...pageProps} />
             </App>
+            <ToastContainer />
           </Provider>
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
@@ -51,8 +54,8 @@ const App = ({
 }) => {
   const { status, data: session } = useSession()
   const router = useRouter()
-  const { isModalVisible } = useAppSelector((state) => state.modal)
-  const pusherClient = useContext(PusherContext)
+  const isModalVisible = useAppSelector((state) => !!state.modal.modalType)
+
   useEffect(() => {
     if (isModalVisible) {
       document.body.style.overflow = "hidden"
@@ -60,19 +63,6 @@ const App = ({
       document.body.style.overflow = "visible"
     }
   }, [isModalVisible])
-
-  useEffect(() => {
-    if (status === "authenticated") {
-      const jobsChannel = pusherClient.subscribe(
-        `presence-jobs-${session?.user.id}`
-      )
-      jobsChannel.bind("job:new", (job: Jobs) => {
-        alert("new job")
-        console.log(job)
-      })
-      pusherClient.subscribe(`notifications-${session?.user.id}`)
-    }
-  }, [status])
 
   const userQuery = useGetCurrentUser()
 

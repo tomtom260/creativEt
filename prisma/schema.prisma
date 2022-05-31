@@ -71,6 +71,7 @@ model User {
   MoneyTransaction MoneyTransaction[]
   employer         Jobs[]             @relation("employer")
   employee         Jobs[]             @relation("employee")
+  Notification     Notification[]
 }
 
 model VerificationToken {
@@ -203,12 +204,15 @@ model Jobs {
 }
 
 model Notification {
-  id     String           @id @default(cuid())
-  title  String
-  type   NotificationType
-  jobsId String?
-  job    Jobs?            @relation(fields: [jobsId], references: [id])
-  seen   Boolean          @default(false)
+  id        String           @id @default(cuid())
+  title     String
+  type      NotificationType
+  jobsId    String?
+  job       Jobs?            @relation(fields: [jobsId], references: [id])
+  seen      Boolean          @default(false)
+  userId    String
+  User      User             @relation(fields: [userId], references: [id])
+  createdAt DateTime         @default(now())
 }
 
 enum MoneyTransactionType {
