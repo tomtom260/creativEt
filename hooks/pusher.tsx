@@ -16,8 +16,6 @@ function PusherProvider({ children }) {
     })
   )
 
-  console.log("run")
-
   useEffect(() => {
     return pusherClient.disconnect
   }, [])

@@ -2,13 +2,12 @@
 import { NextApiRequest, NextApiResponse } from "next"
 import { getSession } from "next-auth/react"
 import { wrongRequestMethodError } from "../../../utils/apiResponses"
-import Pusher from "@/utils/pusher"
+import { pusherServer } from "@/utils/pusher"
 
 export default async function userHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const pusherServer = Pusher.getInstance()
   const session = await getSession({ req })
   const userId = session?.user?.id!
   switch (req.method) {

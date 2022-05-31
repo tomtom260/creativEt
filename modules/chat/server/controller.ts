@@ -1,4 +1,4 @@
-import Pusher from "@/utils/pusher"
+import { pusherServer } from "@/utils/pusher"
 import { createNewMessageParams, NewRoomDTO, ToggleSeenUpdate } from "../types"
 import {
   createMessage,
@@ -9,7 +9,6 @@ import {
 } from "./services"
 
 export async function createNewMessage(newMessage: createNewMessageParams) {
-  const pusherServer = Pusher.getInstance()
   const message = await createMessage(newMessage)
   pusherServer
     .trigger(`presence-room-${message.roomId}`, "message:new", message)
