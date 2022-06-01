@@ -11,11 +11,19 @@ import { signOut } from "next-auth/react"
 import NotificationContainer from "@/modules/notification/components/Container"
 import { useGetNotifictionsQuery } from "@/modules/notification/hooks"
 import { PusherContext } from "@/hooks/pusher"
+import { useAppDispatch } from "@/hooks/redux"
+import { addToast } from "store/toastSlice"
+import { Notification } from "@prisma/client"
+import { useQueryClient } from "react-query"
 
 function SignedInNavigation() {
   const { data: user } = useGetCurrentUser()
-  const notifications = useGetNotifictionsQuery()
+  const notifications = useGetNotifictionsQuery().map(
+    (notifQuery) => notifQuery.data!
+  )
   const pusherClient = useContext(PusherContext)
+  const queryClient = useQueryClient()
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
     const notificationsChannel = pusherClient.subscribe(
@@ -24,11 +32,16 @@ function SignedInNavigation() {
     notificationsChannel.bind(
       "notification:new",
       (notification: Notification) => {
-        alert("new notification")
-        console.log(notification)
+        queryClient.setQueryData(
+          "notifications",
+          [notification].concat(queryClient.getQueryData("notifications") || [])
+        )
+        dispatch(addToast(notification))
       }
     )
   }, [])
+
+  console.log("first", Date.now())
 
   const userNavigation = [
     { name: "Profile", href: `/${user?.username}`, onClick: () => {} },
@@ -85,29 +98,22 @@ function SignedInNavigation() {
               >
                 <BellIcon className="h-6 w-6" aria-hidden="true" />
                 <div className="absolute top-0 text-xs flex items-center justify-center right-px w-4 h-4 rounded-full bg-secondary-normal text-white">
-                  <p className="!m-0 !p-0">{notifications.data?.length}</p>
+                  <p className="!m-0 !p-0">
+                    {notifications?.filter((not) => !not.seen).length}
+                  </p>
                 </div>
               </div>
-
-              {
-                <Transition
-                  appear
-                  enter="transition-opacity transition-transform duration-100"
-                  enterFrom="opacity-0 "
-                  enterTo="opacity-100"
-                  leave="transition-opacity duration-100"
-                  leaveFrom="opacity-100"
-                  leaveTo="opacity-0"
-                  className="absolute  -right-20 top-20 "
-                  show={showNotification}
-                >
-                  <div>
-                    <NotificationContainer
-                      notifications={notifications.data!}
-                    />
-                  </div>
-                </Transition>
-              }
+              <Transition
+                enter="transition-opacity transition-transform duration-1000"
+                enterFrom="opacity-0 "
+                enterTo="opacity-100"
+                leave="transition-opacity duration-1000"
+                leaveFrom="opacity-1000"
+                leaveTo="opacity-10"
+                show={showNotification}
+              >
+                <NotificationContainer />
+              </Transition>
             </div>
             {/* Profile dropdown */}
             <Menu as="div" className="flex-shrink-0 relative ml-5">

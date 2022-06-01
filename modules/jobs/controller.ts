@@ -10,8 +10,8 @@ export async function createJobController(data: Prisma.JobsCreateInput) {
     userId: job.employeeId,
     type: "JOB",
   })
-  pusherServer
-    .trigger(`notifications-${job.employeeId}`, "notification:new", job)
-    .catch((err) => console.log(err))
+  // pusherServer
+  //   .trigger(`notifications-${job.employeeId}`, "notification:new", job)
+  //   .catch((err) => console.log(err))
   return job
 }

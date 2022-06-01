@@ -2,7 +2,7 @@ import "../styles/globals.css"
 import "react-loading-skeleton/dist/skeleton.css"
 import "react-datepicker/dist/react-datepicker.css"
 import type { AppProps } from "next/app"
-import { ReactNode, useContext, useEffect, useRef } from "react"
+import { ReactNode, useContext, useEffect, useRef, ReactElement } from "react"
 import { SessionProvider, useSession } from "next-auth/react"
 import { Provider } from "react-redux"
 import { store } from "store"
@@ -16,8 +16,17 @@ import PusherProvider, { PusherContext } from "@/hooks/pusher"
 import { Notification } from "@prisma/client"
 import { useGetNotifictionsQuery } from "@/modules/notification/hooks"
 import ToastContainer from "@/components/Dialog/Toast/Container"
+import type { NextPage } from "next"
 
-function MyApp({ Component, pageProps }: AppProps) {
+type NextPageWithLayout = NextPage & {
+  getLayout?: (page: ReactElement) => ReactNode
+}
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout
+}
+
+function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const queryClient = useRef(
     new QueryClient({
       defaultOptions: {
@@ -28,13 +37,15 @@ function MyApp({ Component, pageProps }: AppProps) {
     })
   ).current
 
+  const getLayout = Component.getLayout ?? ((page) => page)
+
   return (
     <PusherProvider>
       <SessionProvider session={pageProps.session}>
         <QueryClientProvider client={queryClient}>
           <Provider store={store}>
             <App privatePage={pageProps.protected}>
-              <Component {...pageProps} />
+              {getLayout(<Component {...pageProps} />)}
             </App>
             <ToastContainer />
           </Provider>

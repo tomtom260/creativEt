@@ -23,6 +23,7 @@ function Toast() {
           leave="transition-opacity transition-transform duration-500 ease-in"
           leaveFrom="opacity-100 translate-x-0"
           leaveTo="opacity-10 -translate-y-[200px]"
+          className="shadow-2xl rounded-2xl overflow-hidden"
         >
           <NotificationCard notification={notifications[0]} />
         </Transition.Child>

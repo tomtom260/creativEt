@@ -8,6 +8,7 @@ export type DefaultLayoutProps = {
 }
 
 function DefaultLayout({ children, padded = true }: DefaultLayoutProps) {
+  console.log("second", Date.now())
   return (
     <>
       <Navigation variant={NavigationVariant.SignedIn} />

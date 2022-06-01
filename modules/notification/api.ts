@@ -1,5 +1,6 @@
+import { Notification } from "@prisma/client"
 import axios from "axios"
-import { TCreateNotifcation, TGetNotifcation } from "./types"
+import { TGetNotifcation } from "./types"
 
 export async function getNotifcationsAPI(id: string) {
   return (
@@ -7,6 +8,8 @@ export async function getNotifcationsAPI(id: string) {
   ).data.data
 }
 
-export async function createNotifcationsAPI(id: TCreateNotifcation) {
-  return (await axios.post(`/api/notification?id=${id}`)).data.data
+export async function dismissNotifcationsAPI(id: string) {
+  return (
+    await axios.patch<{ data: Notification }>(`/api/notification?id=${id}`)
+  ).data.data
 }

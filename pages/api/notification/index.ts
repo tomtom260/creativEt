@@ -1,3 +1,4 @@
+import { dismissNotifcationController } from "@/modules/notification/controller"
 import { getNotifcations } from "@/modules/notification/server"
 import { NextApiRequest, NextApiResponse } from "next"
 import { getSession } from "next-auth/react"
@@ -15,7 +16,10 @@ export default async function userHandler(
     case "GET":
       const notifications = await getNotifcations(session?.user.id)
       return SuccessAPIResponse(res, notifications)
+    case "PATCH":
+      const notification = await dismissNotifcationController(req.query.id)
+      return SuccessAPIResponse(res, notification)
     default:
-      wrongRequestMethodError(res, ["GET"])
+      wrongRequestMethodError(res, ["GET", "PATCH"])
   }
 }
