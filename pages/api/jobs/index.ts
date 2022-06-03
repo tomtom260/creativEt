@@ -1,4 +1,5 @@
 import { createJobController } from "@/modules/jobs/controller"
+import { getJobs } from "@/modules/jobs/server"
 import { NextApiRequest, NextApiResponse } from "next"
 import { getSession } from "next-auth/react"
 import {
@@ -10,12 +11,14 @@ export default async function userHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const session = await getSession({ req })
   switch (req.method) {
     case "POST":
-      const job = createJobController(req.body)
+      const job = await createJobController(req.body)
       return SuccessAPIResponse(res, job)
+    case "GET":
+      const jobs = await getJobs(req.query)
+      return SuccessAPIResponse(res, jobs)
     default:
-      wrongRequestMethodError(res, ["POST"])
+      wrongRequestMethodError(res, ["POST", "GET"])
   }
 }

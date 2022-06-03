@@ -41,8 +41,6 @@ function SignedInNavigation() {
     )
   }, [])
 
-  console.log("first", Date.now())
-
   const userNavigation = [
     { name: "Profile", href: `/${user?.username}`, onClick: () => {} },
     { name: "Dashboard", href: "/account/dashboard", onClick: () => {} },

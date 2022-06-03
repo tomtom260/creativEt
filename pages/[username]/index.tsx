@@ -47,8 +47,6 @@ function ProfilePage({ profile, myProfile, contents }: ProfileProps) {
     placeholderData: { data: { data: { ...profile } } },
   })
 
-  console.log("filteredContents", contents)
-
   const [selectedMenuItem, setSelectedMenuItem] = useState<number>(0)
   const [filteredContents, setFilteredContents] = useState<Contents>([])
   const [loading, setLoading] = useState(false)

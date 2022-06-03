@@ -1,7 +1,7 @@
 import { pusherServer } from "@/utils/pusher"
 import { Prisma } from "@prisma/client"
 import { createNotifcationController } from "../notification/controller"
-import { createJob } from "./server"
+import { createJob, getJobs } from "./server"
 export async function createJobController(data: Prisma.JobsCreateInput) {
   const job = await createJob(data)
   createNotifcationController({
@@ -10,8 +10,12 @@ export async function createJobController(data: Prisma.JobsCreateInput) {
     userId: job.employeeId,
     type: "JOB",
   })
-  // pusherServer
-  //   .trigger(`notifications-${job.employeeId}`, "notification:new", job)
-  //   .catch((err) => console.log(err))
   return job
+}
+
+export async function getJobsController(data: {
+  employeeId?: Prisma.JobsScalarWhereInput["employeeId"]
+  employerId?: Prisma.JobsScalarWhereInput["employerId"]
+}) {
+  return await getJobs(data)
 }

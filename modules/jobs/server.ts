@@ -6,17 +6,43 @@ export async function createJob(data: Prisma.JobsCreateInput) {
     data,
   })
 }
-export async function getJobsWhereEmployee(id: string) {
+export async function getJobs(data: Prisma.JobsScalarWhereInput) {
   return await prisma.jobs.findMany({
-    where: {
-      employeeId: id,
+    include: {
+      employer: {
+        select: {
+          image: true,
+          name: true,
+        },
+      },
+      employee: {
+        select: {
+          image: true,
+          name: true,
+        },
+      },
     },
+    where: data,
   })
 }
-export async function getJobsWhereEmployer(id: string) {
-  return await prisma.jobs.findMany({
+export async function getJobsById(id: string) {
+  return await prisma.jobs.findUnique({
+    include: {
+      employer: {
+        select: {
+          image: true,
+          name: true,
+        },
+      },
+      employee: {
+        select: {
+          image: true,
+          name: true,
+        },
+      },
+    },
     where: {
-      employerId: id,
+      id,
     },
   })
 }
