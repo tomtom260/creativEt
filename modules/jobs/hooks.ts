@@ -50,6 +50,8 @@ function getStatus(status: FilterOptions) {
       return JobsStatus.PENDING
     case FilterOptions["In Progress"]:
       return JobsStatus.IN_PROGRESS
+    case FilterOptions.Submitted:
+      return JobsStatus.SUBMITTED
     case FilterOptions.Success:
       return JobsStatus.SUCCESS
     case FilterOptions.Cancelled:
@@ -77,14 +79,6 @@ export function useGetJobsQuery(
     }
   )
 
-  useQueries(
-    (getJobsQuery.data || []).map((job) => ({
-      queryFn: () => getJobByIdAPI(job.id),
-      queryKey: ["job", job.id],
-      initialData: job,
-    }))
-  )
-
   const [firstTime, setFirstTime] = useState(true)
 
   useEffect(() => {
@@ -96,21 +90,37 @@ export function useGetJobsQuery(
     }
   }, [menu, firstTime, status])
 
-  return getJobsQuery
+  const jobsQueriesData = useQueries(
+    (getJobsQuery.data || []).map((job) => ({
+      queryFn: () => getJobByIdAPI(job.id),
+      queryKey: ["job", job.id],
+      initialData: job,
+    }))
+  )
+
+  return { jobsQuery: getJobsQuery, jobsQueriesData }
 }
 
 export function useAcceptJobMutation() {
   const queryClient = useQueryClient()
   return useMutation(acceptJobAPI, {
     onSuccess: (res) => {
-      queryClient.invalidateQueries(["jobs", res.data.data.id])
+      queryClient.invalidateQueries(["job", res.data.data.id])
     },
   })
 }
 
 export function useRejectJobMutation() {
-  return useMutation(rejectJobAPI)
+  return useMutation(rejectJobAPI, {
+    onSuccess: (res) => {
+      queryClient.invalidateQueries(["job", res.data.data.id])
+    },
+  })
 }
 export function useFinishJobMutation() {
-  return useMutation(finishJobAPI)
+  return useMutation(finishJobAPI, {
+    onSuccess: (res) => {
+      queryClient.invalidateQueries(["job", res.data.data.id])
+    },
+  })
 }

@@ -11,5 +11,5 @@ export enum FilterOptions {
   "In Progress" = "In Progress",
   "Success" = "Success",
   "Cancelled" = "Cancelled",
+  "Submitted" = "Submitted",
 }
-

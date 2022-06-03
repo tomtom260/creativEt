@@ -4,9 +4,10 @@ import { DefaultLayout } from "@/layouts/layout.stories"
 import { getJobsController } from "@/modules/jobs/controller"
 import { useGetJobsQuery } from "@/modules/jobs/hooks"
 import { FilterOptions, TJOb } from "@/modules/jobs/types"
-import FinishJobModal from "@/modules/user/component/FinishJobModal"
-import JobsCard from "@/modules/user/component/JobsCard"
+import FinishJobModal from "@/modules/jobs/components/FinishJobModal"
+import JobsCard from "@/modules/jobs/components/JobsCard"
 import { changeDateInJSONToMoment } from "@/utils/changeDateToMoment"
+import moment from "moment"
 import { getSession } from "next-auth/react"
 import React, { useState } from "react"
 
@@ -19,13 +20,20 @@ type JobsPageProps = {
   jobs: TJOb[]
 }
 
-const filterOptions = ["All", "Pending", "In Progress", "Success", "Cancelled"]
+const filterOptions = [
+  "All",
+  "Pending",
+  "In Progress",
+  "Submitted",
+  "Success",
+  "Cancelled",
+]
 
 function Jobs({ jobs }: JobsPageProps) {
   const [selectedMenuItem, setSelectedMenuItem] = useState<number>(0)
   const [selectedFilterOption, setSelectedFilterOption] =
     useState<FilterOptions>(filterOptions[0] as FilterOptions)
-  const jobsQuery = useGetJobsQuery(
+  const { jobsQuery, jobsQueriesData } = useGetJobsQuery(
     jobs,
     selectedFilterOption,
     selectedMenuItem
@@ -51,15 +59,21 @@ function Jobs({ jobs }: JobsPageProps) {
             optionsClassName=" !right-0 !left-auto"
           />
           <div className="mb-[800px]  grid w-full  mt-8 gap-8  mx-auto grid-rows-2  grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3  flex-wrap">
-            {(jobsQuery.data || []).map((job) => (
-              <JobsCard
-                key={job.id}
-                job={job}
-                flippedCard={flippedCard}
-                setIsFlipped={setFlippedCard}
-                isLoading={jobsQuery.isFetching}
-              />
-            ))}
+            {jobsQueriesData
+              // .sort((a, b) =>
+              //   moment(a.data?.updatedAt).isBefore(moment(b.data?.updatedAt))
+              //     ? 1
+              //     : -1
+              // )
+              .map((job) => (
+                <JobsCard
+                  key={job?.data?.id}
+                  job={job.data as TJOb}
+                  flippedCard={flippedCard}
+                  setIsFlipped={setFlippedCard}
+                  isLoading={job.isFetching || jobsQuery.isFetching}
+                />
+              ))}
           </div>
         </div>
       </DefaultLayout>
