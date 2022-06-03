@@ -18,6 +18,7 @@ import {
 import { JobsStatus } from "@prisma/client"
 import { useAppDispatch } from "@/hooks/redux"
 import { ModalType, showModal } from "store/modalSlice"
+import { useGetCurrentUser } from "@/hooks/user"
 
 type JobsProps = {
   flippedCard: string | null
@@ -37,6 +38,7 @@ function JobsCard({
   const acceptJobMutattion = useAcceptJobMutation()
   const rejectJobMutattion = useRejectJobMutation()
   const dispatch = useAppDispatch()
+  const user = useGetCurrentUser().data
 
   return isLoading ? (
     <div className="w-full min-h-[330px] h-full">
@@ -76,9 +78,12 @@ function JobsCard({
               </Text>
             </div>
             <div className="flex flex-col">
-              <Text varaint={TypographyVariant.Body2}>Due In</Text>
+              <Text varaint={TypographyVariant.Body2}>
+                {job.status === JobsStatus.SUCCESS ? "Completed At" : "Due In"}
+              </Text>
               <Text
                 className={
+                  job.status !== JobsStatus.SUCCESS &&
                   dueIn.isBefore(moment(Date.now()))
                     ? "text-red-600"
                     : dueIn.isBetween(
@@ -90,13 +95,16 @@ function JobsCard({
                 }
                 varaint={TypographyVariant.H2}
               >
-                {dueIn.fromNow()}
+                {job.status === JobsStatus.SUCCESS
+                  ? moment(job.updatedAt).fromNow()
+                  : dueIn.fromNow()}
               </Text>
             </div>
           </div>
           <div className="flex justify-between items-center w-full mt-2">
             <div className="flex gap-2">
-              {job.status === JobsStatus.PENDING ? (
+              {job.status === JobsStatus.PENDING &&
+              user?.id === job.employeeId ? (
                 <>
                   <Button
                     onClick={() => {
@@ -116,7 +124,8 @@ function JobsCard({
                     Reject
                   </Button>
                 </>
-              ) : job.status === JobsStatus.IN_PROGRESS ? (
+              ) : job.status === JobsStatus.IN_PROGRESS &&
+                user?.id === job.employeeId ? (
                 <Button
                   onClick={() => {
                     dispatch(
@@ -130,7 +139,8 @@ function JobsCard({
                 >
                   Finish
                 </Button>
-              ) : job.status === JobsStatus.SUBMITTED ? (
+              ) : job.status === JobsStatus.SUBMITTED &&
+                user?.id === job.employerId ? (
                 <Button
                   onClick={() => {
                     dispatch(
@@ -148,7 +158,14 @@ function JobsCard({
             </div>
             <p
               className={classNames(
-                "inline-flex rounded-full px-3 py-1 text-sm bg-green-100 text-green-800 font-semibold leading-5"
+                "inline-flex rounded-full px-3 py-1 text-sm  font-semibold leading-5",
+                "bg-amber-100 text-amber-800",
+                job.status === JobsStatus.SUCCESS
+                  ? "!bg-green-100 !text-green-800"
+                  : "",
+                job.status === JobsStatus.CANCELED
+                  ? "!bg-red-100 !text-red-800"
+                  : ""
               )}
             >
               {job.status}

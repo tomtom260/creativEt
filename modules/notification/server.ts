@@ -4,6 +4,9 @@ import { TCreateNotifcation } from "./types"
 
 export async function getNotifcations(userId: string) {
   return await prisma.notification.findMany({
+    include: {
+      notifiedBy: true,
+    },
     where: {
       userId,
     },

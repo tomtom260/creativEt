@@ -7,7 +7,7 @@ export async function createJobAPI(
     Prisma.JobsUncheckedCreateWithoutEmployerInput
 ) {
   return await (
-    await axios.post("/api/jobs", data)
+    await axios.post<{ data: Prisma.JobsGetPayload<{}> }>("/api/jobs", data)
   ).data.data
 }
 

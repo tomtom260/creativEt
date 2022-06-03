@@ -45,9 +45,13 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         <QueryClientProvider client={queryClient}>
           <Provider store={store}>
             <App privatePage={pageProps.protected}>
-              {getLayout(<Component {...pageProps} />)}
+              {getLayout(
+                <>
+                  <Component {...pageProps} />
+                  <ToastContainer />
+                </>
+              )}
             </App>
-            <ToastContainer />
           </Provider>
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>

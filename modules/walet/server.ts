@@ -1,19 +1,22 @@
 import { prisma } from "@/utils/db"
-import { MoneyTransaction } from "@prisma/client"
-import { MoneyTransactionStatus } from "./types"
+import { MoneyTransaction, MoneyTransactionStatus } from "@prisma/client"
 
 export async function createMoneyTransaction({
   amount,
   description,
   userId,
   type,
-}: Pick<MoneyTransaction, "amount" | "description" | "userId" | "type">) {
+  status = MoneyTransactionStatus.PENDING,
+}: Pick<MoneyTransaction, "amount" | "description" | "userId" | "type"> & {
+  status?: MoneyTransaction["status"]
+}) {
   return await prisma.moneyTransaction.create({
     data: {
       amount,
       description,
       userId,
       type,
+      status,
     },
   })
 }

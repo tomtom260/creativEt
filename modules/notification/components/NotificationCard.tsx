@@ -20,10 +20,12 @@ function NotificationCard({ notification }: { notification: TGetNotifcation }) {
       )}
     >
       <div className=" rounded-full relative overflow-hidden h-8 w-8 md:h-14 md:w-14 flex-shrink-0">
-        <ImageWithSkeleton
-          src={notification.notifiedBy.image as string}
-          layout="fill"
-        />
+        {notification?.notifiedBy?.image && (
+          <ImageWithSkeleton
+            src={notification.notifiedBy.image as string}
+            layout="fill"
+          />
+        )}
       </div>
       <div className="flex flex-col gap-4">
         <div className="flex flex-col">

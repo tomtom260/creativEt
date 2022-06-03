@@ -16,8 +16,13 @@ import {
 } from "./api"
 import { FilterOptions, TJOb } from "./types"
 
-export function useCreateJobMutatation(options?: CustomUseMutationOptions) {
-  return useMutation(createJobAPI, options)
+export function useCreateJobMutatation() {
+  const queryClient = useQueryClient()
+  return useMutation(createJobAPI, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["currentUser"])
+    },
+  })
 }
 
 export function useGetYourGigsQuery() {

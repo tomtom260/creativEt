@@ -1,4 +1,9 @@
-import { JobsStatus, MoneyTransactionType, Prisma } from "@prisma/client"
+import {
+  JobsStatus,
+  MoneyTransactionStatus,
+  MoneyTransactionType,
+  Prisma,
+} from "@prisma/client"
 import { PublishContent } from "../content/server"
 import { createNotifcationController } from "../notification/controller"
 import { createMoneyTransaction } from "../walet/server"
@@ -11,6 +16,13 @@ export async function createJobController(data: Prisma.JobsCreateInput) {
     userId: job.employeeId,
     type: "JOB",
     notifiedById: job.employerId,
+  })
+  createMoneyTransaction({
+    amount: job.price,
+    description: `Gig ${job.title}`,
+    userId: job.employerId,
+    type: MoneyTransactionType.WITHDRAW,
+    status: MoneyTransactionStatus.SUCCESS,
   })
   return job
 }

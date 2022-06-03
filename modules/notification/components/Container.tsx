@@ -14,7 +14,7 @@ function NotificationContainer() {
     <div className="relative w-1/4 max-h-96 overflow-hidden">
       <div
         className="flex fixed flex-col bg-white border rounded-3xl 
-        h-full w-full w-fit  min-w-[350px] max-w-[550px] max-h-96 top-20 right-40 pl-8 py-6
+        h-full  w-fit  min-w-[350px] max-w-[550px] max-h-96 top-20 right-40 pl-8 py-6
         "
       >
         <Text varaint={TypographyVariant.H2}>Notifications</Text>
