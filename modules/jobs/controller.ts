@@ -1,14 +1,16 @@
-import { pusherServer } from "@/utils/pusher"
-import { JobsStatus, Prisma } from "@prisma/client"
+import { JobsStatus, MoneyTransactionType, Prisma } from "@prisma/client"
+import { PublishContent } from "../content/server"
 import { createNotifcationController } from "../notification/controller"
+import { createMoneyTransaction } from "../walet/server"
 import { createJob, getJobs, updateJob } from "./server"
+
 export async function createJobController(data: Prisma.JobsCreateInput) {
   const job = await createJob(data)
   createNotifcationController({
     title: "New Job Offer",
-    jobsId: job.id,
     userId: job.employeeId,
     type: "JOB",
+    notifiedById: job.employerId,
   })
   return job
 }
@@ -41,9 +43,17 @@ export async function finishJobController(id: string, image: string) {
 }
 
 export async function successJobController(id: string) {
-  return await updateJob(id, {
+  const job = await updateJob(id, {
     status: JobsStatus.SUCCESS,
   })
+  PublishContent(job.contentId as string)
+  createMoneyTransaction({
+    amount: job.price,
+    description: `Gig ${job.title}`,
+    userId: job.employeeId,
+    type: MoneyTransactionType.DEPOSIT,
+  })
+  return job
 }
 
 export async function reviseContentJobController(id: string) {

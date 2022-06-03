@@ -13,7 +13,7 @@ import { TGetNotifcation } from "./types"
 
 export function useDismissNotifictionMutatation() {
   const queryClient = useQueryClient()
-  return useMutation<UseMutationOptions<Notification>>(dismissNotifcationsAPI, {
+  return useMutation(dismissNotifcationsAPI, {
     onSuccess: (notification) => {
       queryClient.setQueryData(["notifications", notification.id], notification)
     },

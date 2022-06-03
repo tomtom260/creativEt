@@ -1,5 +1,6 @@
 import { createNotifcations, updateNotifcations } from "./server"
 import { TCreateNotifcation } from "./types"
+import { pusherServer } from "@/utils/pusher"
 
 export async function createNotifcationController(data: TCreateNotifcation) {
   const notification = await createNotifcations(data)

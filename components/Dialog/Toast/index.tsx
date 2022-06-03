@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react"
 import NotificationCard from "@/modules/notification/components/NotificationCard"
 import { useGetNotifictionsQuery } from "@/modules/notification/hooks"
 import { Transition } from "@headlessui/react"
+import { Notification } from "@prisma/client"
 
 function Toast() {
-  const notifications = useGetNotifictionsQuery().data
+  const notification = useGetNotifictionsQuery()[0].data
   const [isShown, setIsShown] = useState(true)
 
   useEffect(() => {
@@ -25,7 +26,7 @@ function Toast() {
           leaveTo="opacity-10 -translate-y-[200px]"
           className="shadow-2xl rounded-2xl overflow-hidden"
         >
-          <NotificationCard notification={notifications[0]} />
+          <NotificationCard notification={notification as Notification} />
         </Transition.Child>
       </Transition>
     </>

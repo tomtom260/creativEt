@@ -4,46 +4,19 @@ import { TCreateNotifcation } from "./types"
 
 export async function getNotifcations(userId: string) {
   return await prisma.notification.findMany({
-    include: {
-      job: {
-        include: {
-          employer: true,
-        },
-      },
-    },
     where: {
       userId,
     },
   })
 }
 
-export async function createNotifcations({
-  jobsId,
-  userId,
-  ...data
-}: TCreateNotifcation) {
+export async function createNotifcations(data: TCreateNotifcation) {
   const { id } = await prisma.notification.create({
-    data: {
-      ...data,
-      job: {
-        connect: {
-          id: jobsId as string,
-        },
-      },
-      User: {
-        connect: {
-          id: userId,
-        },
-      },
-    },
+    data,
   })
   return await prisma.notification.findUnique({
     include: {
-      job: {
-        include: {
-          employer: true,
-        },
-      },
+      notifiedBy: true,
     },
     where: {
       id,
@@ -57,11 +30,7 @@ export async function updateNotifcations(
 ) {
   return await prisma.notification.update({
     include: {
-      job: {
-        include: {
-          employer: true,
-        },
-      },
+      notifiedBy: true,
     },
     where: {
       id,

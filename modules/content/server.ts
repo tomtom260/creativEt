@@ -48,6 +48,17 @@ export async function deleteContent(id: string) {
   })
 }
 
+export async function PublishContent(id: string) {
+  return await prisma.content.update({
+    where: {
+      id,
+    },
+    data: {
+      published: true,
+    },
+  })
+}
+
 export async function getContents(
   userId?: string,
   creatorId?: string,
@@ -75,6 +86,7 @@ export async function getContents(
       },
     },
     where: {
+      published: true,
       createdBy: {
         id: creatorId,
         following:
@@ -127,6 +139,7 @@ export async function getLikedContents(userId: string) {
       },
     },
     where: {
+      published: true,
       likes: {
         some: {
           userId,
@@ -155,6 +168,7 @@ export async function getBoughtContents(userId: string) {
       },
     },
     where: {
+      published: true,
       Transaction: {
         some: {
           buyerId: userId,

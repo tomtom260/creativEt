@@ -71,7 +71,8 @@ model User {
   MoneyTransaction MoneyTransaction[]
   employer         Jobs[]             @relation("employer")
   employee         Jobs[]             @relation("employee")
-  Notification     Notification[]
+  Notification     Notification[]     @relation("user")
+  notifiedBy       Notification[]     @relation("notifiedBy")
 }
 
 model VerificationToken {
@@ -102,6 +103,8 @@ model Content {
   Transaction Transaction[]
   View        View[]
   Boost       Boost?
+  published   Boolean       @default(true)
+  Jobs        Jobs?
 }
 
 model Likes {
@@ -186,34 +189,35 @@ model Boost {
 }
 
 model Jobs {
-  id               String         @id @default(cuid())
+  id               String     @id @default(cuid())
   title            String
   description      String
   price            Int
   image            String?
-  status           JobsStatus     @default(PENDING)
+  status           JobsStatus @default(PENDING)
   dueIn            DateTime
   employerId       String
-  employer         User           @relation("employer", fields: [employerId], references: [id])
+  employer         User       @relation("employer", fields: [employerId], references: [id])
   employeeId       String
-  employee         User           @relation("employee", fields: [employeeId], references: [id])
-  closedByEmployee Boolean        @default(false)
-  closedByEmployer Boolean        @default(false)
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
-  Notification     Notification[]
+  employee         User       @relation("employee", fields: [employeeId], references: [id])
+  closedByEmployee Boolean    @default(false)
+  closedByEmployer Boolean    @default(false)
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+  content          Content?   @relation(fields: [contentId], references: [id])
+  contentId        String?    @unique
 }
 
 model Notification {
-  id        String           @id @default(cuid())
-  title     String
-  type      NotificationType
-  jobsId    String?
-  job       Jobs?            @relation(fields: [jobsId], references: [id])
-  seen      Boolean          @default(false)
-  userId    String
-  User      User             @relation(fields: [userId], references: [id])
-  createdAt DateTime         @default(now())
+  id           String           @id @default(cuid())
+  title        String
+  type         NotificationType
+  seen         Boolean          @default(false)
+  userId       String
+  User         User             @relation("user", fields: [userId], references: [id])
+  createdAt    DateTime         @default(now())
+  notifiedBy   User             @relation("notifiedBy", fields: [notifiedById], references: [id])
+  notifiedById String
 }
 
 enum MoneyTransactionType {

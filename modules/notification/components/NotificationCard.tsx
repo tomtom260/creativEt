@@ -21,25 +21,23 @@ function NotificationCard({ notification }: { notification: TGetNotifcation }) {
     >
       <div className=" rounded-full relative overflow-hidden h-8 w-8 md:h-14 md:w-14 flex-shrink-0">
         <ImageWithSkeleton
-          src={notification.job?.employer.image as string}
+          src={notification.notifiedBy.image as string}
           layout="fill"
         />
       </div>
       <div className="flex flex-col gap-4">
         <div className="flex flex-col">
           <Text varaint={TypographyVariant.Body1}>
-            <span className="font-bold ">
-              {notification.job?.employer.name}
-            </span>{" "}
+            <span className="font-bold ">{notification.notifiedBy.name}</span>{" "}
             offered you a <span className="font-bold">job</span>
           </Text>
           <div className="flex gap-3 items-center">
             <Text varaint={TypographyVariant.Body2}>
-              {moment(notification.job?.createdAt).fromNow()}
+              {moment(notification.createdAt).fromNow()}
             </Text>
-            <Text className="hidden md:block" varaint={TypographyVariant.Body1}>
+            {/* <Text className="hidden md:block" varaint={TypographyVariant.Body1}>
               {notification.job?.title as string}
-            </Text>
+            </Text> */}
           </div>
         </div>
       </div>
@@ -47,9 +45,7 @@ function NotificationCard({ notification }: { notification: TGetNotifcation }) {
         <Text
           className="self-end underline cursor-pointer underline-offset-2 text-secondary-light"
           varaint={TypographyVariant.Body2}
-          onClick={() =>
-            dismissNotificationMutatation.mutate(notification.id as string)
-          }
+          onClick={() => dismissNotificationMutatation.mutate(notification.id)}
         >
           Dismiss
         </Text>

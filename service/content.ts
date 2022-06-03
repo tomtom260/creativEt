@@ -54,6 +54,7 @@ export default function useContentService() {
       tags,
       image: cloudinaryResponse.secure_url,
       userId: userId || undefined,
+      published: false,
     })
   }
 
