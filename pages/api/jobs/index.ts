@@ -16,6 +16,7 @@ export default async function userHandler(
       const job = await createJobController(req.body)
       return SuccessAPIResponse(res, job)
     case "GET":
+      console.log(req.query)
       const jobs = await getJobs(req.query)
       return SuccessAPIResponse(res, jobs)
     default:

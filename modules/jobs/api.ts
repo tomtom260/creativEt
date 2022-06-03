@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client"
 import axios from "axios"
+import { TJOb } from "./types"
 
 export async function createJobAPI(
   data: Prisma.JobsUncheckedCreateWithoutEmployeeInput &
@@ -11,8 +12,11 @@ export async function createJobAPI(
 }
 
 export async function getJobAPI(data: Prisma.JobsScalarWhereInput) {
-  return await (
-    await axios.get("/api/jobs", {
+  console.log(data)
+  return (
+    await axios.get<{
+      data: TJOb[]
+    }>("/api/jobs", {
       params: data,
     })
   ).data.data

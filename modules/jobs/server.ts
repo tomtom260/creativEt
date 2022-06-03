@@ -1,5 +1,5 @@
 import { prisma } from "@/utils/db"
-import { Prisma } from "@prisma/client"
+import { JobsStatus, Prisma } from "@prisma/client"
 
 export async function createJob(data: Prisma.JobsCreateInput) {
   return await prisma.jobs.create({
@@ -22,7 +22,9 @@ export async function getJobs(data: Prisma.JobsScalarWhereInput) {
         },
       },
     },
-    where: data,
+    where: {
+      ...data,
+    },
   })
 }
 export async function getJobsById(id: string) {

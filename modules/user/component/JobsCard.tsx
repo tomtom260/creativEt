@@ -13,7 +13,7 @@ import Jobs from "pages/account/jobs"
 import moment from "moment"
 
 type JobsProps = {
-  flippedCard: string
+  flippedCard: string | null
   isLoading?: boolean
   setIsFlipped: Dispatch<SetStateAction<string | null>>
   job: TJOb
