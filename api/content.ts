@@ -1,4 +1,5 @@
 import { useGetCurrentUser } from "@/hooks/user"
+import { Prisma } from "@prisma/client"
 import axios from "axios"
 import {
   useMutation,
@@ -36,7 +37,7 @@ export const useUploadImageMutation = (props: CustomUseMutationOptions) => {
   return useMutation(uploadImage, props)
 }
 
-async function createContent(contentData: Partial<Content>) {
+async function createContent(contentData: Prisma.ContentUncheckedCreateInput) {
   return await axios.post(`/api/content/upload`, contentData)
 }
 

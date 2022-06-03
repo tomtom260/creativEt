@@ -11,6 +11,13 @@ import { TJOb } from "@/modules/jobs/types"
 import { getOptimisedProfileImage } from "@/utils/cloudinary"
 import Jobs from "pages/account/jobs"
 import moment from "moment"
+import {
+  useAcceptJobMutation,
+  useRejectJobMutation,
+} from "@/modules/jobs/hooks"
+import { JobsStatus } from "@prisma/client"
+import { useAppDispatch } from "@/hooks/redux"
+import { ModalType, showModal } from "store/modalSlice"
 
 type JobsProps = {
   flippedCard: string | null
@@ -27,6 +34,9 @@ function JobsCard({
 }: JobsProps) {
   const optimisedImage = getOptimisedProfileImage(job.employer.image as string)
   const dueIn = moment(job.dueIn)
+  const acceptJobMutattion = useAcceptJobMutation()
+  const rejectJobMutattion = useRejectJobMutation()
+  const dispatch = useAppDispatch()
 
   return isLoading ? (
     <div className="w-full min-h-[330px] h-full">
@@ -86,7 +96,43 @@ function JobsCard({
             </div>
           </div>
           <div className="flex justify-between items-center w-full mt-2">
-            <Button variant={ButtonVariants.PRIMARY}>Finish</Button>
+            <div className="flex gap-2">
+              {job.status === JobsStatus.PENDING ? (
+                <>
+                  <Button
+                    onClick={() => {
+                      acceptJobMutattion.mutate(job.id)
+                    }}
+                    variant={ButtonVariants.PRIMARY}
+                  >
+                    Accept
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      rejectJobMutattion.mutate(job.id)
+                    }}
+                    className="text-red-600"
+                    variant={ButtonVariants.OUTLINED}
+                  >
+                    Reject
+                  </Button>
+                </>
+              ) : job.status === JobsStatus.IN_PROGRESS ? (
+                <Button
+                  onClick={() => {
+                    dispatch(
+                      showModal({
+                        modalType: ModalType.FINISH_MODAL,
+                        payload: job,
+                      })
+                    )
+                  }}
+                  variant={ButtonVariants.PRIMARY}
+                >
+                  Finish
+                </Button>
+              ) : null}
+            </div>
             <p
               className={classNames(
                 "inline-flex rounded-full px-3 py-1 text-sm bg-green-100 text-green-800 font-semibold leading-5"

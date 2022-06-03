@@ -33,11 +33,16 @@ export default function useContentService() {
     title,
     description,
     tags,
+    userId,
   }: {
     imageToBeUploaded: File
     description: string
     title: string
-    tags: any
+    tags: {
+      id: string
+      name: string
+    }[]
+    userId?: string
   }) {
     const formData = new FormData()
     formData.append("file", imageToBeUploaded)
@@ -48,6 +53,7 @@ export default function useContentService() {
       description,
       tags,
       image: cloudinaryResponse.secure_url,
+      userId: userId || undefined,
     })
   }
 

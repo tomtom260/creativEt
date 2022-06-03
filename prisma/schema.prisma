@@ -236,4 +236,5 @@ enum JobsStatus {
   IN_PROGRESS
   SUCCESS
   CANCELED
+  SUBMITTED
 }

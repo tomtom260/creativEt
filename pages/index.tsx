@@ -1,11 +1,8 @@
 import DefaultLayout from "../layouts/DefaultLayout"
-import Cards from "@/components/Cards/BaseCard"
 import { changeDateInJSONToMoment } from "@/utils/changeDateToMoment"
 import { Content } from "types/content"
 import { getContents, getTags } from "modules/content/server"
 import { getSession } from "next-auth/react"
-import { useQuery } from "react-query"
-import { transformUserResponse } from "api/user"
 import Button from "@/components/Button"
 import ButtonVariants from "@/components/Button/button.enum"
 import { AdjustmentsIcon } from "@heroicons/react/outline"
@@ -17,7 +14,6 @@ import classNames from "@/utils/classNames"
 import { useGetContentsQuery } from "@/modules/content/hooks"
 import ContentCard from "@/components/Cards/ContentCard"
 import Landing from "@/components/Landing"
-import NavBar from "@/components/navbar/userNav"
 
 type HomeProps = {
   contents: Content[]

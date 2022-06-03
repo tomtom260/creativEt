@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client"
 import { NextApiRequest, NextApiResponse } from "next"
 import { getSession } from "next-auth/react"
 import { Content } from "types/content"
@@ -8,7 +9,7 @@ import {
 import { prisma } from "../../../utils/db"
 
 type NextApiRequestType = Omit<NextApiRequest, "body"> & {
-  body: Partial<Content>
+  body: Prisma.ContentUncheckedCreateInput
 }
 
 export default async function userHandler(
@@ -18,7 +19,7 @@ export default async function userHandler(
   const session = await getSession({ req })
   const id = session?.user?.id!
 
-  const { image, title, description, tags } = req.body
+  const { image, title, description, tags, userId } = req.body
   if (!image || !title) {
     return
   }
@@ -31,7 +32,7 @@ export default async function userHandler(
             image,
             title,
             description,
-            userId: id,
+            userId: userId || id,
             tags: {
               connectOrCreate: tags.map((tag) => ({
                 create: { name: tag },

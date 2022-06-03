@@ -2,9 +2,22 @@ import { useGetCurrentUser } from "@/hooks/user"
 import { JobsStatus } from "@prisma/client"
 import { MenuItems } from "pages/account/jobs"
 import { useEffect, useState } from "react"
-import { useMutation, useQueries, useQuery } from "react-query"
+import {
+  useMutation,
+  UseMutationOptions,
+  useQueries,
+  useQuery,
+  useQueryClient,
+} from "react-query"
 import { CustomUseMutationOptions } from "../chat/hooks"
-import { createJobAPI, getJobAPI, getJobByIdAPI } from "./api"
+import {
+  acceptJobAPI,
+  createJobAPI,
+  finishJobAPI,
+  getJobAPI,
+  getJobByIdAPI,
+  rejectJobAPI,
+} from "./api"
 import { FilterOptions, TJOb } from "./types"
 
 export function useCreateJobMutatation(options?: CustomUseMutationOptions) {
@@ -84,4 +97,20 @@ export function useGetJobsQuery(
   }, [menu, firstTime, status])
 
   return getJobsQuery
+}
+
+export function useAcceptJobMutation() {
+  const queryClient = useQueryClient()
+  return useMutation(acceptJobAPI, {
+    onSuccess: (res) => {
+      queryClient.invalidateQueries(["jobs", res.data.data.id])
+    },
+  })
+}
+
+export function useRejectJobMutation() {
+  return useMutation(rejectJobAPI)
+}
+export function useFinishJobMutation() {
+  return useMutation(finishJobAPI)
 }

@@ -12,7 +12,6 @@ export async function createJobAPI(
 }
 
 export async function getJobAPI(data: Prisma.JobsScalarWhereInput) {
-  console.log(data)
   return (
     await axios.get<{
       data: TJOb[]
@@ -24,6 +23,18 @@ export async function getJobAPI(data: Prisma.JobsScalarWhereInput) {
 
 export async function getJobByIdAPI(id: string) {
   return await (
-    await axios.get(`/api/jobs/${id}`)
+    await axios.get<{ data: TJOb }>(`/api/jobs/${id}`)
   ).data.data
+}
+
+export async function acceptJobAPI(id: string) {
+  return await axios.patch<{ data: TJOb }>(`/api/jobs/${id}?accept`)
+}
+
+export async function rejectJobAPI(id: string) {
+  return await axios.patch<{ data: TJOb }>(`/api/jobs/${id}?reject`)
+}
+
+export async function finishJobAPI(id: string) {
+  return await axios.patch<{ data: TJOb }>(`/api/jobs/${id}?finish`)
 }

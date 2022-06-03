@@ -8,14 +8,17 @@ import { hideModal } from "store/modalSlice"
 export type ModalProps = {
   children: ReactNode
   isVisible: boolean
+  className?: string
 }
 
-function Modal({ children, isVisible }: ModalProps) {
+function Modal({ children, isVisible, className }: ModalProps) {
   const dispatch = useAppDispatch()
   return isVisible ? (
     <div className={`inset-0 h-screen absolute flex items-center`}>
       <div className="bg-black opacity-50 z-20 fixed inset-0 h-screen" />
-      <div className="bg-white flex flex-col z-30 p-6   top-1/2 m-auto rounded-2xl ">
+      <div
+        className={`bg-white flex flex-col z-30 p-6  top-1/2 m-auto rounded-2xl ${className}`}
+      >
         <Button
           onClick={() => dispatch(hideModal())}
           variant={ButtonVariants.OUTLINED}

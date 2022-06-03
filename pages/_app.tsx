@@ -67,13 +67,13 @@ const App = ({
   const router = useRouter()
   const isModalVisible = useAppSelector((state) => !!state.modal.modalType)
 
-  useEffect(() => {
-    if (isModalVisible) {
-      document.body.style.overflow = "hidden"
-    } else {
-      document.body.style.overflow = "visible"
-    }
-  }, [isModalVisible])
+  // useEffect(() => {
+  //   if (isModalVisible) {
+  //     document.body.style.overflow = "hidden"
+  //   } else {
+  //     document.body.style.overflow = "visible"
+  //   }
+  // }, [isModalVisible])
 
   const userQuery = useGetCurrentUser()
 

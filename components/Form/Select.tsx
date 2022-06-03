@@ -11,12 +11,14 @@ type SelectProps = {
   options: string[]
   selectedOptions: string[]
   setSelectedOptions: React.Dispatch<SetStateAction<string[]>>
+  className?: string
 }
 
 export default function Select({
   options,
   selectedOptions,
   setSelectedOptions,
+  className,
 }: SelectProps) {
   const [isInputFocused, setIsInputFocused] = useState(false)
   let [filteredOptions, setFilteredOptions] = useState<string[]>(options)
@@ -42,7 +44,6 @@ export default function Select({
   return (
     <Combobox
       as="div"
-      className=""
       value={selectedOptions}
       onChange={(option: string) => {
         addOption(option)
@@ -53,7 +54,9 @@ export default function Select({
         }
       }}
     >
-      <Combobox.Label className="block text-base md:text-3xl mb-4 text-gray-700">
+      <Combobox.Label
+        className={`block text-base md:text-3xl mb-4 text-gray-700 ${className}`}
+      >
         Tags
       </Combobox.Label>
       <div

@@ -16,7 +16,6 @@ export function useDismissNotifictionMutatation() {
   return useMutation<UseMutationOptions<Notification>>(dismissNotifcationsAPI, {
     onSuccess: (notification) => {
       queryClient.setQueryData(["notifications", notification.id], notification)
-      console.log(notification)
     },
   })
 }
