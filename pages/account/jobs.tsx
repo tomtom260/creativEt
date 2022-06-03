@@ -10,6 +10,7 @@ import { changeDateInJSONToMoment } from "@/utils/changeDateToMoment"
 import moment from "moment"
 import { getSession } from "next-auth/react"
 import React, { useState } from "react"
+import PreviewModal from "@/modules/jobs/components/PreviewModal"
 
 export enum MenuItems {
   "Your Gigs",
@@ -78,6 +79,7 @@ function Jobs({ jobs }: JobsPageProps) {
         </div>
       </DefaultLayout>
       <FinishJobModal />
+      <PreviewModal />
     </>
   )
 }

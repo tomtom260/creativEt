@@ -2,6 +2,8 @@ import {
   acceptJobController,
   finishJobController,
   rejectJobController,
+  reviseContentJobController,
+  successJobController,
 } from "@/modules/jobs/controller"
 import { getJobsById } from "@/modules/jobs/server"
 import { TJOb } from "@/modules/jobs/types"
@@ -36,7 +38,17 @@ export default async function userHandler(
         case "finish":
           return SuccessAPIResponse(
             res,
-            await finishJobController(req.query.id as string)
+            await finishJobController(req.query.id as string, req.body.image)
+          )
+        case "success":
+          return SuccessAPIResponse(
+            res,
+            await successJobController(req.query.id as string)
+          )
+        case "revise":
+          return SuccessAPIResponse(
+            res,
+            await reviseContentJobController(req.query.id as string)
           )
       }
       break

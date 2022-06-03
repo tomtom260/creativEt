@@ -32,8 +32,22 @@ export async function rejectJobController(id: string) {
   })
 }
 
-export async function finishJobController(id: string) {
+export async function finishJobController(id: string, image: string) {
+  console.log(image)
   return await updateJob(id, {
     status: JobsStatus.SUBMITTED,
+    image,
+  })
+}
+
+export async function successJobController(id: string) {
+  return await updateJob(id, {
+    status: JobsStatus.SUCCESS,
+  })
+}
+
+export async function reviseContentJobController(id: string) {
+  return await updateJob(id, {
+    status: JobsStatus.IN_PROGRESS,
   })
 }

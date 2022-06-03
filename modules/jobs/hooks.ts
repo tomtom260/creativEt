@@ -2,13 +2,7 @@ import { useGetCurrentUser } from "@/hooks/user"
 import { JobsStatus } from "@prisma/client"
 import { MenuItems } from "pages/account/jobs"
 import { useEffect, useState } from "react"
-import {
-  useMutation,
-  UseMutationOptions,
-  useQueries,
-  useQuery,
-  useQueryClient,
-} from "react-query"
+import { useMutation, useQueries, useQuery, useQueryClient } from "react-query"
 import { CustomUseMutationOptions } from "../chat/hooks"
 import {
   acceptJobAPI,
@@ -17,6 +11,8 @@ import {
   getJobAPI,
   getJobByIdAPI,
   rejectJobAPI,
+  reviseJobAPI,
+  successJobAPI,
 } from "./api"
 import { FilterOptions, TJOb } from "./types"
 
@@ -111,13 +107,34 @@ export function useAcceptJobMutation() {
 }
 
 export function useRejectJobMutation() {
+  const queryClient = useQueryClient()
   return useMutation(rejectJobAPI, {
     onSuccess: (res) => {
       queryClient.invalidateQueries(["job", res.data.data.id])
     },
   })
 }
+
+export function useReviseJobMutation() {
+  const queryClient = useQueryClient()
+  return useMutation(reviseJobAPI, {
+    onSuccess: (res) => {
+      queryClient.invalidateQueries(["job", res.data.data.id])
+    },
+  })
+}
+
+export function useSuccessJobMutation() {
+  const queryClient = useQueryClient()
+  return useMutation(successJobAPI, {
+    onSuccess: (res) => {
+      queryClient.invalidateQueries(["job", res.data.data.id])
+    },
+  })
+}
+
 export function useFinishJobMutation() {
+  const queryClient = useQueryClient()
   return useMutation(finishJobAPI, {
     onSuccess: (res) => {
       queryClient.invalidateQueries(["job", res.data.data.id])

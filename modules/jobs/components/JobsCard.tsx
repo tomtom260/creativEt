@@ -46,11 +46,10 @@ function JobsCard({
     <div className="flex relative flex-col w-full  px-8 py-8 items-center justify-between shadow-2xl rounded-3xl flex-wrap ">
       {flippedCard !== job.id ? (
         <>
-          <Skeleton height="100%" width="100%" />
           <div className="flex w-full flex-col mb-4">
             <div className="flex">
               <div className="flex w-full gap-4">
-                <div className="bg-red-900  relative w-16 h-16 self-start flex-shrink-0 rounded-full overflow-hidden">
+                <div className="relative w-16 h-16 self-start flex-shrink-0 rounded-full overflow-hidden">
                   <ImageWithSkeleton src={optimisedImage} layout="fill" />
                 </div>
                 <Text varaint={TypographyVariant.H2}>{job.title}</Text>
@@ -130,6 +129,20 @@ function JobsCard({
                   variant={ButtonVariants.PRIMARY}
                 >
                   Finish
+                </Button>
+              ) : job.status === JobsStatus.SUBMITTED ? (
+                <Button
+                  onClick={() => {
+                    dispatch(
+                      showModal({
+                        modalType: ModalType.PREVIEW_MODAL,
+                        payload: job,
+                      })
+                    )
+                  }}
+                  variant={ButtonVariants.PRIMARY}
+                >
+                  Preview
                 </Button>
               ) : null}
             </div>

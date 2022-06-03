@@ -76,9 +76,9 @@ function UploadContent({
       title,
       description,
       userId,
-    }).then(() => {
+    }).then((res) => {
       if (jobId) {
-        finishJobMutation.mutate(jobId)
+        finishJobMutation.mutate({ id: jobId, image: res.data.data.image })
         dispatch(hideModal())
       } else {
         queryClient.removeQueries(["contents"])

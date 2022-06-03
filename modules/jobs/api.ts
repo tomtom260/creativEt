@@ -35,6 +35,22 @@ export async function rejectJobAPI(id: string) {
   return await axios.patch<{ data: TJOb }>(`/api/jobs/${id}?reject`)
 }
 
-export async function finishJobAPI(id: string) {
-  return await axios.patch<{ data: TJOb }>(`/api/jobs/${id}?finish`)
+export async function reviseJobAPI(id: string) {
+  return await axios.patch<{ data: TJOb }>(`/api/jobs/${id}?revise`)
+}
+
+export async function successJobAPI(id: string) {
+  return await axios.patch<{ data: TJOb }>(`/api/jobs/${id}?success`)
+}
+
+export async function finishJobAPI({
+  id,
+  image,
+}: {
+  id: string
+  image: string
+}) {
+  return await axios.patch<{ data: TJOb }>(`/api/jobs/${id}?finish`, {
+    image,
+  })
 }

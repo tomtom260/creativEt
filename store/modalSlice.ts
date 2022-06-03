@@ -9,6 +9,7 @@ export enum ModalType {
   INSUFFICENT_MODAL,
   HIRE_MODAL,
   FINISH_MODAL,
+  PREVIEW_MODAL,
 }
 
 type ModalSlice = {

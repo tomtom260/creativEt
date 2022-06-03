@@ -38,7 +38,7 @@ export const useUploadImageMutation = (props: CustomUseMutationOptions) => {
 }
 
 async function createContent(contentData: Prisma.ContentUncheckedCreateInput) {
-  return await axios.post(`/api/content/upload`, contentData)
+  return await axios.post<{ data: Content }>(`/api/content/upload`, contentData)
 }
 
 export const useCreateContentMutation = (props: CustomUseMutationOptions) => {

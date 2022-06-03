@@ -190,6 +190,7 @@ model Jobs {
   title            String
   description      String
   price            Int
+  image            String?
   status           JobsStatus     @default(PENDING)
   dueIn            DateTime
   employerId       String
