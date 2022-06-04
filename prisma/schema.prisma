@@ -73,6 +73,8 @@ model User {
   employee         Jobs[]             @relation("employee")
   Notification     Notification[]     @relation("user")
   notifiedBy       Notification[]     @relation("notifiedBy")
+  availableForHire Boolean            @default(false)
+  Ratings          Ratings[]
 }
 
 model VerificationToken {
@@ -206,6 +208,7 @@ model Jobs {
   updatedAt        DateTime   @updatedAt
   content          Content?   @relation(fields: [contentId], references: [id])
   contentId        String?    @unique
+  Ratings          Ratings[]
 }
 
 model Notification {
@@ -218,6 +221,15 @@ model Notification {
   createdAt    DateTime         @default(now())
   notifiedBy   User             @relation("notifiedBy", fields: [notifiedById], references: [id])
   notifiedById String
+}
+
+model Ratings {
+  id     String @id @default(cuid())
+  jobId  String
+  Job    Jobs   @relation(fields: [jobsId], references: [id])
+  userId String
+  User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobsId String
 }
 
 enum MoneyTransactionType {

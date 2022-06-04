@@ -104,3 +104,24 @@ export async function searchUser(username: string) {
     location: profile.location,
   }))
 }
+
+export async function getUsersForHIre() {
+  const users = await prisma.user.findMany({
+    include: {
+      Profile: true,
+    },
+    where: {
+      availableForHire: true,
+    },
+  })
+  return users.map((user) => {
+    const newUser = {
+      ...user,
+      location: user.Profile?.location,
+      bio: user.Profile?.bio,
+      username: user.Profile?.username,
+    }
+    delete newUser.Profile
+    return newUser
+  })
+}

@@ -21,6 +21,7 @@ import {
   useFollowUserMutation,
   useUnfollowUserMutation,
   useGetCurrentUser,
+  useToggleAvailableForHireMutation,
 } from "@/hooks/user"
 import { isFollwingUser } from "modules/user/server"
 import MyContent from "@/components/Cards/MyContent"
@@ -50,7 +51,6 @@ function ProfilePage({ profile, myProfile, contents }: ProfileProps) {
   const [selectedMenuItem, setSelectedMenuItem] = useState<number>(0)
   const [filteredContents, setFilteredContents] = useState<Contents>([])
   const [loading, setLoading] = useState(false)
-  const [isAvailableForHire, setIsAvailableForHire] = useState<boolean>(false)
   const router = useRouter()
 
   useEffect(() => {
@@ -77,6 +77,9 @@ function ProfilePage({ profile, myProfile, contents }: ProfileProps) {
 
   const followMutation = useFollowUserMutation(profileQuery.data.id)
   const unFollowMutation = useUnfollowUserMutation(profileQuery.data.id)
+  const toggleAvailableForHireMutation = useToggleAvailableForHireMutation(
+    profileQuery.data.id
+  )
   const [flippedCard, setFlippedCard] = useState<string | null>(null)
   const dispatch = useAppDispatch()
 
@@ -112,7 +115,7 @@ function ProfilePage({ profile, myProfile, contents }: ProfileProps) {
                   {profileQuery.data.location}
                 </Text>
               )}
-              {!myProfile ? (
+              {myProfile ? (
                 <div className="flex flex-col gap-4 mt-8 ">
                   <Button
                     onClick={() => {
@@ -127,8 +130,12 @@ function ProfilePage({ profile, myProfile, contents }: ProfileProps) {
                       Available for hire
                     </Text>
                     <Toggle
-                      onChange={setIsAvailableForHire}
-                      value={isAvailableForHire}
+                      onChange={() =>
+                        toggleAvailableForHireMutation.mutate(
+                          profileQuery.data.id
+                        )
+                      }
+                      value={profileQuery.data.availableForHire}
                     />
                   </div>
                 </div>
@@ -236,6 +243,7 @@ export async function getServerSideProps(
           email: true,
           image: true,
           id: true,
+          availableForHire: true,
         },
       },
     },

@@ -39,7 +39,7 @@ export default function Home({ contents, tags }: HomeProps) {
         id="content"
         className="max-w-7xl mb-[800px] flex flex-col px-2  sm:px-6  md:px-4 lg:px-8 pb-2 md:py-8 mx-auto"
       >
-        <div className=" flex  sticky top-[60px] py-8 bg-white z-20 w-full  flex-1 justify-between  items-center">
+        <div className=" flex  sticky top-[60px] py-8 bg-white overflow-auto  z-20 w-full  flex-1 justify-between  items-center">
           <div className="w-32 ">
             <ListBox
               selected={selectedFilterOption}
@@ -67,7 +67,6 @@ export default function Home({ contents, tags }: HomeProps) {
             Filters
           </Button>
         </div>
-        <p className="">aaa</p>
         <div className="mb-[800px]  grid   mt-8 md:mt-14 gap-8  mx-auto grid-rows-2  grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4  flex-wrap">
           {getContentsQuery.data?.map((content) => (
             <>

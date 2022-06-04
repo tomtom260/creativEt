@@ -9,4 +9,5 @@ export type User = {
   location: null | string
   bio: null | string
   balance?: number
+  availableForHire: boolean
 }

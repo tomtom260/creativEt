@@ -1,6 +1,7 @@
 import {
   fetchUserWithProfile,
   searchUsers,
+  toggleAvailableForHire,
   transformUserResponse,
 } from "api/user"
 import {
@@ -82,6 +83,20 @@ export const useUnfollowUserMutation = (
   return useMutation(unfollowUser, {
     ...props,
     onSuccess: () => {
+      queryClient.invalidateQueries(["user", id])
+    },
+  })
+}
+
+export const useToggleAvailableForHireMutation = (
+  id: string,
+  props?: CustomUseMutationOptions
+) => {
+  const queryClient = useQueryClient()
+  return useMutation(toggleAvailableForHire, {
+    ...props,
+    onSuccess: () => {
+      console.log("ss")
       queryClient.invalidateQueries(["user", id])
     },
   })

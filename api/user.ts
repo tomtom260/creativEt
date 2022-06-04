@@ -80,6 +80,12 @@ export async function unfollowUser(followingId: string) {
   ).data.data
 }
 
+export async function toggleAvailableForHire() {
+  return await (
+    await axios.patch(`/api/account/toggleAvailableForHire`)
+  ).data.data
+}
+
 export const useGetUserQuery = (id: string, options?: QueryOptions) => {
   return useQuery(["user", id], () => fetchUserWithProfile(id), {
     refetchOnWindowFocus: false,
