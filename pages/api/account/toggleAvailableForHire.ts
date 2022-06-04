@@ -15,8 +15,6 @@ export default async function userHandler(
 
   switch (req.method) {
     case "PATCH":
-      console.log("d")
-
       const user = await prisma.user.findUnique({
         where: {
           id,

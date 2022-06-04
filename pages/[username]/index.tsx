@@ -33,6 +33,7 @@ import HireModal from "@/modules/user/component/HireModal"
 import { useAppDispatch } from "@/hooks/redux"
 import { ModalType, showModal } from "store/modalSlice"
 import EditModal from "@/modules/user/component/EditModal"
+import EnterFullProfileModal from "@/modules/user/component/EnterFullProfileModal"
 
 type Contents = Awaited<ReturnType<typeof getContents>>
 type ProfileProps = Awaited<ReturnType<typeof getServerSideProps>>["props"]
@@ -53,6 +54,7 @@ function ProfilePage({ profile, myProfile, contents }: ProfileProps) {
   const [filteredContents, setFilteredContents] = useState<Contents>([])
   const [loading, setLoading] = useState(false)
   const router = useRouter()
+  const user = useGetCurrentUser().data
 
   useEffect(() => {
     setLoading(true)
@@ -131,11 +133,23 @@ function ProfilePage({ profile, myProfile, contents }: ProfileProps) {
                       Available for hire
                     </Text>
                     <Toggle
-                      onChange={() =>
-                        toggleAvailableForHireMutation.mutate(
-                          profileQuery.data.id
-                        )
-                      }
+                      onChange={() => {
+                        if (
+                          !user.data?.availableForHire &&
+                          (!user?.bio || !user?.location)
+                        ) {
+                          dispatch(
+                            showModal({
+                              modalType: ModalType.UPDATE_PROFILE,
+                              payload: {},
+                            })
+                          )
+                        } else {
+                          toggleAvailableForHireMutation.mutate(
+                            profileQuery.data.id
+                          )
+                        }
+                      }}
                       value={profileQuery.data.availableForHire}
                     />
                   </div>
@@ -214,6 +228,7 @@ function ProfilePage({ profile, myProfile, contents }: ProfileProps) {
       <InsufficientBalanceModal />
       <HireModal />
       <EditModal />
+      <EnterFullProfileModal />
     </>
   )
 }

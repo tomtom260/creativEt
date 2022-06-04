@@ -26,7 +26,7 @@ function EditModal() {
   const [price, setPrice] = useState<number>(content?.price || 0)
   const [title, setTitle] = useState<string>(content?.title || "")
   const [selectedTags, setSelectedTags] = useState<string[]>(
-    content?.tags.map((tag) => tag.name) || []
+    content?.tags?.map((tag) => tag.name) || []
   )
   const updateContentMutation = useUpdateContent()
 
@@ -34,7 +34,7 @@ function EditModal() {
     setDescription(content?.description || "")
     setTitle(content?.title || "")
     setPrice(content?.price || 0)
-    setSelectedTags(content?.tags.map((tag) => tag.name) || [])
+    setSelectedTags(content?.tags?.map((tag) => tag.name) || [])
   }, [content])
 
   return (
