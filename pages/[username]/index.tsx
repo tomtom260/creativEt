@@ -32,6 +32,7 @@ import Toggle from "@/components/Form/Switch"
 import HireModal from "@/modules/user/component/HireModal"
 import { useAppDispatch } from "@/hooks/redux"
 import { ModalType, showModal } from "store/modalSlice"
+import EditModal from "@/modules/user/component/EditModal"
 
 type Contents = Awaited<ReturnType<typeof getContents>>
 type ProfileProps = Awaited<ReturnType<typeof getServerSideProps>>["props"]
@@ -212,6 +213,7 @@ function ProfilePage({ profile, myProfile, contents }: ProfileProps) {
       <DeleteModal />
       <InsufficientBalanceModal />
       <HireModal />
+      <EditModal />
     </>
   )
 }

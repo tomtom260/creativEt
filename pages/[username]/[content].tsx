@@ -116,6 +116,8 @@ function Content({ content }: { content: ContentWithProfile }) {
     link.click()
   }
 
+  console.log(user?.id === contentQuery.data.createdBy.id)
+
   return (
     <>
       <DefaultLayout>
@@ -228,12 +230,16 @@ function Content({ content }: { content: ContentWithProfile }) {
                 className="absolute w-20 sm:hidden z-10 right-4"
                 variant={ButtonVariants.PRIMARY}
                 onClick={
-                  !contentQuery.data.isBoughtByCurrentUser
-                    ? onBuyClicked
-                    : onDownloadClick
+                  contentQuery.data.isBoughtByCurrentUser ||
+                  user?.id === contentQuery.data.createdBy.id
+                    ? onDownloadClick
+                    : onBuyClicked
                 }
               >
-                {!contentQuery.data.isBoughtByCurrentUser ? " Buy" : "Download"}
+                {contentQuery.data.isBoughtByCurrentUser ||
+                user?.id === contentQuery.data.createdBy.id
+                  ? "Download"
+                  : " Buy"}
               </Button>
             </div>
             <div className="absolute sm:hidden  z-10 bottom-0">
@@ -351,12 +357,16 @@ function Content({ content }: { content: ContentWithProfile }) {
               className="w-40 ml-auto mt-10"
               variant={ButtonVariants.PRIMARY}
               onClick={
-                !contentQuery.data.isBoughtByCurrentUser
-                  ? onBuyClicked
-                  : onDownloadClick
+                contentQuery.data.isBoughtByCurrentUser ||
+                user?.id === contentQuery.data.createdBy.id
+                  ? onDownloadClick
+                  : onBuyClicked
               }
             >
-              {!contentQuery.data.isBoughtByCurrentUser ? " Buy" : "Download"}
+              {contentQuery.data.isBoughtByCurrentUser ||
+              user?.id === contentQuery.data.createdBy.id
+                ? "Download"
+                : " Buy"}
             </Button>
             <div className="relative mt-24">
               <Input

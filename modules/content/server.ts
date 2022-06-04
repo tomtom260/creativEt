@@ -1,4 +1,4 @@
-import { Likes, Profile, Tags, Transaction, View } from "@prisma/client"
+import { Likes, Prisma, Profile, Tags, Transaction, View } from "@prisma/client"
 import { prisma } from "@/utils/db"
 import { Content } from "types/content"
 import { User } from "types/user"
@@ -55,6 +55,31 @@ export async function PublishContent(id: string) {
     },
     data: {
       published: true,
+    },
+  })
+}
+
+export async function UpdateContent(
+  id: string,
+  {
+    tags,
+    ...data
+  }: Omit<Prisma.ContentUpdateInput, "image" | "tags"> & {
+    tags: string[]
+  }
+) {
+  return await prisma.content.update({
+    where: {
+      id,
+    },
+    data: {
+      ...data,
+      tags: {
+        connectOrCreate: tags.map((tag) => ({
+          where: { name: tag },
+          create: { name: tag },
+        })),
+      },
     },
   })
 }

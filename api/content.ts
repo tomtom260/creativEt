@@ -51,6 +51,23 @@ async function getBest3Contents(userId: string) {
   )
 }
 
+export async function updateContent({
+  id,
+  data,
+}: {
+  id: string
+  data: Omit<Prisma.ContentUpdateInput, "image" | "tags"> & {
+    tags: string[]
+  }
+}) {
+  return await (
+    await axios.patch<{ data: Content }>(
+      `/api/content/updateContent?id=${id}`,
+      data
+    )
+  ).data.data
+}
+
 export async function getContentById(contentId: string, userId: string) {
   return await (
     await axios.get(

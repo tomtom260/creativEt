@@ -1,4 +1,4 @@
-import { getContentById } from "@/api/content"
+import { getContentById, updateContent } from "@/api/content"
 import axios from "axios"
 import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react"
@@ -78,6 +78,15 @@ export function useBoostContentMutation(id: string) {
   return useMutation(() => boostContent(id), {
     onSuccess: () => {
       queryClient.invalidateQueries(["myContents", "boost"])
+    },
+  })
+}
+
+export function useUpdateContent() {
+  const queryClient = useQueryClient()
+  return useMutation(updateContent, {
+    onSuccess: (res) => {
+      queryClient.invalidateQueries(["content", res.id])
     },
   })
 }

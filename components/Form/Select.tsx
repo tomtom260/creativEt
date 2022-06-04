@@ -44,6 +44,7 @@ export default function Select({
   return (
     <Combobox
       as="div"
+      className="flex flex-col gap-0"
       value={selectedOptions}
       onChange={(option: string) => {
         addOption(option)
@@ -64,11 +65,11 @@ export default function Select({
           inputRef.current.focus()
           setIsInputFocused(true)
         }}
-        className={` relative overflow-hidden py-1 md:py-2 min-h-[48px] md:min-h-[66px] px-1 md:px-3 mt-1 rounded-md  flex flex-wrap cursor-text border  ${
+        className={` relative border-gray-normal overflow-hidden py-1 md:py-2 min-h-[40px] md:min-h-[66px] px-1 md:px-3 mt-1 rounded-md  flex flex-wrap cursor-text border  ${
           isInputFocused
-            ? "shadow-center shadow-secondary-light border-secondary-normal "
+            ? " shadow-secondary-light border-secondary-normal "
             : ""
-        } hover:border-secondary-normal hover:shadow-center   transition-shadow hover:shadow-secondary-light   `}
+        } hover:border-secondary-normal   transition-shadow    `}
       >
         {selectedOptions.map((el) => (
           <div
@@ -90,7 +91,7 @@ export default function Select({
           </div>
         ))}
         <Combobox.Input
-          className="flex flex-1 rounded-md border-0 outline-0 p-0 !ring-0 bg-white w-min    sm:text-sm"
+          className="flex flex-1 rounded-md border-0 outline-0 p-0 !ring-0 bg-white w-min h-10    sm:text-sm"
           onChange={(event) => {}}
           ref={inputRef}
           onFocus={() => setIsInputFocused(true)}
@@ -98,7 +99,7 @@ export default function Select({
         />
       </div>
       {filteredOptions.length > 0 && (
-        <Combobox.Options className=" z-10 mt-4 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+        <Combobox.Options className=" z-10 mt-4  max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
           {filteredOptions.map((option) => (
             <Combobox.Option
               key={option}

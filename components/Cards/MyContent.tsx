@@ -35,26 +35,39 @@ function MyContent({
             onClick={() => setFlippedCard(null)}
             className=" text-gray-dark cursor-pointer  self-end h-6 w-6 -mr-5 -mt-2  z-20"
           />
-          <Text className="cursor-pointer" varaint={TypographyVariant.Body1}>
+          <Text
+            onClick={() => {
+              dispatch(
+                showModal({
+                  modalType: ModalType.EDIT_MODAL,
+                  payload: content,
+                })
+              )
+            }}
+            className="cursor-pointer"
+            varaint={TypographyVariant.Body1}
+          >
             Edit
           </Text>
           <Text
             onClick={() => {
-              user?.balance >= 50
-                ? dispatch(
-                    showModal({
-                      payload: {
-                        id: content.id,
-                      },
-                      modalType: ModalType.BOOST_MODAL,
-                    })
-                  )
-                : dispatch(
-                    showModal({
-                      payload: {},
-                      modalType: ModalType.INSUFFICENT_MODAL,
-                    })
-                  )
+              if ((user?.balance as number) >= 50) {
+                dispatch(
+                  showModal({
+                    payload: {
+                      id: content.id,
+                    },
+                    modalType: ModalType.BOOST_MODAL,
+                  })
+                )
+              } else {
+                dispatch(
+                  showModal({
+                    payload: {},
+                    modalType: ModalType.INSUFFICENT_MODAL,
+                  })
+                )
+              }
             }}
             className=" text-secondary-light cursor-pointer    "
             varaint={TypographyVariant.Body1}
