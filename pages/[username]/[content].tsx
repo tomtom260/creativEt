@@ -264,9 +264,11 @@ function Content({ content }: { content: ContentWithProfile }) {
                 setIsImageLoaded(true)
               }}
               loader={({ width }) => {
-                const image = contentQuery.data.isBoughtByCurrentUser
-                  ? getResponsiveImage(contentPublicId, width)
-                  : getResponsiveWatermarkedImage(contentPublicId, width)
+                const image =
+                  contentQuery.data.isBoughtByCurrentUser ||
+                  user?.id === contentQuery.data.createdBy.id
+                    ? getResponsiveImage(contentPublicId, width)
+                    : getResponsiveWatermarkedImage(contentPublicId, width)
                 setContentImage(image)
                 return image
               }}

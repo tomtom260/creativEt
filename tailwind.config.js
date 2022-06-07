@@ -18,11 +18,17 @@ module.exports = {
         center: "0.5px 0.5px 10px",
       },
       colors: {
+        // secondary: {
+        //   dark: "#28104E",
+        //   normal: "#6237A0",
+        //   light: "#9754C8",
+        //   "very-light": "#DEACF5",
+        // },
         secondary: {
-          dark: "#28104E",
-          normal: "#6237A0",
-          light: "#9754C8",
-          "very-light": "#DEACF5",
+          dark: "#4546E5",
+          normal: "#4546E5",
+          light: "#4546E5",
+          "very-light": "#4546E5",
         },
         gray: { light: "#e7e7e9", normal: "#9e9ea7", dark: "#8b8b8b" },
         cPurple: {

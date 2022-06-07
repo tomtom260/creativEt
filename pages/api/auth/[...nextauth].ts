@@ -29,6 +29,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
         return session
       },
       async signIn({ profile, user, account }) {
+        console.log("gg")
         if (account.type === "oauth") {
           const existingUser = await prisma.user.findFirst({
             where: {
@@ -114,6 +115,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
         authorize: async (
           credentials: Record<"email" | "password", string> | undefined
         ) => {
+          console.log("ggg")
           const { email, password } = credentials!
           const user = await prisma.user.findUnique({
             include: {

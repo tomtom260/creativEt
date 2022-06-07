@@ -67,8 +67,8 @@ function Message({ type, message, time, image, seen, id }: MessageProps) {
           </Text>
           {isSentMessage && (
             <>
-              <ClockIcon className="h-4 w-4 " />
-              <CheckIcon className="h-4 w-4 " />
+              {/* <ClockIcon className="h-4 w-4 " />
+              <CheckIcon className="h-4 w-4 " /> */}
               <div className="flex">
                 <CheckIcon className="h-4 w-4 " />
                 <CheckIcon className="h-4 w-4 -ml-[19px] " />
