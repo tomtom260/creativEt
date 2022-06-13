@@ -14,6 +14,8 @@ import classNames from "@/utils/classNames"
 import { useGetContentsQuery } from "@/modules/content/hooks"
 import ContentCard from "@/components/Cards/ContentCard"
 import Landing from "@/components/Landing"
+import Input from "@/components/Form/Input"
+import { InputType, InputVariant } from "@/components/Form/Input/Input.enum"
 
 type HomeProps = {
   contents: Content[]
@@ -21,12 +23,23 @@ type HomeProps = {
 }
 
 const filterOptions = ["All", "Following", "Popular", "New"]
+const filterAdvancedOptions = [
+  "Price (Cheapest)",
+  "Price (Expensive)",
+  "Date Created (Oldest)",
+  "Date Created (Latest)",
+  "Most Liked",
+  "Most Viewed",
+]
 
 export default function Home({ contents, tags }: HomeProps) {
+  const [selectedAdvancedFilterOption, setSelectedAdvancedFilterOption] =
+    useState(filterAdvancedOptions[0])
   const [selectedFilterOption, setSelectedFilterOption] = useState(
     filterOptions[0]
   )
   const [selectedTag, setSelectedTag] = useState(tags[0])
+  const [showFilter, setShowFilter] = useState<boolean>(false)
   const getContentsQuery = useGetContentsQuery(
     contents,
     selectedTag !== "All" ? selectedTag : undefined,
@@ -39,35 +52,54 @@ export default function Home({ contents, tags }: HomeProps) {
         id="content"
         className="max-w-7xl mb-[800px] flex flex-col px-2  sm:px-6  md:px-4 lg:px-8 pb-2 md:py-8 mx-auto"
       >
-        <div className=" flex  sticky top-[60px] py-8 bg-white overflow-auto  z-20 w-full  flex-1 justify-between  items-center">
-          <div className="w-32 ">
-            <ListBox
-              selected={selectedFilterOption}
-              changeSelected={(val) => setSelectedFilterOption(val)}
-              options={filterOptions}
-            />
-          </div>
-          <div className="  flex self-center  justify-self-center  gap-6">
-            {tags.map((tag) => (
-              <Tag
-                key={tag}
-                tag={tag}
-                selectedTag={selectedTag}
-                changeSelectedTag={() => setSelectedTag(tag)}
+        <div className=" flex flex-col px-2  sticky top-[60px] py-8 bg-white  z-20 w-full  flex-1 justify-between  items-center">
+          <div className="flex w-full justify-between items-center">
+            <div className="w-32 ">
+              <ListBox
+                selected={selectedFilterOption}
+                changeSelected={(val) => setSelectedFilterOption(val)}
+                options={filterOptions}
               />
-            ))}
+            </div>
+            <div className="  flex self-center  justify-self-center  gap-6">
+              {tags.map((tag) => (
+                <Tag
+                  key={tag}
+                  tag={tag}
+                  selectedTag={selectedTag}
+                  changeSelectedTag={() => setSelectedTag(tag)}
+                />
+              ))}
+            </div>
+            <Button
+              onClick={() => {
+                setShowFilter((val) => !val)
+              }}
+              prependComponent={
+                <AdjustmentsIcon className="h-5 w-5 justify-self-end " />
+              }
+              variant={ButtonVariants.OUTLINED}
+            >
+              Filters
+            </Button>
           </div>
-          <Button
-            onClick={() => {}}
-            prependComponent={
-              <AdjustmentsIcon className="h-5 w-5 justify-self-end " />
-            }
-            variant={ButtonVariants.OUTLINED}
-          >
-            Filters
-          </Button>
+          {showFilter && (
+            <div className=" flex w-full  flex-1 justify-between mt-4  items-center">
+              <input
+                placeholder="Filter by tags"
+                className="h-10 md:w-1/3 px-2 border-2 outline-none rounded-md"
+                onChange={() => {}}
+              />
+              <ListBox
+                optionsClassName="!right-0 !left-auto"
+                selected={selectedAdvancedFilterOption}
+                changeSelected={(val) => setSelectedAdvancedFilterOption(val)}
+                options={filterAdvancedOptions}
+              />
+            </div>
+          )}
         </div>
-        <div className="mb-[800px]  grid   mt-8 md:mt-14 gap-8  mx-auto grid-rows-2  grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4  flex-wrap">
+        <div className="mb-[800px]  grid    gap-8  mx-auto grid-rows-2  grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4  flex-wrap">
           {getContentsQuery.data?.map((content) => (
             <>
               <ContentCard
