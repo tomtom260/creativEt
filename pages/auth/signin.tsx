@@ -48,6 +48,9 @@ export default function SignIn({ providers, csrfToken }: SignInPropsType) {
 
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+            <p className="text-sm  font-medium text-red-500 text-center">
+              Email address
+            </p>
             <form
               className="space-y-6"
               action="/api/auth/callback/credentials"
@@ -149,7 +152,9 @@ export default function SignIn({ providers, csrfToken }: SignInPropsType) {
                 <div>
                   <button
                     onClick={() => {
-                      signIn(providers?.facebook.id)
+                      signIn(providers?.facebook.id).catch((err) =>
+                        console.log(err)
+                      )
                     }}
                     className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
                   >
@@ -172,7 +177,9 @@ export default function SignIn({ providers, csrfToken }: SignInPropsType) {
                 <div className="flex-1">
                   <button
                     onClick={() => {
-                      signIn(providers?.google.id)
+                      signIn(providers?.google.id).catch((err) =>
+                        console.log(err)
+                      )
                     }}
                     className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
                   >
