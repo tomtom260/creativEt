@@ -53,7 +53,9 @@ export default async function userHandler(
           userId: user.id,
         },
         create: {
-          username: username,
+          username: `${user.name?.replace(" ", "_")}_${Math.ceil(
+            Math.random() * 10000
+          )}`,
           userId: user.id,
         },
         update: {

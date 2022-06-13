@@ -9,9 +9,8 @@ import {
   useSession,
 } from "next-auth/react"
 import { BuiltInProviderType } from "next-auth/providers"
-import { Router } from "next/router"
 import axios from "axios"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 
@@ -24,23 +23,33 @@ type SignInPropsType = {
 }
 
 const checkifEmailExists = async (email: string) => {
-  axios
-    .post("/api/auth/emailExists", {
-      email,
-    })
-    .then(({ data }) => {
-      console.log(data)
-    })
-    .catch((data) => {
-      console.log(data)
-    })
+  return (
+    (
+      await axios.post("/api/auth/emailExists", {
+        email,
+      })
+    ).data.message !== "Email Valid"
+  )
 }
 
 export default function SignUp({ providers, csrfToken }: SignInPropsType) {
   const router = useRouter()
   const [email, setEmail] = useState<string>("")
+  const [isValidEmail, setIsValidEmail] = useState<boolean>(true)
+  const [emailExists, setEmailExists] = useState<boolean>(false)
 
   const { status } = useSession()
+
+  useEffect(() => {
+    email
+      ? setIsValidEmail(
+          // eslint-disable-next-line no-control-regex
+          /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/.test(
+            email
+          )
+        )
+      : setIsValidEmail(true)
+  }, [email])
 
   if (status === "loading") {
     return "Loading"
@@ -71,7 +80,7 @@ export default function SignUp({ providers, csrfToken }: SignInPropsType) {
                   htmlFor="email"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  First Name
+                  First Name <span className="text-red-600 text-lg">*</span>
                 </label>
                 <div className="mt-1">
                   <input
@@ -89,7 +98,7 @@ export default function SignUp({ providers, csrfToken }: SignInPropsType) {
                   htmlFor="email"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Last Name
+                  Last Name <span className="text-red-600 text-lg">*</span>
                 </label>
                 <div className="mt-1">
                   <input
@@ -102,19 +111,54 @@ export default function SignUp({ providers, csrfToken }: SignInPropsType) {
                   />
                 </div>
               </div>
-              <div>
+              {/* <div>
                 <label
-                  htmlFor="email"
+                  htmlFor="user"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Email address
+                  Username <span className="text-red-600 text-lg">*</span>
                 </label>
                 <div className="mt-1">
                   <input
+                    required
+                    type="text"
+                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  />
+                </div>
+              </div> */}
+
+              <div>
+                <div className="flex justify-between">
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Email address{" "}
+                    <span className="text-red-600 text-lg">*</span>
+                  </label>
+                  {isValidEmail ? (
+                    emailExists ? (
+                      <span className="text-red-600 text-sm">
+                        Email Already Exists
+                      </span>
+                    ) : (
+                      <span className="text-green-600 text-sm">
+                        Email is Available
+                      </span>
+                    )
+                  ) : (
+                    <span className="text-red-600 text-sm">
+                      Not a valid Email
+                    </span>
+                  )}
+                </div>
+                <div className="mt-1">
+                  <input
                     value={email}
-                    onChange={(e) => {
+                    onChange={async (e) => {
                       setEmail(e.target.value)
-                      checkifEmailExists(e.target.value)
+                      isValidEmail &&
+                        setEmailExists(await checkifEmailExists(e.target.value))
                     }}
                     id="email"
                     name="email"
@@ -128,29 +172,10 @@ export default function SignUp({ providers, csrfToken }: SignInPropsType) {
 
               <div>
                 <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Username
-                </label>
-                <div className="mt-1">
-                  <input
-                    id="user"
-                    name="username"
-                    type="user"
-                    autoComplete="user"
-                    required
-                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label
                   htmlFor="password"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Password
+                  Password <span className="text-red-600 text-lg">*</span>
                 </label>
                 <div className="mt-1">
                   <input
@@ -167,6 +192,7 @@ export default function SignUp({ providers, csrfToken }: SignInPropsType) {
               <div>
                 <button
                   type="submit"
+                  disabled={emailExists}
                   className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   //   onClick={() =>
                   //     signIn(providers?.credentials.id).then(() => {

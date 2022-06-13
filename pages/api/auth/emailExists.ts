@@ -28,7 +28,7 @@ export default async function checkifEmailExists(
       })
 
       if (user) {
-        return res.status(400).json({
+        return res.status(200).json({
           message: "Email Already Exists",
         })
       }

@@ -3,10 +3,7 @@ import { prisma } from "@/utils/db"
 import { ErrorAPIResponse } from "@/utils/apiResponses"
 import { MoneyTransactionStatus, MoneyTransactionType } from "@prisma/client"
 
-export async function isFollwingUser(
-  currentUser: string,
-  followedUser: string
-) {
+export async function isFollwingUser(currentUser = "", followedUser: string) {
   const result = await prisma.follow.findUnique({
     where: {
       followerId_followingId: {

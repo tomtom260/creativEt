@@ -15,6 +15,7 @@ import { useAppDispatch } from "@/hooks/redux"
 import { addToast } from "store/toastSlice"
 import { Notification } from "@prisma/client"
 import { useQueryClient } from "react-query"
+import { useRouter } from "next/router"
 
 function SignedInNavigation() {
   const { data: user } = useGetCurrentUser()
@@ -24,6 +25,7 @@ function SignedInNavigation() {
   const pusherClient = useContext(PusherContext)
   const queryClient = useQueryClient()
   const dispatch = useAppDispatch()
+  const router = useRouter()
 
   useEffect(() => {
     const notificationsChannel = pusherClient.subscribe(
@@ -48,7 +50,11 @@ function SignedInNavigation() {
     {
       name: "Sign out",
       href: "#",
-      onClick: () => signOut(),
+      onClick: () => {
+        signOut().then(() => {
+          router.push("/auth/signin")
+        })
+      },
     },
   ]
   const [showNotification, setShowNotification] = useState(false)

@@ -24,7 +24,7 @@ type SignInPropsType = {
 export default function SignIn({ providers, csrfToken }: SignInPropsType) {
   const router = useRouter()
 
-  const { data, status } = useSession()
+  const { status } = useSession()
 
   if (status === "loading") {
     return "Loading"
@@ -33,6 +33,8 @@ export default function SignIn({ providers, csrfToken }: SignInPropsType) {
   if (status === "authenticated") {
     router.push("/")
   }
+
+  console.log()
 
   return (
     <>
@@ -49,7 +51,8 @@ export default function SignIn({ providers, csrfToken }: SignInPropsType) {
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
             <p className="text-sm  font-medium text-red-500 text-center">
-              Email address
+              {router.query.error === "CredentialsSignin" &&
+                "email or password Incorrect"}
             </p>
             <form
               className="space-y-6"
