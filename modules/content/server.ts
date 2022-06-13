@@ -268,6 +268,7 @@ export async function getTags(take?: number) {
       },
     })
   )
+    .filter((tag) => (!take ? true : tag._count.contents))
     .sort((a, b) => b._count.contents - a._count.contents)
     .slice(0, take)
     .map((tag) => tag.name)
