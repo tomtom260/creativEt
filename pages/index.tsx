@@ -9,7 +9,7 @@ import { AdjustmentsIcon } from "@heroicons/react/outline"
 import Text from "@/components/Typography"
 import { TypographyVariant } from "@/components/Typography/textVariant.enum"
 import ListBox from "@/components/Form/ListBox"
-import { ReactElement, useState } from "react"
+import { ReactElement, useEffect, useRef, useState } from "react"
 import classNames from "@/utils/classNames"
 import { useGetContentsQuery } from "@/modules/content/hooks"
 import ContentCard from "@/components/Cards/ContentCard"
@@ -36,13 +36,22 @@ export default function Home({ contents, tags }: HomeProps) {
   const [selectedFilterOption, setSelectedFilterOption] = useState(
     filterOptions[0]
   )
+  const [tag, setTag] = useState<string>()
+  const [displayTag, setDisplayTag] = useState<string>()
+  const [displayCreatorName, setDisplayCreatorName] = useState<string>()
+  const [creatorName, setCreatorName] = useState<string>()
   const [selectedTag, setSelectedTag] = useState(tags[0])
   const [showFilter, setShowFilter] = useState<boolean>(false)
   const getContentsQuery = useGetContentsQuery(
     contents,
-    selectedTag !== "All" ? selectedTag : undefined,
-    selectedFilterOption !== "All" ? selectedFilterOption : undefined
+    tag ? tag : selectedTag !== "All" ? selectedTag : undefined,
+    selectedFilterOption !== "All" ? selectedFilterOption : undefined,
+    creatorName
   )
+
+  const timerCreatorNameRef = useRef<NodeJS.Timeout>()
+  const timerTagRef = useRef<NodeJS.Timeout>()
+
   return (
     <>
       <Landing />
@@ -86,12 +95,27 @@ export default function Home({ contents, tags }: HomeProps) {
               <input
                 placeholder="Filter by tags"
                 className="h-10 md:w-1/3 px-2 border-2 outline-none rounded-md"
-                onChange={() => {}}
+                value={displayTag}
+                onChange={(e) => {
+                  setDisplayTag(e.target.value)
+                  timerTagRef.current && clearTimeout(timerTagRef.current)
+                  timerTagRef.current = setTimeout(() => {
+                    setTag(e.target.value)
+                  }, 500)
+                }}
               />
               <input
                 placeholder="Filter by User"
                 className="h-10 md:w-1/3 px-2 border-2 outline-none rounded-md"
-                onChange={() => {}}
+                onChange={(e) => {
+                  setDisplayCreatorName(e.target.value)
+                  timerCreatorNameRef.current &&
+                    clearTimeout(timerCreatorNameRef.current)
+                  timerCreatorNameRef.current = setTimeout(() => {
+                    setCreatorName(e.target.value)
+                  }, 500)
+                }}
+                value={displayCreatorName}
               />
               <ListBox
                 optionsClassName="!right-0 !left-auto"

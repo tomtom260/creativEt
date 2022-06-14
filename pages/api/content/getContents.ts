@@ -12,13 +12,15 @@ export default async function userHandler(
 ) {
   const session = await getSession({ req })
   const userId = session?.user?.id!
+  console.log(req.query)
   switch (req.method) {
     case "GET":
       const contents = await getContents(
         userId,
         req.query.creatorId,
         req.query.tag,
-        req.query.filter
+        req.query.filter,
+        req.query.creatorName
       )
       return SuccessAPIResponse(res, contents)
     default:

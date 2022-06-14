@@ -88,11 +88,13 @@ export async function getContents(
   userId?: string,
   creatorId?: string,
   tag?: string,
-  filter?: string
+  filter?: string,
+  creatorName?: string
 ) {
   if (!userId) {
     return []
   }
+  console.log(creatorName)
   const contents = await prisma.content.findMany({
     include: {
       tags: true,
@@ -112,6 +114,11 @@ export async function getContents(
     where: {
       published: true,
       createdBy: {
+        name: creatorName
+          ? {
+              contains: creatorName.trim(),
+            }
+          : undefined,
         id: creatorId,
         following:
           filter === FILTERS.FOLLOWING
@@ -131,7 +138,7 @@ export async function getContents(
       tags: tag
         ? {
             some: {
-              name: tag,
+              name: { contains: tag.trim() },
             },
           }
         : undefined,

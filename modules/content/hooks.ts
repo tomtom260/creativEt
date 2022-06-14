@@ -8,12 +8,13 @@ import { Content } from "types/content"
 export function useGetContentsQuery(
   initialContents: Content[],
   tag?: string,
-  filter?: string
+  filter?: string,
+  creatorName?: string
 ) {
   const user = useSession().data?.user
   const getContentsQuery = useQuery(
-    ["contents", tag, filter],
-    () => getContents(tag, filter),
+    ["contents", tag, filter, creatorName],
+    () => getContents(tag, filter, creatorName),
     {
       initialData: initialContents,
       refetchOnMount: false,
@@ -36,17 +37,23 @@ export function useGetContentsQuery(
     return () => {
       firstTime && setFirstTime(false)
     }
-  }, [tag, firstTime, filter])
+  }, [tag, firstTime, filter, creatorName])
 
   return getContentsQuery
 }
 
-async function getContents(tag?: string, filter?: string) {
+async function getContents(
+  tag?: string,
+  filter?: string,
+  creatorName?: string
+) {
   return await (
     await axios.get(
       `/api/content/getContents?${tag ? `tag=${tag}` : ""}${
-        tag && filter ? "&" : ""
-      }${filter ? `filter=${filter}` : ""}`
+        (tag && filter) || (tag && creatorName) ? "&" : ""
+      }${filter ? `filter=${filter}` : ""}${creatorName && filter ? "&" : ""}${
+        creatorName ? `creatorName=${creatorName}` : ""
+      }`
     )
   ).data.data
 }
