@@ -26,7 +26,6 @@ const filterAdvancedOptions = [
   "Price (Expensive)",
   "Date Created (Oldest)",
   "Date Created (Latest)",
-  "Most Liked",
   "Most Viewed",
 ]
 
@@ -51,7 +50,10 @@ export default function Home({ contents, tags }: HomeProps) {
     tag ? tag : selectedTag !== "All" ? selectedTag : undefined,
     selectedFilterOption !== "All" ? selectedFilterOption : undefined,
     creatorName,
-    query
+    query,
+    selectedAdvancedFilterOption !== "All"
+      ? selectedAdvancedFilterOption
+      : undefined
   )
 
   const timerCreatorNameRef = useRef<NodeJS.Timeout>()

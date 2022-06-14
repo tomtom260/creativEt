@@ -12,6 +12,14 @@ enum FILTERS {
   FOLLOWING = "Following",
 }
 
+enum ADVANCED_FILTERS {
+  "Price (Cheapest)" = "Price (Cheapest)",
+  "Price (Expensive)" = "Price (Expensive)",
+  "Date Created (Oldest)" = "Date Created (Oldest)",
+  "Date Created (Latest)" = "Date Created (Latest)",
+  "Most Viewed" = "Most Viewed",
+}
+
 export async function boostContent(id: string) {
   const boost = await prisma.boost.findUnique({
     where: {
@@ -90,12 +98,12 @@ export async function getContents(
   tag?: string,
   filter?: string,
   creatorName?: string,
-  query?: string
+  query?: string,
+  advancedFilter?: string
 ) {
   if (!userId) {
     return []
   }
-  console.log(creatorName)
   const contents = await prisma.content.findMany({
     include: {
       tags: true,
@@ -190,6 +198,26 @@ export async function getContents(
 
   if (filter === FILTERS.POPULAR) {
     contentsWithProfile.sort((a, b) => b._count.likes - a._count.likes)
+  }
+
+  switch (advancedFilter) {
+    case ADVANCED_FILTERS["Date Created (Latest)"]:
+      contentsWithProfile.sort((a, b) => b.createdAt - a.createdAt)
+      break
+    case ADVANCED_FILTERS["Date Created (Oldest)"]:
+      contentsWithProfile.sort((a, b) => a.createdAt - b.createdAt)
+      break
+    case ADVANCED_FILTERS["Most Viewed"]:
+      contentsWithProfile.sort((a, b) => b._count.View - a._count.View)
+      break
+    case ADVANCED_FILTERS["Price (Cheapest)"]:
+      contentsWithProfile.sort((a, b) => a.price - b.price)
+      break
+    case ADVANCED_FILTERS["Price (Expensive)"]:
+      contentsWithProfile.sort((a, b) => b.price - a.price)
+      break
+    default:
+      break
   }
 
   return contentsWithProfile
