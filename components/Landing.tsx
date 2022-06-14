@@ -1,7 +1,13 @@
 import { motion, useViewportScroll, useTransform } from "framer-motion"
-import { duration } from "moment"
+import { Dispatch, SetStateAction } from "react"
 
-function Landing() {
+function Landing({
+  onChange,
+  value,
+}: {
+  onChange: Dispatch<SetStateAction<string>>
+  value: string
+}) {
   const { scrollYProgress } = useViewportScroll()
   const y1 = useTransform(scrollYProgress, [0, 300], [0, 200])
   const y2 = useTransform(scrollYProgress, (value) => value * -300)
@@ -54,6 +60,8 @@ function Landing() {
             </svg>
           </label>
           <input
+            onChange={(e) => onChange(e.target.value)}
+            value={value}
             name="navSearch"
             className="w-[500px] h-10 border-2 rounded-md px-10"
             placeholder="Search"

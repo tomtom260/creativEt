@@ -20,7 +20,8 @@ export default async function userHandler(
         req.query.creatorId,
         req.query.tag,
         req.query.filter,
-        req.query.creatorName
+        req.query.creatorName,
+        req.query.query
       )
       return SuccessAPIResponse(res, contents)
     default:

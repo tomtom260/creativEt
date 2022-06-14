@@ -89,7 +89,8 @@ export async function getContents(
   creatorId?: string,
   tag?: string,
   filter?: string,
-  creatorName?: string
+  creatorName?: string,
+  query?: string
 ) {
   if (!userId) {
     return []
@@ -112,6 +113,11 @@ export async function getContents(
       },
     },
     where: {
+      title: query
+        ? {
+            contains: query.trim(),
+          }
+        : undefined,
       published: true,
       createdBy: {
         name: creatorName

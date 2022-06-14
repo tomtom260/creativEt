@@ -36,6 +36,10 @@ export default function Home({ contents, tags }: HomeProps) {
   const [selectedFilterOption, setSelectedFilterOption] = useState(
     filterOptions[0]
   )
+
+  const [query, setQuery] = useState<string>("")
+  const [displayQuery, setDisplayQuery] = useState<string>("")
+
   const [tag, setTag] = useState<string>()
   const [displayTag, setDisplayTag] = useState<string>()
   const [displayCreatorName, setDisplayCreatorName] = useState<string>()
@@ -46,15 +50,26 @@ export default function Home({ contents, tags }: HomeProps) {
     contents,
     tag ? tag : selectedTag !== "All" ? selectedTag : undefined,
     selectedFilterOption !== "All" ? selectedFilterOption : undefined,
-    creatorName
+    creatorName,
+    query
   )
 
   const timerCreatorNameRef = useRef<NodeJS.Timeout>()
   const timerTagRef = useRef<NodeJS.Timeout>()
+  const searchTimerRef = useRef<NodeJS.Timeout>()
 
   return (
     <>
-      <Landing />
+      <Landing
+        value={displayQuery}
+        onChange={(val) => {
+          setDisplayQuery(val)
+          searchTimerRef.current && clearTimeout(searchTimerRef.current)
+          searchTimerRef.current = setTimeout(() => {
+            setQuery(val)
+          }, 500)
+        }}
+      />
       <div
         id="content"
         className="max-w-7xl mb-[800px] flex flex-col px-2  sm:px-6  md:px-4 lg:px-8 pb-2 md:py-8 mx-auto"

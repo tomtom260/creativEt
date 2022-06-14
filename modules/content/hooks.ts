@@ -9,12 +9,13 @@ export function useGetContentsQuery(
   initialContents: Content[],
   tag?: string,
   filter?: string,
-  creatorName?: string
+  creatorName?: string,
+  query?: string
 ) {
   const user = useSession().data?.user
   const getContentsQuery = useQuery(
     ["contents", tag, filter, creatorName],
-    () => getContents(tag, filter, creatorName),
+    () => getContents(tag, filter, creatorName, query),
     {
       initialData: initialContents,
       refetchOnMount: false,
@@ -37,7 +38,7 @@ export function useGetContentsQuery(
     return () => {
       firstTime && setFirstTime(false)
     }
-  }, [tag, firstTime, filter, creatorName])
+  }, [tag, firstTime, filter, creatorName, query])
 
   return getContentsQuery
 }
@@ -45,16 +46,18 @@ export function useGetContentsQuery(
 async function getContents(
   tag?: string,
   filter?: string,
-  creatorName?: string
+  creatorName?: string,
+  query?: string
 ) {
   return await (
-    await axios.get(
-      `/api/content/getContents?${tag ? `tag=${tag}` : ""}${
-        (tag && filter) || (tag && creatorName) ? "&" : ""
-      }${filter ? `filter=${filter}` : ""}${creatorName && filter ? "&" : ""}${
-        creatorName ? `creatorName=${creatorName}` : ""
-      }`
-    )
+    await axios.get(`/api/content/getContents`, {
+      params: {
+        query,
+        creatorName,
+        tag,
+        filter,
+      },
+    })
   ).data.data
 }
 
