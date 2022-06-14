@@ -93,7 +93,6 @@ export async function getContents(
   if (!userId) {
     return []
   }
-  console.log(filter)
   const contents = await prisma.content.findMany({
     include: {
       tags: true,
@@ -139,15 +138,48 @@ export async function getContents(
     },
   })
 
-  if (filter === FILTERS.POPULAR) {
-    contents.sort((a, b) => b._count.likes - a._count.likes)
-  }
+  contents.map((content) => {
+    content.point = 0
 
-  return await Promise.all(
+    const viewsByCurrentUser = content.View.filter(
+      (view) => view.userId === userId
+    ).length
+    if (viewsByCurrentUser < parseInt(process.env.NEW_POST as string)) {
+      content.point += parseInt(process.env.NEW_POST_POINTS as string)
+    } else if (
+      viewsByCurrentUser < parseInt(process.env.RECENT_POST as string)
+    ) {
+      content.point += parseInt(process.env.RECENT_POST_POINTS as string)
+    }
+
+    const likes = content._count.likes
+    if (likes > parseInt(process.env.POPULAR as string)) {
+      content.point += parseInt(process.env.POPULAR_POINTS as string)
+    }
+  })
+
+  const contentsWithProfile = await Promise.all(
     contents.map(async (content: Exclude<typeof contents[number], void>) => {
       return await addProfileToContentCreator(content, userId)
     })
   )
+
+  contentsWithProfile.map((content) => {
+    if (content.isBoosted) {
+      content.point += parseInt(process.env.BOOST_POINTS as string)
+    }
+    if (content.createdBy.isFollowedByCurrentUser) {
+      content.point += parseInt(process.env.FOLLOW_POINTS as string)
+    }
+  })
+
+  contentsWithProfile.sort((a, b) => b.point - a.point)
+
+  if (filter === FILTERS.POPULAR) {
+    contentsWithProfile.sort((a, b) => b._count.likes - a._count.likes)
+  }
+
+  return contentsWithProfile
 }
 
 export async function getLikedContents(userId: string) {
@@ -303,9 +335,14 @@ async function addProfileToContentCreator(
   contentWithProfile.isBoughtByCurrentUser = content.Transaction.some(
     (trans) => trans.buyerId === userId
   )
-  contentWithProfile.isBoosted = moment(
-    contentWithProfile?.Boost?.boostedAt || 0
-  ).isAfter(moment().diff(7, "days"))
+  contentWithProfile.isBoosted = contentWithProfile?.Boost?.boostedAt
+    ? moment().isBefore(
+        moment(contentWithProfile?.Boost?.boostedAt).add(
+          process.env.BOOST_LASTS_DAYS,
+          "days"
+        )
+      )
+    : false
   contentWithProfile.createdBy.isFollowedByCurrentUser =
     await addUserFollowsContentCreator(userId, contentWithProfile.createdBy.id)
 
@@ -339,4 +376,5 @@ type ContentWithLikesTagsUser =
         likes: number
         View: number
       }
+      point?: number
     }

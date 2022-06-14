@@ -14,8 +14,6 @@ import classNames from "@/utils/classNames"
 import { useGetContentsQuery } from "@/modules/content/hooks"
 import ContentCard from "@/components/Cards/ContentCard"
 import Landing from "@/components/Landing"
-import Input from "@/components/Form/Input"
-import { InputType, InputVariant } from "@/components/Form/Input/Input.enum"
 
 type HomeProps = {
   contents: Content[]
@@ -90,6 +88,11 @@ export default function Home({ contents, tags }: HomeProps) {
                 className="h-10 md:w-1/3 px-2 border-2 outline-none rounded-md"
                 onChange={() => {}}
               />
+              <input
+                placeholder="Filter by User"
+                className="h-10 md:w-1/3 px-2 border-2 outline-none rounded-md"
+                onChange={() => {}}
+              />
               <ListBox
                 optionsClassName="!right-0 !left-auto"
                 selected={selectedAdvancedFilterOption}
@@ -122,6 +125,13 @@ Home.getLayout = function getLayout(page: ReactElement) {
 export async function getServerSideProps({ req }) {
   const session = await getSession({ req })
   const contents = await getContents(session?.user.id)
+  console.log(
+    contents.map((content) => ({
+      nme: content.title,
+      views: content.views,
+      point: content.point,
+    }))
+  )
   const tags = await getTags(8)
   return {
     props: {
