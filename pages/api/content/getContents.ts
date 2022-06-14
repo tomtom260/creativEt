@@ -12,7 +12,6 @@ export default async function userHandler(
 ) {
   const session = await getSession({ req })
   const userId = session?.user?.id!
-  console.log(req.query)
   switch (req.method) {
     case "GET":
       const contents = await getContents(

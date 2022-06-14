@@ -134,11 +134,11 @@ export async function getContents(
             }
           : undefined,
         id: creatorId,
-        following:
-          filter === FILTERS.FOLLOWING
+        followers:
+          FILTERS.FOLLOWING === filter
             ? {
                 some: {
-                  id: userId,
+                  followerId: userId,
                 },
               }
             : undefined,
