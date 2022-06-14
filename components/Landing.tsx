@@ -1,4 +1,5 @@
 import { motion, useViewportScroll, useTransform } from "framer-motion"
+import Link from "next/link"
 import { Dispatch, SetStateAction } from "react"
 
 function Landing({
@@ -67,7 +68,15 @@ function Landing({
             placeholder="Search"
           ></input>
         </div>
-        <button className="bg-gray-800 p-3  text-md text-white rounded-lg absolute bottom-10 border shadow-lg border-white">
+        <button
+          onClick={() => {
+            document.getElementById("content")?.scrollIntoView({
+              behavior: "smooth",
+            })
+          }}
+          className="bg-gray-800 p-3 text-md text-white rounded-lg absolute
+            bottom-10 border shadow-lg border-white"
+        >
           Start Exploring
         </button>
       </motion.div>
