@@ -26,6 +26,7 @@ function UploadContent({
   modal = false,
   userId,
   jobId,
+  gigPrice,
 }: {
   tags: string[]
   modal?: boolean
@@ -34,11 +35,13 @@ function UploadContent({
   userId?: string
   jobId?: string
   afterUpload?: () => void
+  gigPrice: number
 }) {
   const [imageToBeUploaded, setImageToBeUploaded] = useState<File | null>(null)
   const [imageError, setImageError] = useState<string[]>([])
   const [imagePreview, setImagePreview] = useState<string>()
   const [title, setTitle] = useState(gigTitle)
+  const [price, setPrice] = useState(gigPrice)
   const [description, setDescription] = useState(gigDescription)
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const { uploadContent } = useContentService()
@@ -74,6 +77,7 @@ function UploadContent({
       imageToBeUploaded: imageToBeUploaded as File,
       tags: selectedTags,
       title,
+      price,
       description,
       userId,
     }).then((res) => {
@@ -92,7 +96,9 @@ function UploadContent({
 
   return (
     <>
-      <Text varaint={TypographyVariant.H1}>Upload your work</Text>
+      <Text varaint={TypographyVariant.H1} className="mb-4">
+        Upload your work
+      </Text>
       {!modal &&
         (imagePreview ? (
           <Input
@@ -194,7 +200,7 @@ function UploadContent({
         )}
       </Dropzone>
       {imagePreview ? (
-        <>
+        <div className="space-y-5 ">
           <Select
             className="md:text-2xl"
             selectedOptions={selectedTags}
@@ -202,19 +208,31 @@ function UploadContent({
             options={tags}
           />
           {!modal && (
-            <Input
-              variant={InputType.TEXTAREA}
-              label=""
-              placeholder="Descritption"
-              className={`text-base  px-0 ${
-                modal ? "md:text-2xl" : "md:text-3xl"
-              } `}
-              value={description}
-              onChange={setDescription}
-              noBorder
-            />
+            <>
+              <Input
+                variant={InputType.NORMAL}
+                placeholder="Price"
+                className={`text-base !px-0 !h-12 ${
+                  modal ? "md:text-2xl" : "md:text-3xl"
+                } `}
+                value={price}
+                onChange={setPrice}
+                noBorder
+              />
+              <Input
+                variant={InputType.TEXTAREA}
+                label=""
+                placeholder="Descritption"
+                className={`text-base  px-0 ${
+                  modal ? "md:text-2xl" : "md:text-3xl"
+                } `}
+                value={description}
+                onChange={setDescription}
+                noBorder
+              />
+            </>
           )}
-        </>
+        </div>
       ) : // <div className="h-28" />
       null}
       <div

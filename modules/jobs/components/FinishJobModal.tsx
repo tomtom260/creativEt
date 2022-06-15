@@ -22,6 +22,7 @@ function FinishJobModal() {
           userId={job.employerId}
           gigTitle={job.title}
           gigDescription={job.description}
+          gigPrice={job.price}
           modal
           tags={[]}
         />

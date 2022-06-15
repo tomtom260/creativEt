@@ -19,7 +19,7 @@ export default async function userHandler(
   const session = await getSession({ req })
   const id = session?.user?.id!
 
-  const { image, title, description, tags, userId } = req.body
+  const { image, title, description, tags, userId, price } = req.body
   if (!image || !title) {
     return
   }
@@ -32,6 +32,7 @@ export default async function userHandler(
             image,
             title,
             description,
+            price: parseInt(price),
             userId: userId || id,
             tags: {
               connectOrCreate: tags.map((tag) => ({

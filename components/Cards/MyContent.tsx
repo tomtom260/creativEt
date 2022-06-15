@@ -30,7 +30,7 @@ function MyContent({
       content={content}
       isFlipped={isFlipped}
       backSide={
-        <div className=" shadow-lg w-full h-full flex flex-col py-6 px-8 gap-3">
+        <div className=" shadow-lg bg-white relative z-20 w-full h-full flex flex-col py-6 px-8 gap-3">
           <XCircleIcon
             onClick={() => setFlippedCard(null)}
             className=" text-gray-dark cursor-pointer  self-end h-6 w-6 -mr-5 -mt-2  z-20"

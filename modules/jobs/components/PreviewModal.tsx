@@ -3,7 +3,6 @@ import Modal from "@/components/Dialog/Modal"
 import { useAppDispatch, useAppSelector } from "@/hooks/redux"
 import { hideModal, ModalType } from "store/modalSlice"
 
-import UploadContent from "@/modules/content/components/UploadContent"
 import { TJOb } from "@/modules/jobs/types"
 import ImageWithSkeleton from "@/components/ImageWithSkeleton"
 import Button from "@/components/Button"

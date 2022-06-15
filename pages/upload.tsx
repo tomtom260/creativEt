@@ -20,7 +20,9 @@ import { useQueryClient } from "react-query"
 function Upload({ tags }) {
   return (
     <DefaultLayout>
-      <UploadContent tags={tags} />
+      <div className="md:w-[65%] mx-auto">
+        <UploadContent tags={tags} />
+      </div>
     </DefaultLayout>
   )
 }

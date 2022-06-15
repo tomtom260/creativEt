@@ -49,7 +49,7 @@ const BaseInputComp = React.forwardRef(function BaseInput({
     <div className="flex-1 flex flex-col">
       {label && (
         <Text
-          className="!font-mono  !text-xl mb-2 sm:mb-4"
+          className=" !text-xl md:text-3xl mb-2 sm:mb-4"
           varaint={TypographyVariant.Body1}
         >
           {label}
