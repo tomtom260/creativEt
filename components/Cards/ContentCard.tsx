@@ -84,6 +84,15 @@ function ContentCard({
       content={content}
       hoverComponent={
         <>
+          <div className="absolute left-4 top-4 px-2 bg-[rgba(255,255,255,0.5)] text-black opacity-70  ">
+            <Text
+              className="font-extrabold  tracking-wider"
+              varaint={TypographyVariant.Body1}
+            >
+              <span className="text-2xl">{content.price.toFixed(2)}</span>
+              ETB
+            </Text>
+          </div>
           {content.isBoosted && (
             <div className="z-10 absolute right-4 top-4 px-2 bg-secondary-normal  opacity-70  ">
               <Text
@@ -161,13 +170,13 @@ function ContentCard({
                       <div className="flex flex-col mx-3">
                         <Text
                           varaint={TypographyVariant.H2}
-                          className="font-semibold mt-3"
+                          className="font-semibold line-clamp-1 mt-3"
                         >
                           {createdBy.name}
                         </Text>
                         <Text
                           varaint={TypographyVariant.Body1}
-                          className="font-thin text-gray-normal"
+                          className="font-thin line-clamp-1 text-gray-normal"
                         >
                           {createdBy.location}
                         </Text>
