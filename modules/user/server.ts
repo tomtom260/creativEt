@@ -102,12 +102,22 @@ export async function searchUser(username: string) {
   }))
 }
 
-export async function getUsersForHIre() {
+export async function getUsersForHIre(name?: string, location?: string) {
   const users = await prisma.user.findMany({
     include: {
       Profile: true,
     },
     where: {
+      Profile: location
+        ? {
+            location,
+          }
+        : undefined,
+      name: name
+        ? {
+            contains: name,
+          }
+        : undefined,
       availableForHire: true,
     },
   })

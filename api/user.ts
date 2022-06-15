@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client"
 import axios, { AxiosResponse } from "axios"
 import {
   QueryOptions,
@@ -83,6 +84,22 @@ export async function unfollowUser(followingId: string) {
 export async function toggleAvailableForHire() {
   return await (
     await axios.patch(`/api/account/toggleAvailableForHire`)
+  ).data.data
+}
+
+export async function getUsersAvailableForHire(
+  name?: string,
+  location?: string
+) {
+  return await (
+    await axios.get<{
+      data: User[]
+    }>(`/api/user`, {
+      params: {
+        name,
+        location,
+      },
+    })
   ).data.data
 }
 

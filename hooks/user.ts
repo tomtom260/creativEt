@@ -1,5 +1,6 @@
 import {
   fetchUserWithProfile,
+  getUsersAvailableForHire,
   searchUsers,
   toggleAvailableForHire,
   transformUserResponse,
@@ -7,6 +8,7 @@ import {
 import {
   useMutation,
   UseMutationOptions,
+  useQueries,
   useQuery,
   useQueryClient,
   UseQueryOptions,
@@ -14,6 +16,7 @@ import {
 import { followUser, unfollowUser } from "@/api/user"
 import { useEffect, useState } from "react"
 import { useSession } from "next-auth/react"
+import { User } from "types/user"
 
 type CustomUseMutationOptions = UseMutationOptions<
   unknown,
@@ -96,8 +99,30 @@ export const useToggleAvailableForHireMutation = (
   return useMutation(toggleAvailableForHire, {
     ...props,
     onSuccess: () => {
-      console.log("ss")
       queryClient.invalidateQueries(["user", id])
     },
   })
+}
+
+export const useGetUsersForHireQuery = (
+  initUsers: User[],
+  name?: string,
+  location?: string
+) => {
+  const [users, setUsers] = useState(initUsers)
+  useEffect(() => {
+    if (name || location) {
+      getUsersAvailableForHire(name, location).then((res) => {
+        setUsers(res)
+      })
+    }
+  }, [name, location])
+
+  return useQueries(
+    users.map((user) => ({
+      queryFn: () => fetchUserWithProfile(user.id),
+      queryKey: ["user", user.id],
+      initialData: user,
+    }))
+  )
 }

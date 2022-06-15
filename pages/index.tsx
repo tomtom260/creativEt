@@ -166,13 +166,7 @@ Home.getLayout = function getLayout(page: ReactElement) {
 export async function getServerSideProps({ req }) {
   const session = await getSession({ req })
   const contents = await getContents(session?.user.id)
-  console.log(
-    contents.map((content) => ({
-      nme: content.title,
-      views: content.views,
-      point: content.point,
-    }))
-  )
+
   const tags = await getTags(8)
   return {
     props: {
