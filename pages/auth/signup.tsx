@@ -73,7 +73,12 @@ export default function SignUp({ providers, csrfToken }: SignInPropsType) {
 
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-            <form className="space-y-6" action="/api/auth/user" method="POST">
+            <form
+              autoComplete="off"
+              className="space-y-6"
+              action="/api/auth/user"
+              method="POST"
+            >
               <input hidden name="csrfToken" defaultValue={csrfToken} />
               <div>
                 <label
@@ -136,21 +141,22 @@ export default function SignUp({ providers, csrfToken }: SignInPropsType) {
                     Email address{" "}
                     <span className="text-red-600 text-lg">*</span>
                   </label>
-                  {isValidEmail ? (
-                    emailExists ? (
-                      <span className="text-red-600 text-sm">
-                        Email Already Exists
-                      </span>
+                  {email &&
+                    (isValidEmail ? (
+                      emailExists ? (
+                        <span className="text-red-600 text-sm">
+                          Email Already Exists
+                        </span>
+                      ) : (
+                        <span className="text-green-600 text-sm">
+                          Email is Available
+                        </span>
+                      )
                     ) : (
-                      <span className="text-green-600 text-sm">
-                        Email is Available
+                      <span className="text-red-600 text-sm">
+                        Not a valid Email
                       </span>
-                    )
-                  ) : (
-                    <span className="text-red-600 text-sm">
-                      Not a valid Email
-                    </span>
-                  )}
+                    ))}
                 </div>
                 <div className="mt-1">
                   <input
@@ -158,12 +164,13 @@ export default function SignUp({ providers, csrfToken }: SignInPropsType) {
                     onChange={async (e) => {
                       setEmail(e.target.value)
                       isValidEmail &&
+                        email &&
                         setEmailExists(await checkifEmailExists(e.target.value))
                     }}
                     id="email"
                     name="email"
                     type="email"
-                    autoComplete="email"
+                    autoComplete="none"
                     required
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
@@ -182,7 +189,7 @@ export default function SignUp({ providers, csrfToken }: SignInPropsType) {
                     id="password"
                     name="password"
                     type="password"
-                    autoComplete="current-password"
+                    autoComplete="new-password"
                     required
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />

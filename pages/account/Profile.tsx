@@ -135,7 +135,7 @@ function Profile() {
               onChange={setName}
               label="Name"
             />
-          <Input
+            <Input
               variant={InputType.NORMAL}
               value={location}
               onChange={setLocation}

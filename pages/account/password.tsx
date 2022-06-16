@@ -6,12 +6,12 @@ import Input from "@/components/Form/Input"
 import { InputType } from "@/components/Form/Input/Input.enum"
 import { useGetCurrentUser } from "@/hooks/user"
 
-function Profile() {
+function Password() {
   const { data: user } = useGetCurrentUser()
 
-  const [oldPassword, setOldPassword] = useState(user?.name || "")
-  const [newPassword, setNewPassword] = useState(user?.location || "")
-  const [confirmPassword, setConfirmPassword] = useState(user?.bio || "")
+  const [oldPassword, setOldPassword] = useState<string>("")
+  const [newPassword, setNewPassword] = useState<string>("")
+  const [confirmPassword, setConfirmPassword] = useState<string>("")
 
   return (
     <ProfileLayout>
@@ -19,24 +19,24 @@ function Profile() {
         <div className="flex flex-1">
           <div className="grid grid-cols-1 gap-4 px-10 flex-1">
             <Input
-              variant={InputType.NORMAL}
+              variant={InputType.PASSWORD}
               value={oldPassword}
               onChange={setOldPassword}
               label="Old Password"
             />
             <Input
-              variant={InputType.NORMAL}
+              variant={InputType.PASSWORD}
               value={newPassword}
               onChange={setNewPassword}
               label="New Password"
             />
             <Input
-              variant={InputType.NORMAL}
+              variant={InputType.PASSWORD}
               value={confirmPassword}
               onChange={setConfirmPassword}
               label="Confirm Password"
             />
-            <Button onClick={} variant={ButtonVariants.PRIMARY}>
+            <Button onClick={() => {}} variant={ButtonVariants.PRIMARY}>
               Save
             </Button>
           </div>
@@ -54,4 +54,4 @@ export async function getStaticProps() {
   }
 }
 
-export default Profile
+export default Password

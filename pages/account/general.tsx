@@ -6,7 +6,7 @@ import Input from "@/components/Form/Input"
 import { InputType } from "@/components/Form/Input/Input.enum"
 import { useGetCurrentUser } from "@/hooks/user"
 
-function Profile() {
+function General() {
   const { data: user } = useGetCurrentUser()
 
   const [email, setEmail] = useState(user?.email || "")
@@ -29,7 +29,7 @@ function Profile() {
               onChange={setUsername}
               label="Username"
             />
-            <Button onClick={} variant={ButtonVariants.PRIMARY}>
+            <Button onClick={() => {}} variant={ButtonVariants.PRIMARY}>
               Save
             </Button>
           </div>
@@ -47,4 +47,4 @@ export async function getStaticProps() {
   }
 }
 
-export default Profile
+export default General
