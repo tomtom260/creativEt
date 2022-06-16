@@ -10,13 +10,10 @@ import DepositModal from "@/modules/walet/components/DepositModal"
 import WithdrawModal from "@/modules/walet/components/WithdrawModal"
 import { getMoneyTransaction } from "@/modules/walet/server"
 import { changeDateInJSONToMoment } from "@/utils/changeDateToMoment"
-import {
-  MoneyTransaction,
-  MoneyTransactionStatus,
-  MoneyTransactionType,
-} from "@prisma/client"
+import { MoneyTransaction } from "@prisma/client"
+import moment from "moment"
 import { GetServerSidePropsContext } from "next"
-import { getSession, useSession } from "next-auth/react"
+import { getSession } from "next-auth/react"
 import React from "react"
 import { ModalType, showModal } from "store/modalSlice"
 
@@ -61,7 +58,14 @@ function Walet({ transactions }: { transactions: MoneyTransaction[] }) {
           </div>
           <div className="mt-20 w-full self-start">
             <Text varaint={TypographyVariant.H1}>Transaction List </Text>
-            <Table className="" items={transactions} />
+            <Table
+              className=""
+              items={transactions.sort((a, b) =>
+                moment(b.transactionAt).isBefore(moment(a.transactionAt))
+                  ? -1
+                  : 1
+              )}
+            />
           </div>
         </div>
       </DefaultLayout>
