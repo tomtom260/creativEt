@@ -9,10 +9,10 @@ import {
   useSession,
 } from "next-auth/react"
 import { BuiltInProviderType } from "next-auth/providers"
-import axios from "axios"
 import { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
+import { checkifEmailExists } from "@/api/user"
 
 type SignInPropsType = {
   providers: Record<
@@ -20,16 +20,6 @@ type SignInPropsType = {
     ClientSafeProvider
   > | null
   csrfToken: string | undefined
-}
-
-const checkifEmailExists = async (email: string) => {
-  return (
-    (
-      await axios.post("/api/auth/emailExists", {
-        email,
-      })
-    ).data.message !== "Email Valid"
-  )
 }
 
 export default function SignUp({ providers, csrfToken }: SignInPropsType) {

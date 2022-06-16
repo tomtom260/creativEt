@@ -159,6 +159,42 @@ export async function getUsersForHIre(
   })
 }
 
+export async function updateUsername(id: string, username: string) {
+  return await prisma.profile.update({
+    data: {
+      username,
+    },
+    where: {
+      id,
+    },
+  })
+}
+
+export async function updateEmail(id: string, email: string) {
+  return await prisma.user.update({
+    data: {
+      email,
+    },
+    where: {
+      id,
+    },
+  })
+}
+
+export async function updatePassword(id: string, password: string) {
+  return await prisma.account.update({
+    data: {
+      password,
+    },
+    where: {
+      provider_providerAccountId: {
+        provider: "user&Password",
+        providerAccountId: id,
+      },
+    },
+  })
+}
+
 enum FILTERS {
   "Top Rated" = "Top Rated",
   FOLLOWING = "Following",

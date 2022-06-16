@@ -14,7 +14,10 @@ export function wrongRequestMethodError(
   })
 }
 
-export function SuccessAPIResponse(res: NextApiResponse, data: object) {
+export function SuccessAPIResponse(
+  res: NextApiResponse,
+  data: Record<string, unknown>
+) {
   return res.status(200).json({
     status: RestAPIStatus.SUCCESS,
     data,

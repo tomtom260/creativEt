@@ -12,6 +12,7 @@ function Password() {
   const [oldPassword, setOldPassword] = useState<string>("")
   const [newPassword, setNewPassword] = useState<string>("")
   const [confirmPassword, setConfirmPassword] = useState<string>("")
+  const [confirmPasswordError, setConfirmPasswordError] = useState<string>("")
 
   return (
     <ProfileLayout>
@@ -33,8 +34,11 @@ function Password() {
             <Input
               variant={InputType.PASSWORD}
               value={confirmPassword}
-              onChange={setConfirmPassword}
+              onChange={(val) => {
+                setConfirmPassword(val)
+              }}
               label="Confirm Password"
+              error={confirmPasswordError}
             />
             <Button onClick={() => {}} variant={ButtonVariants.PRIMARY}>
               Save

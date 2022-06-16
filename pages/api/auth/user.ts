@@ -4,7 +4,6 @@ import bcryptjs from "bcryptjs"
 import { prisma } from "../../../utils/db"
 import sendMail from "../../../utils/mail"
 import crypto from "crypto"
-import { create } from "domain"
 import { getSession } from "next-auth/react"
 
 type NextApiRequestType = Omit<NextApiRequest, "body"> & {
@@ -23,7 +22,7 @@ export default async function userHandler(
 ) {
   switch (req.method) {
     case "POST":
-      const { email, firstName, lastName, username, password } = req.body
+      const { email, firstName, lastName, password } = req.body
       const verificationToken = crypto.randomBytes(16).toString("hex")
       const hashedVerificationToken = bcryptjs.hashSync(verificationToken, 10)
       const hashedPassword = bcryptjs.hashSync(password, 10)
@@ -71,7 +70,7 @@ export default async function userHandler(
                 <h2 style="margin:0px">You're on your way! Let's confirm your email address.</h2>
                 <h3 style="margin:15px; font-weight:200;">By clicking on the following link, you are confirming your email address.</h3> 
                 <div style="width:150px; pointer:cursor; background-color:skyblue; color:white; padding:15px; text-align:center;  margin:0 auto;">
-                <a  style="text-decoration:none; color:white;" href="${process.env.NEXTAUTH_URL}/api/auth/verifyEmail?id=${account.id}&token=${verificationToken}">
+                <a  style="text-decoration:none; color:white;" href="${process.env.NEXTAUTH_URL}/api/auth/verifyEmail?id=${account.userId}&token=${verificationToken}">
                     Confirm your Email
                 </a>
                 </div>
@@ -101,9 +100,6 @@ export default async function userHandler(
         },
       })
 
-      // if (User) {
-      //   User.isFollowedByCurrentUser = true
-      // }
       return User
     default:
       wrongRequestMethodError(res, ["POST", "GET"])

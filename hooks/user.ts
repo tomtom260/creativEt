@@ -4,6 +4,7 @@ import {
   searchUsers,
   toggleAvailableForHire,
   transformUserResponse,
+  updateEmailAndUsernameAPI,
 } from "api/user"
 import {
   useMutation,
@@ -137,4 +138,14 @@ export const useGetUsersForHireQuery = (
       select: transformUserResponse,
     }))
   )
+}
+
+export function useUpdateEmailAndUsernameMutation(id: string) {
+  const queryClient = useQueryClient()
+  return useMutation(updateEmailAndUsernameAPI, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["user", id])
+      queryClient.invalidateQueries("currentUser")
+    },
+  })
 }
