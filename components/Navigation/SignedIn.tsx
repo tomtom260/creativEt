@@ -100,11 +100,13 @@ function SignedInNavigation() {
                 className="ml-5 cursor-pointer flex-shrink-0 bg-white rounded-full p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
                 <BellIcon className="h-6 w-6" aria-hidden="true" />
-                <div className="absolute top-0 text-xs flex items-center justify-center right-px w-4 h-4 rounded-full bg-secondary-normal text-white">
-                  <p className="!m-0 !p-0">
-                    {notifications?.filter((not) => !not.seen).length}
-                  </p>
-                </div>
+                {notifications?.filter((not) => !not.seen).length && (
+                  <div className="absolute  top-0 text-xs flex items-center justify-center right-px px-px min-w-[16px] h-4 rounded-full bg-secondary-normal text-white">
+                    <p className="!m-0 !p-0">
+                      {notifications?.filter((not) => !not.seen).length}
+                    </p>
+                  </div>
+                )}
               </div>
               <Transition
                 enter="transition-opacity transition-transform duration-1000"

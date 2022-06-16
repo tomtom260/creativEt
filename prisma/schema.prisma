@@ -238,8 +238,11 @@ enum MoneyTransactionType {
 }
 
 enum NotificationType {
-  NOTIFICATION
   JOB
+  MESSAGE
+  FOLLOW
+  LIKE
+  BOUGHT
 }
 
 enum MoneyTransactionStatus {

@@ -2,13 +2,30 @@ import Button from "@/components/Button"
 import ButtonVariants from "@/components/Button/button.enum"
 import Text from "@/components/Typography"
 import { TypographyVariant } from "@/components/Typography/textVariant.enum"
-import { Prisma } from "@prisma/client"
+import { NotificationType, Prisma } from "@prisma/client"
 import moment from "moment"
 import React from "react"
 import ImageWithSkeleton from "../../../components/ImageWithSkeleton"
 import { useDismissNotifictionMutatation } from "../hooks"
 import { TGetNotifcation } from "../types"
 import classNames from "@/utils/classNames"
+
+function selectMessage(type: NotificationType) {
+  switch (type) {
+    case NotificationType.JOB:
+      return (
+        <>
+          offered you a <span className="font-bold">job</span>`
+        </>
+      )
+    case NotificationType.MESSAGE:
+      return (
+        <>
+          sent you a new <span className="font-bold">message</span>`
+        </>
+      )
+  }
+}
 
 function NotificationCard({ notification }: { notification: TGetNotifcation }) {
   const dismissNotificationMutatation = useDismissNotifictionMutatation()
@@ -29,10 +46,12 @@ function NotificationCard({ notification }: { notification: TGetNotifcation }) {
       </div>
       <div className="flex flex-col gap-4">
         <div className="flex flex-col">
-          <Text varaint={TypographyVariant.Body1}>
-            <span className="font-bold ">{notification.notifiedBy.name}</span>{" "}
-            offered you a <span className="font-bold">job</span>
-          </Text>
+          {
+            <Text varaint={TypographyVariant.Body1}>
+              <span className="font-bold ">{notification.notifiedBy.name}</span>{" "}
+              {selectMessage(notification.type)}
+            </Text>
+          }
           <div className="flex gap-3 items-center">
             <Text varaint={TypographyVariant.Body2}>
               {moment(notification.createdAt).fromNow()}

@@ -1,4 +1,6 @@
+import { createNotifcationController } from "@/modules/notification/controller"
 import { pusherServer } from "@/utils/pusher"
+import { NotificationType } from "@prisma/client"
 import { createNewMessageParams, NewRoomDTO, ToggleSeenUpdate } from "../types"
 import {
   createMessage,
@@ -13,6 +15,12 @@ export async function createNewMessage(newMessage: createNewMessageParams) {
   pusherServer
     .trigger(`presence-room-${message.roomId}`, "message:new", message)
     .catch((err) => console.log(err))
+  createNotifcationController({
+    title: "New Message",
+    userId: message.senderId,
+    type: NotificationType.MESSAGE,
+    notifiedById: message.senderId,
+  })
   return message
 }
 

@@ -1,11 +1,7 @@
 import dynamic from "next/dynamic"
 import Input, { InputProps } from "@/components/Form/Input"
 import { InputType } from "@/components/Form/Input/Input.enum"
-import {
-  EmojiHappyIcon,
-  PaperClipIcon,
-  SearchIcon,
-} from "@heroicons/react/outline"
+import { EmojiHappyIcon, PaperClipIcon } from "@heroicons/react/outline"
 import React, { useState, useRef } from "react"
 import Picker from "emoji-picker-react"
 import { IEmojiPickerProps } from "emoji-picker-react"
