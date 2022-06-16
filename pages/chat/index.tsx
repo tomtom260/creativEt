@@ -13,17 +13,22 @@ import { getAllRooms } from "@/modules/chat/server/controller"
 import { getSession } from "next-auth/react"
 import { useQueryClient } from "react-query"
 import { PusherContext } from "@/hooks/pusher"
+import { Room } from "@prisma/client"
+import { useRouter } from "next/router"
 
 type ChatPageProps = {
   user: ChatBoxProps
+  rooms: Room[]
 }
 
 function Chat({ user, rooms }: ChatPageProps) {
   const [search, setSearch] = useState("")
-  const [selectedUser, setSelectedUser] = useState<ChatBoxProps>()
-  const searchUserQuery = useSearchUsers(search, {})
+  const [selectedUser, setSelectedUser] = useState<ChatBoxProps>(user)
+  const searchUserQuery = useSearchUsers(search, rooms)
   const { id } = useGetCurrentUser().data
   const pusherClient = useContext(PusherContext)
+  const queryClient = useQueryClient()
+  const router = useRouter()
 
   useEffect(() => {
     rooms.map(({ id }) => {
@@ -37,14 +42,16 @@ function Chat({ user, rooms }: ChatPageProps) {
     })
   }, [])
 
-  const queryClient = useQueryClient()
-
   return (
     <DefaultLayout>
       <div className="flex flex-1">
-        <div className="hidden md:flex flex-col md:gap-y-4">
+        <div
+          className={`${
+            router.query.username ? "hidden" : ""
+          } md:flex w-full md:w-auto flex-col md:gap-y-4`}
+        >
           <div className="flex gap-x-10 py-2 bg-gray-light px-2">
-            <div className="hidden md:flex">
+            <div className="">
               <SearchInput
                 label=""
                 value={search}
@@ -53,7 +60,7 @@ function Chat({ user, rooms }: ChatPageProps) {
             </div>
           </div>
           <div className="flex gap-x-6">
-            <div className="hidden flex-shrink-0 min-w-[280px] md:flex flex-col  px-2 ">
+            <div className="flex-shrink-0  w-full min-w-[280px]  flex-col  px-2 ">
               <div className=" divide-y-2  rounded-xl overflow-hidden ">
                 {search &&
                   (searchUserQuery?.data || []).map((user, index) => {
@@ -96,18 +103,24 @@ function Chat({ user, rooms }: ChatPageProps) {
             </div>
           </div>
         </div>
-        {selectedUser ? (
-          <ChatBox
-            id={selectedUser.id}
-            name={selectedUser.name}
-            image={selectedUser.image}
-            roomId={selectedUser.roomId}
-          />
-        ) : (
-          <Text className="mx-auto mt-32" varaint={TypographyVariant.Body1}>
-            Select a chat to start messaging
-          </Text>
-        )}
+        <div
+          className={`${
+            !router.query.username && "hidden"
+          } md:flex items-center justify-center flex-1`}
+        >
+          {selectedUser ? (
+            <ChatBox
+              id={selectedUser.id}
+              name={selectedUser.name}
+              image={selectedUser.image}
+              roomId={selectedUser.roomId}
+            />
+          ) : (
+            <Text className="mx-auto mt-32" varaint={TypographyVariant.Body1}>
+              Select a chat to start messaging
+            </Text>
+          )}
+        </div>
       </div>
     </DefaultLayout>
   )
@@ -115,11 +128,14 @@ function Chat({ user, rooms }: ChatPageProps) {
 
 export async function getServerSideProps({ query, req }: NextPageContext) {
   const session = await getSession({ req })
-  const [user] = await searchUser(query.username!)
+  const [{ image, name, id }] = await searchUser(query.username!)
   const rooms = await getAllRooms(session?.user.id)
+  const room = rooms.find((room) =>
+    room.members.find((mem) => mem.Profile?.username === query.username)
+  )
   return {
     props: changeDateInJSONToMoment({
-      user: user || null,
+      user: room ? { name, id, image, roomId: room.id } : null,
       rooms,
       protected: true,
     }),

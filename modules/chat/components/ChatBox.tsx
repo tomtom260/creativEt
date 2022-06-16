@@ -11,6 +11,7 @@ import Button from "@/components/Button"
 import ButtonVariants from "@/components/Button/button.enum"
 import { useGetMessagesWithRoomId, useSendMessage } from "../hooks"
 import { useGetCurrentUser } from "@/hooks/user"
+import { useRouter } from "next/router"
 
 export type ChatBoxProps = {
   name: string
@@ -34,9 +35,14 @@ function ChatBox({ name, image, id, roomId }: ChatBoxProps) {
   useEffect(() => {
     messageBoxRef.current.scrollTop = messageBoxRef.current.scrollHeight
   }, [messagesQuery])
+  const router = useRouter()
 
   return (
-    <div className="flex flex-col flex-1 gap-4">
+    <div
+      className={` flex-col flex-1 gap-4 ${
+        router.query.username ? "flex" : "hidden md:flex"
+      } `}
+    >
       <div className="flex gap-4 px-2 bg-gray-light justify-between items-center">
         <div className="flex gap-4 h-[70px] items-center ">
           <div className="relative w-14  h-14 rounded-full overflow-hidden">

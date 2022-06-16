@@ -49,7 +49,6 @@ export const getDownloadUrlFromPublicId = (publicId: string) =>
   cloudinary.image(publicId).addFlag("attachment").toURL()
 
 export function getOptimisedProfileImage(url: string) {
-  console.log("url", url)
   if (url.includes("cloudinary")) {
     const publicId = getPublicIdFromUrl(url)
     return getThumnailSizedImage(publicId)

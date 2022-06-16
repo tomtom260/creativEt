@@ -17,6 +17,7 @@ import { followUser, unfollowUser } from "@/api/user"
 import { useEffect, useState } from "react"
 import { useSession } from "next-auth/react"
 import { User } from "types/user"
+import { Room } from "@prisma/client"
 
 type CustomUseMutationOptions = UseMutationOptions<
   unknown,
@@ -57,12 +58,22 @@ export const useUserWithProfileQuery = (
   })
 }
 
-export const useSearchUsers = (username: string, options: UseQueryOptions) => {
-  return useQuery(["user:search", username], () => searchUsers(username), {
-    select: transformUserResponse,
-    ...options,
-    enabled: !!username,
-  })
+export const useSearchUsers = (
+  username: string,
+  rooms: Room[],
+  options?: UseQueryOptions
+) => {
+  return useQuery(
+    ["user:search", username],
+    async () => {
+      return await searchUsers(username)
+    },
+    {
+      select: transformUserResponse,
+      ...options,
+      enabled: !!username,
+    }
+  )
 }
 
 export const useFollowUserMutation = (

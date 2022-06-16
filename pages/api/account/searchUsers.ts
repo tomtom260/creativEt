@@ -1,5 +1,7 @@
+import { getAllRooms } from "@/modules/chat/server/controller"
 import { searchUsers } from "modules/user/server"
 import { NextApiRequest, NextApiResponse } from "next"
+import { getSession } from "next-auth/react"
 import {
   SuccessAPIResponse,
   wrongRequestMethodError,
@@ -16,9 +18,15 @@ export default async function userHandler(
   res: NextApiResponse
 ) {
   const { username } = req.query
+  const session = await getSession({ req })
   switch (req.method) {
     case "GET":
-      const users = await searchUsers(username)
+      const rooms = await getAllRooms(session?.user.id)
+      const users = (await searchUsers(username)).filter((user) => {
+        return !rooms.find((room) =>
+          room.members.find((mem) => mem.id === user.id)
+        )
+      })
       return SuccessAPIResponse(res, users)
 
     default:

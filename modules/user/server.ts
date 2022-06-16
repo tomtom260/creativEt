@@ -67,6 +67,7 @@ export async function getUserWithProfile(
 }
 
 export async function searchUsers(username: string) {
+
   const profiles = await prisma.profile.findMany({
     include: {
       user: true,

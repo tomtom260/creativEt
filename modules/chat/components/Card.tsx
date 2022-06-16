@@ -62,9 +62,9 @@ function Card({
           </Text>
           <Text className="text-gray-dark" varaint={TypographyVariant.Body2}>
             <span className="text-secondary-dark font-medium">
-              {searchString}
+              {searchString.toLowerCase()}
             </span>
-            {username.replace(searchString, "")}
+            {username.toLowerCase().replace(searchString.toLowerCase(), "")}
           </Text>
         </div>
       </div>
