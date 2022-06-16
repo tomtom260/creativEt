@@ -19,6 +19,7 @@ type UserCardProps = {
 }
 
 function UserCard({ user }: { user: User }) {
+  console.log("user", user)
   const image = getOptimisedProfileImage(user.image)
   return (
     <div className=" px-4 md:px-12 py-8 w-full flex gap-7 hover:scale-[1.01] transition-transform duration-50   justify-between rounded-2xl shadow-2xl">

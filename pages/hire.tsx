@@ -44,7 +44,6 @@ export default function Home({ users }: HomeProps) {
   //     : undefined
   // )
   const usersQuery = useGetUsersForHireQuery(users)
-  console.log(usersQuery)
 
   return (
     <>

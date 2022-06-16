@@ -51,9 +51,8 @@ function SignedInNavigation() {
       name: "Sign out",
       href: "#",
       onClick: () => {
-        signOut().then(() => {
-          router.push("/auth/signin")
-        })
+        router.push("/auth/signin")
+        signOut()
       },
     },
   ]

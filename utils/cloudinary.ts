@@ -21,7 +21,7 @@ const cloudinary = new Cloudinary({
 export const getPublicIdFromUrl = (url: string) =>
   url.split(".").slice(-2, -1).join(".").split("/").slice(-2).join("/")
 
-export const getThumnailSizedImage = (publicId: string) =>  
+export const getThumnailSizedImage = (publicId: string) =>
   cloudinary.image(publicId).resize(Resize.scale().width(80).height(80)).toURL()
 
 export const getResponsiveImage = (publicId: string, width: number) =>
@@ -49,6 +49,7 @@ export const getDownloadUrlFromPublicId = (publicId: string) =>
   cloudinary.image(publicId).addFlag("attachment").toURL()
 
 export function getOptimisedProfileImage(url: string) {
+  console.log("url", url)
   if (url.includes("cloudinary")) {
     const publicId = getPublicIdFromUrl(url)
     return getThumnailSizedImage(publicId)

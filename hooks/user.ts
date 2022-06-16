@@ -122,7 +122,8 @@ export const useGetUsersForHireQuery = (
     users.map((user) => ({
       queryFn: () => fetchUserWithProfile(user.id),
       queryKey: ["user", user.id],
-      initialData: user,
+      initialData: { data: { data: { ...user } } },
+      select: transformUserResponse,
     }))
   )
 }
