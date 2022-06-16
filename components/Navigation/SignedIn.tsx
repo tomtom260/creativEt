@@ -100,13 +100,13 @@ function SignedInNavigation() {
                 className="ml-5 cursor-pointer flex-shrink-0 bg-white rounded-full p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
                 <BellIcon className="h-6 w-6" aria-hidden="true" />
-                {notifications?.filter((not) => !not.seen).length && (
+                {notifications?.filter((not) => !not.seen).length ? (
                   <div className="absolute  top-0 text-xs flex items-center justify-center right-px px-px min-w-[16px] h-4 rounded-full bg-secondary-normal text-white">
                     <p className="!m-0 !p-0">
                       {notifications?.filter((not) => !not.seen).length}
                     </p>
                   </div>
-                )}
+                ) : null}
               </div>
               <Transition
                 enter="transition-opacity transition-transform duration-1000"
@@ -164,7 +164,7 @@ function SignedInNavigation() {
               </Transition>
             </Menu>
             <Link passHref href="/upload">
-              <span className="ml-6 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+              <span className="ml-6 inline-flex cursor-pointer items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 Upload
               </span>
             </Link>

@@ -3,7 +3,10 @@ import { fetchUserWithProfile, transformUserResponse } from "@/api/user"
 import EyeOnSVG from "@/assets/icons/EyeOn"
 import HeartFilledSVG from "@/assets/icons/HeartFilled"
 import useContentService from "@/service/content"
-import { getOptimisedProfileImage } from "@/utils/cloudinary"
+import {
+  getOptimisedProfileImage,
+  getResponsiveImage,
+} from "@/utils/cloudinary"
 import React, { useEffect, useState } from "react"
 import { useQuery } from "react-query"
 import { Content } from "types/content"
@@ -18,6 +21,7 @@ import Cards from "./BaseCard"
 import { useFollowUserMutation, useUnfollowUserMutation } from "@/hooks/user"
 import { useInView } from "react-intersection-observer"
 import { useCreateViewMutation } from "@/modules/views/hooks"
+import Link from "next/link"
 
 function ContentCard({
   content,
@@ -168,12 +172,14 @@ function ContentCard({
                         />
                       </div>
                       <div className="flex flex-col mx-3">
-                        <Text
-                          varaint={TypographyVariant.H2}
-                          className="font-semibold line-clamp-1 mt-3"
-                        >
-                          {createdBy.name}
-                        </Text>
+                        <Link href={`/${createdBy.username}`} passHref>
+                          <Text
+                            varaint={TypographyVariant.H2}
+                            className="font-semibold cursor-pointer line-clamp-1 mt-3"
+                          >
+                            {createdBy.name}
+                          </Text>
+                        </Link>
                         <Text
                           varaint={TypographyVariant.Body1}
                           className="font-thin line-clamp-1 text-gray-normal"
@@ -206,7 +212,7 @@ function ContentCard({
                           className="relative w-[106px] h-[82px]"
                         >
                           <ImageWithSkeleton
-                            src={content.image}
+                            src={getOptimisedProfileImage(content.image)}
                             alt=""
                             layout="fill"
                             objectFit="cover"

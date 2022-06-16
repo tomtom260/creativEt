@@ -13,7 +13,7 @@ function ProfileLayout({ children: Children }: { children: ReactNode }) {
   const SidebarMenuItems = [
     {
       name: "General",
-      path: "/account",
+      path: "/account/general",
       label: "General",
       description: "Update your username and manage your account",
     },
@@ -25,7 +25,7 @@ function ProfileLayout({ children: Children }: { children: ReactNode }) {
     },
     {
       name: "Password",
-      path: "/account/Password",
+      path: "/account/password",
       label: "Password",
       description: "Manage your password",
     },
@@ -67,7 +67,9 @@ function ProfileLayout({ children: Children }: { children: ReactNode }) {
               <Link key={item.name} href={item.path} passHref>
                 <Text
                   varaint={TypographyVariant.Body1}
-                  className={`${isActive ? "font-bold " : ""} capitalize py-1`}
+                  className={`${
+                    isActive ? "font-bold " : ""
+                  } cursor-pointer capitalize py-1`}
                 >
                   {item.name}
                 </Text>
