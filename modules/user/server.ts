@@ -67,7 +67,6 @@ export async function getUserWithProfile(
 }
 
 export async function searchUsers(username: string) {
-
   const profiles = await prisma.profile.findMany({
     include: {
       user: true,
@@ -103,23 +102,49 @@ export async function searchUser(username: string) {
   }))
 }
 
-export async function getUsersForHIre(name?: string, location?: string) {
+export async function getUsersForHIre(
+  id: string,
+  filters = FILTERS["Top Rated"],
+  query?: string
+) {
   const users = await prisma.user.findMany({
     include: {
       Profile: true,
+      followers: true,
     },
     where: {
-      Profile: location
-        ? {
-            location,
-          }
-        : undefined,
-      name: name
-        ? {
-            contains: name,
-          }
+      OR: query
+        ? [
+            {
+              Profile: query
+                ? {
+                    location: {
+                      contains: query,
+                    },
+                  }
+                : undefined,
+            },
+            {
+              name: query
+                ? {
+                    contains: query,
+                  }
+                : undefined,
+            },
+          ]
         : undefined,
       availableForHire: true,
+      id: {
+        not: id,
+      },
+      followers:
+        FILTERS.FOLLOWING === filters
+          ? {
+              some: {
+                followerId: id,
+              },
+            }
+          : undefined,
     },
   })
   return users.map((user) => {
@@ -132,4 +157,9 @@ export async function getUsersForHIre(name?: string, location?: string) {
     delete newUser.Profile
     return newUser
   })
+}
+
+enum FILTERS {
+  "Top Rated" = "Top Rated",
+  FOLLOWING = "Following",
 }

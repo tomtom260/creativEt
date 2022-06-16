@@ -3,7 +3,6 @@ import {
   useDislikeContentMutation,
   useLikeContentMutation,
   useUploadImageMutation,
-  useContentSeenMutation,
   useBuyContentMutation,
 } from "@/api/content"
 import { useQueryClient } from "react-query"

@@ -60,7 +60,7 @@ function Walet({ transactions }: { transactions: MoneyTransaction[] }) {
             <Text varaint={TypographyVariant.H1}>Transaction List </Text>
             <Table
               className=""
-              items={transactions.sort((a, b) =>
+            items={transactions.sort((a, b) =>
                 moment(b.transactionAt).isBefore(moment(a.transactionAt))
                   ? -1
                   : 1

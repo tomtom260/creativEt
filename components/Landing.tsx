@@ -1,5 +1,6 @@
 import { motion, useViewportScroll, useTransform } from "framer-motion"
 import Link from "next/link"
+import { useRouter } from "next/router"
 import { Dispatch, SetStateAction } from "react"
 
 function Landing({
@@ -15,6 +16,8 @@ function Landing({
   const y3 = useTransform(scrollYProgress, (value) => value * -500)
   const scale = useTransform(scrollYProgress, [0, 1], [1, 1.5])
   const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0])
+  const router = useRouter()
+
   return (
     <motion.div
       style={{ opacity }}
@@ -65,7 +68,11 @@ function Landing({
             value={value}
             name="navSearch"
             className="w-[500px] h-10 border-2 rounded-md px-10"
-            placeholder="Search"
+            placeholder={
+              router.pathname.includes("hire")
+                ? "Seatch for a creator or location"
+                : "Search for a content"
+            }
           ></input>
         </div>
         <button

@@ -87,17 +87,14 @@ export async function toggleAvailableForHire() {
   ).data.data
 }
 
-export async function getUsersAvailableForHire(
-  name?: string,
-  location?: string
-) {
+export async function getUsersAvailableForHire(filter: string, query?: string) {
   return await (
     await axios.get<{
       data: User[]
     }>(`/api/user`, {
       params: {
-        name,
-        location,
+        query,
+        filter,
       },
     })
   ).data.data

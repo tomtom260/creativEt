@@ -117,17 +117,17 @@ export const useToggleAvailableForHireMutation = (
 
 export const useGetUsersForHireQuery = (
   initUsers: User[],
-  name?: string,
-  location?: string
+  query?: string,
+  filter
 ) => {
   const [users, setUsers] = useState(initUsers)
   useEffect(() => {
-    if (name || location) {
-      getUsersAvailableForHire(name, location).then((res) => {
+    if (true) {
+      getUsersAvailableForHire(filter, query).then((res) => {
         setUsers(res)
       })
     }
-  }, [name, location])
+  }, [query])
 
   return useQueries(
     users.map((user) => ({
