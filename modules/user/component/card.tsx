@@ -3,8 +3,11 @@ import ButtonVariants from "@/components/Button/button.enum"
 import ImageWithSkeleton from "@/components/ImageWithSkeleton"
 import Text from "@/components/Typography"
 import { TypographyVariant } from "@/components/Typography/textVariant.enum"
+import { useAppDispatch } from "@/hooks/redux"
 import { getOptimisedProfileImage } from "@/utils/cloudinary"
+import Link from "next/link"
 import React from "react"
+import { ModalType, showModal } from "store/modalSlice"
 import { User } from "types/user"
 
 type UserCardProps = {
@@ -19,8 +22,8 @@ type UserCardProps = {
 }
 
 function UserCard({ user }: { user: User }) {
-  console.log("user", user)
   const image = getOptimisedProfileImage(user.image)
+  const dispatch = useAppDispatch()
   return (
     <div className=" px-4 md:px-12 py-8 w-full flex gap-7 hover:scale-[1.01] transition-transform duration-50   justify-between rounded-2xl shadow-2xl">
       <div className="flex  gap-3">
@@ -61,19 +64,37 @@ function UserCard({ user }: { user: User }) {
         </div>
       </div>
       <div className="flex flex-col flex-shrink-0  gap-2">
-        <Button onClick={() => {}} variant={ButtonVariants.PRIMARY}>
-          Hire
-        </Button>
-        <Button onClick={() => {}} variant={ButtonVariants.OUTLINED}>
-          View Profile
-        </Button>
-        <Button
-          className="!w-full"
-          onClick={() => {}}
-          variant={ButtonVariants.OUTLINED}
-        >
-          Message
-        </Button>
+        <Link passHref href={``}>
+          <Button
+            onClick={() => {
+              dispatch(
+                showModal({
+                  modalType: ModalType.HIRE_MODAL,
+                  payload: {
+                    userId: user.id,
+                  },
+                })
+              )
+            }}
+            variant={ButtonVariants.PRIMARY}
+          >
+            Hire
+          </Button>
+        </Link>
+        <Link passHref href={`${user.username}`}>
+          <Button onClick={() => {}} variant={ButtonVariants.OUTLINED}>
+            View Profile
+          </Button>
+        </Link>
+        <Link passHref href={`chat?username=${user.username}`}>
+          <Button
+            className="!w-full"
+            onClick={() => {}}
+            variant={ButtonVariants.OUTLINED}
+          >
+            Message
+          </Button>
+        </Link>
       </div>
     </div>
   )

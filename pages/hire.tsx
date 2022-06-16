@@ -19,6 +19,7 @@ import UserCard from "@/modules/user/component/card"
 import { User } from "types/user"
 import { getUsersForHIre } from "@/modules/user/server"
 import { useGetUsersForHireQuery } from "@/hooks/user"
+import HireModal from "@/modules/user/component/HireModal"
 
 type HomeProps = {
   users: User[]
@@ -88,6 +89,7 @@ export default function Home({ users }: HomeProps) {
             ))}
         </div>
       </div>
+      <HireModal />
     </>
   )
 }
