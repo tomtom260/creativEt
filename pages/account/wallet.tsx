@@ -60,7 +60,7 @@ function Walet({ transactions }: { transactions: MoneyTransaction[] }) {
             <Text varaint={TypographyVariant.H1}>Transaction List </Text>
             <Table
               className=""
-            items={transactions.sort((a, b) =>
+              items={transactions.sort((a, b) =>
                 moment(b.transactionAt).isBefore(moment(a.transactionAt))
                   ? -1
                   : 1
@@ -78,7 +78,7 @@ function Walet({ transactions }: { transactions: MoneyTransaction[] }) {
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   const session = await getSession(ctx)
   const userId = session?.user.id
-  const transactions = await getMoneyTransaction(userId)
+  const transactions = await getMoneyTransaction({ userId })
   return {
     props: {
       protected: true,

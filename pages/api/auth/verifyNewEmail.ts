@@ -6,7 +6,7 @@ import bcrypt from "bcryptjs"
 type NextApiRequestType = Omit<NextApiRequest, "query"> & {
   query: {
     token: string
-    id: string
+    accountId: string
   }
 }
 
@@ -16,15 +16,16 @@ export default async function checkifEmailExists(
 ) {
   switch (req.method) {
     case "GET":
-      const { token, accountId } = req.query
-      const account = await prisma.account.findFirst({
+      const { token, id } = req.query
+      const verificationToken = await prisma.verificationToken.findFirst({
         where: {
-          id: id,
+          identifier: id,
         },
       })
+
       let isValid = false
       if (account?.verificationToken) {
-        isValid = bcrypt.compareSync(token, account?.verificationToken)
+        isValid = bcrypt.compareSync(token, verificationToken?.token)
       }
 
       if (isValid) {

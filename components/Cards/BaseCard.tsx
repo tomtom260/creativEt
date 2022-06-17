@@ -3,7 +3,7 @@ import { Content } from "types/content"
 import ImageWithSkeleton from "../ImageWithSkeleton"
 import Skeleton from "react-loading-skeleton"
 import { useRouter } from "next/router"
-import { getResponsiveImage } from "@/utils/cloudinary"
+import { getPublicIdFromUrl, getResponsiveImage } from "@/utils/cloudinary"
 
 export type CardsProps = {
   content: Content
@@ -27,9 +27,8 @@ const Cards = React.forwardRef(
     ref
   ) => {
     const { id, createdBy, image } = content
-
     const router = useRouter()
-
+    console.log(image)
     return (
       <div
         ref={ref}
@@ -43,7 +42,7 @@ const Cards = React.forwardRef(
               onClick={() => {
                 router.push(`/${createdBy.username}/${id}`)
               }}
-              src={getResponsiveImage(image, 280)}
+              src={getResponsiveImage(getPublicIdFromUrl(image), 280)}
               className=" rounded-lg hover:cursor-pointer overflow-hidden"
               layout="fill"
             />

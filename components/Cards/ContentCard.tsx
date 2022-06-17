@@ -93,11 +93,22 @@ function ContentCard({
               className="font-extrabold  tracking-wider"
               varaint={TypographyVariant.Body1}
             >
-              <span className="text-2xl">{content.price.toFixed(2)}</span>
+              <span className="text-2xl">
+                {content.price
+                  .toFixed(2)
+                  .split(".")
+                  .map((e, i) => {
+                    if (i == 1) {
+                      return <span className="!text-base">{e}</span>
+                    } else {
+                      return <span>{e}.</span>
+                    }
+                  })}
+              </span>
               ETB
             </Text>
           </div>
-          {content.isBoosted && (
+          {content.isBoosted && loading && (
             <div className="z-10 absolute right-4 top-4 px-2 bg-secondary-normal  opacity-70  ">
               <Text
                 className="font-extrabold  tracking-wider text-white "
