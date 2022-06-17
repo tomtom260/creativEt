@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url("https://fonts.googleapis.com/css2?family=Poppins");
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300;700");
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap");
+
 @layer utilities {
   .h1 {
     content-visibility: auto;
@@ -50,5 +54,3 @@
 * {
   font-family: poppins;
 }
-
-@import url("https://fonts.googleapis.com/css2?family=Poppins&family=Quicksand:wght@300;700&family=Roboto+Mono&display=swap");
