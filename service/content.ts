@@ -4,7 +4,7 @@ import {
   useLikeContentMutation,
   useUploadImageMutation,
   useBuyContentMutation,
-} from "@/api/content"
+} from "@/modules/content/api"
 import { useQueryClient } from "react-query"
 
 export default function useContentService() {

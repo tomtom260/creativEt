@@ -38,7 +38,7 @@ import WarnSVG from "@/assets/icons/Warn"
 import LinkSVG from "@/assets/icons/Link"
 import useContentService from "@/service/content"
 import { useQuery } from "react-query"
-import { getContentById } from "@/api/content"
+import { getContentById } from "@/modules/content/api"
 import {
   useFollowUserMutation,
   useGetCurrentUser,

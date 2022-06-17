@@ -1,4 +1,4 @@
-import { getContentById, updateContent } from "@/api/content"
+import { getContentById, updateContent } from "@/modules/content/api"
 import axios from "axios"
 import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react"

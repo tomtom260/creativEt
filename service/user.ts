@@ -1,5 +1,5 @@
-import { useUpdateUserProfile } from "@/api/user"
-import { useUploadImageMutation } from "@/api/content"
+import { useUpdateUserProfile } from "@/modules/user/api"
+import { useUploadImageMutation } from "@/modules/content/api"
 import { useGetCurrentUser } from "@/hooks/user"
 import { useQueryClient } from "react-query"
 

@@ -5,7 +5,7 @@ import {
   toggleAvailableForHire,
   transformUserResponse,
   updateEmailAndUsernameAPI,
-} from "api/user"
+} from "@/modules/user/api"
 import {
   useMutation,
   UseMutationOptions,
@@ -14,7 +14,7 @@ import {
   useQueryClient,
   UseQueryOptions,
 } from "react-query"
-import { followUser, unfollowUser } from "@/api/user"
+import { followUser, unfollowUser } from "@/modules/user/api"
 import { useEffect, useState } from "react"
 import { useSession } from "next-auth/react"
 import { User } from "types/user"

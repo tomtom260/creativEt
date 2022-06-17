@@ -15,7 +15,7 @@ import { getSession } from "next-auth/react"
 import { MailIcon } from "@heroicons/react/outline"
 import { changeDateInJSONToMoment } from "@/utils/changeDateToMoment"
 import { getContents } from "../../modules/content/server"
-import { ContentBoughtQuery, ContentLikedQuery } from "@/api/content"
+import { ContentBoughtQuery, ContentLikedQuery } from "@/modules/content/api"
 import {
   useUserWithProfileQuery,
   useFollowUserMutation,

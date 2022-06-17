@@ -1,4 +1,4 @@
-import { transformUserResponse } from "@/api/user"
+import { transformUserResponse } from "@/modules/user/api"
 import { useGetCurrentUser } from "@/hooks/user"
 import { useEffect, useState } from "react"
 import {

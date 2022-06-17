@@ -8,7 +8,7 @@ import {
   useGetCurrentUser,
   useUpdateEmailAndUsernameMutation,
 } from "@/hooks/user"
-import { checkifEmailExists, checkifUsernameExists } from "@/api/user"
+import { checkifEmailExists, checkifUsernameExists } from "@/modules/user/api"
 import { checkifEmailIsValid } from "@/utils/emailRegex"
 
 function General() {

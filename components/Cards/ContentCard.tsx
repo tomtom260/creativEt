@@ -1,5 +1,5 @@
-import { useGetBest3ContentsQuery } from "@/api/content"
-import { fetchUserWithProfile, transformUserResponse } from "@/api/user"
+import { useGetBest3ContentsQuery } from "@/modules/content/api"
+import { fetchUserWithProfile, transformUserResponse } from "@/modules/user/api"
 import EyeOnSVG from "@/assets/icons/EyeOn"
 import HeartFilledSVG from "@/assets/icons/HeartFilled"
 import useContentService from "@/service/content"

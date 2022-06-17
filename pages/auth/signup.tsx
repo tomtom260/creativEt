@@ -12,7 +12,7 @@ import { BuiltInProviderType } from "next-auth/providers"
 import { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { checkifEmailExists } from "@/api/user"
+import { checkifEmailExists } from "@/modules/user/api"
 
 type SignInPropsType = {
   providers: Record<
