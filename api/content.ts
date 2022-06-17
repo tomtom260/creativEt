@@ -119,6 +119,7 @@ export function useGetBest3ContentsQuery(
   options: CustomUseQueryOptions
 ) {
   return useQuery(["contentByUserId", userId], () => getBest3Contents(userId), {
+    //@ts-ignore
     select: (data) => data.data.data,
     ...options,
   })

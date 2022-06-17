@@ -138,6 +138,7 @@ export async function updateEmailAndUsernameAPI({
 export const useGetUserQuery = (id: string, options?: QueryOptions) => {
   return useQuery(["user", id], () => fetchUserWithProfile(id), {
     refetchOnWindowFocus: false,
+    //@ts-ignore
     select: transformUserResponse,
     ...options,
   })
