@@ -27,7 +27,7 @@ export async function updateEmailAndUsernameController(
     })
 
     await sendMail({
-      to: email,
+      to: "thomasmesfin260@gmail.com",
       subject: "creativeET account email change",
       message: `
         <div style="background-color:#fbf0f099; padding:50px;" >
