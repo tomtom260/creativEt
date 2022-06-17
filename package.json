@@ -25,6 +25,8 @@
   },
   "dependencies": {
     "@cloudinary/url-gen": "^1.6.0",
+    "@fontsource/poppins": "^4.5.8",
+    "@fontsource/quicksand": "^4.5.9",
     "@headlessui/react": "^1.5.0",
     "@heroicons/react": "^1.0.5",
     "@next-auth/prisma-adapter": "^1.0.3",

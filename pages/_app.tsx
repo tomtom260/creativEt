@@ -17,6 +17,8 @@ import { Notification } from "@prisma/client"
 import { useGetNotifictionsQuery } from "@/modules/notification/hooks"
 import ToastContainer from "@/components/Dialog/Toast/Container"
 import type { NextPage } from "next"
+import "@fontsource/quicksand"
+import "@fontsource/poppins"
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode
