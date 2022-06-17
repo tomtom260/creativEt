@@ -2,12 +2,14 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
 }
 
 model Account {
@@ -80,7 +82,7 @@ model User {
 model VerificationToken {
   id      String   @id @default(cuid())
   token   String   @unique
-  expires DateTime @default(dbgenerated("NOW() + interval '1 hour'"))
+  expires DateTime
 
 }
 

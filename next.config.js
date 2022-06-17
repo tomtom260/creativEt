@@ -2,6 +2,13 @@
 const withImages = require("next-images")
 
 module.exports = withImages({
+  typescript: {
+    // !! WARN !!
+    // Dangerously allow production builds to successfully complete even if
+    // your project has type errors.
+    // !! WARN !!
+    ignoreBuildErrors: true,
+  },
   webpack(config, { isServer }) {
     config.module.rules.push({
       test: /\.svg$/,
