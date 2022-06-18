@@ -115,12 +115,11 @@ export default function SignIn({ providers, csrfToken }: SignInPropsType) {
                 </div>
 
                 <div className="text-sm">
-                  <a
-                    href="#"
-                    className="font-medium text-indigo-600 hover:text-indigo-500"
-                  >
-                    Forgot your password?
-                  </a>
+                  <Link href="/auth/forget" passHref>
+                    <span className="font-medium cursor-pointer text-indigo-600 hover:text-indigo-500">
+                      Forgot your password?
+                    </span>
+                  </Link>
                 </div>
               </div>
 
