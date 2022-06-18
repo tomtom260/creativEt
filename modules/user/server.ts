@@ -206,6 +206,14 @@ export async function getAccount(id: string) {
   })
 }
 
+export async function getVerificationToken(id: string) {
+  return await prisma.verificationToken.findUnique({
+    where: {
+      id,
+    },
+  })
+}
+
 enum FILTERS {
   "Top Rated" = "Top Rated",
   FOLLOWING = "Following",
