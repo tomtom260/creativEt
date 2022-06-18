@@ -165,7 +165,7 @@ export async function updateUsername(id: string, username: string) {
       username,
     },
     where: {
-      id,
+      userId: id,
     },
   })
 }

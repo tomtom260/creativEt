@@ -83,7 +83,6 @@ model VerificationToken {
   id      String   @id @default(cuid())
   token   String   @unique
   expires DateTime
-
 }
 
 model Tags {
