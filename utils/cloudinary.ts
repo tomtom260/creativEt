@@ -14,7 +14,7 @@ const cloudinary = new Cloudinary({
     cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
   },
   url: {
-    secure: false, // force https, set to false to force http
+    secure: process.env.NODE_ENV === "production", // force https, set to false to force http
   },
 })
 

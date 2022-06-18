@@ -11,7 +11,7 @@ type MailOptions = {
 export default async function sendMail({ to, subject, message }: MailOptions) {
   await mail
     .send({
-      from: "creative.et251@gmail.com",
+      from:"creative.et251@gmail.com",
       to,
       subject,
       html: message.replace(/\r\n/g, "<br/>"),
