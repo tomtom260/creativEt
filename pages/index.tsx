@@ -14,6 +14,8 @@ import classNames from "@/utils/classNames"
 import { useGetContentsQuery } from "@/modules/content/hooks"
 import ContentCard from "@/components/Cards/ContentCard"
 import Landing from "@/components/Landing"
+import Head from "next/head"
+import Link from "next/link"
 
 type HomeProps = {
   contents: Content[]
@@ -62,6 +64,23 @@ export default function Home({ contents, tags }: HomeProps) {
 
   return (
     <>
+      <Head>
+        <link
+          rel="preload"
+          as="image"
+          href="./assets/images/landing/background.png"
+        />
+        <link
+          rel="preload"
+          as="image"
+          href="./assets/images/landing/middleground.png"
+        />
+        <link
+          rel="preload"
+          as="image"
+          href="./assets/images/landing/foreground.png"
+        />
+      </Head>
       <Landing
         value={displayQuery}
         onChange={(val) => {
