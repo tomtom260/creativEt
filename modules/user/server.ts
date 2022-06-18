@@ -195,6 +195,17 @@ export async function updatePassword(id: string, password: string) {
   })
 }
 
+export async function getAccount(id: string) {
+  return await prisma.account.findUnique({
+    where: {
+      provider_providerAccountId: {
+        provider: "user&Password",
+        providerAccountId: id,
+      },
+    },
+  })
+}
+
 enum FILTERS {
   "Top Rated" = "Top Rated",
   FOLLOWING = "Following",

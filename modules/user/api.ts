@@ -135,6 +135,21 @@ export async function updateEmailAndUsernameAPI({
   })
 }
 
+export async function updatepasswordAPI({
+  id,
+  newPassword,
+  oldPassword,
+}: {
+  id: string
+  newPassword: string
+  oldPassword: string
+}) {
+  return await axios.patch(`/api/user/${id}`, {
+    newPassword,
+    oldPassword,
+  })
+}
+
 export const useGetUserQuery = (id: string, options?: QueryOptions) => {
   return useQuery(["user", id], () => fetchUserWithProfile(id), {
     refetchOnWindowFocus: false,

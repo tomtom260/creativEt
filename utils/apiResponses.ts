@@ -25,8 +25,8 @@ export function SuccessAPIResponse(
 }
 
 export function ErrorAPIResponse(res: NextApiResponse, message: string) {
-  return res.status(200).json({
-    status: RestAPIStatus.SUCCESS,
+  return res.status(400).json({
+    status: RestAPIStatus.ERROR,
     message,
   })
 }

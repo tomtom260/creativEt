@@ -5,6 +5,7 @@ import {
   toggleAvailableForHire,
   transformUserResponse,
   updateEmailAndUsernameAPI,
+  updatepasswordAPI,
 } from "@/modules/user/api"
 import {
   useMutation,
@@ -148,4 +149,8 @@ export function useUpdateEmailAndUsernameMutation(id: string) {
       queryClient.invalidateQueries("currentUser")
     },
   })
+}
+
+export function useUpdatePasswordMutation() {
+  return useMutation(updatepasswordAPI)
 }

@@ -1,13 +1,30 @@
 import sendMail from "@/utils/mail"
 import bcryptjs from "bcryptjs"
 import crypto from "crypto"
-import { updateEmail, updatePassword, updateUsername } from "./server"
+import {
+  getAccount,
+  updateEmail,
+  updatePassword,
+  updateUsername,
+} from "./server"
 import { prisma } from "@/utils/db"
 import moment from "moment"
+import { error } from "console"
+import { ErrorAPIResponse } from "@/utils/apiResponses"
 
-export async function updatePasswordController(id: string, password: string) {
-  const hashedPassword = bcryptjs.hashSync(password)
-  await updatePassword(id, hashedPassword)
+export async function updatePasswordController(
+  id: string,
+  oldPassword: string,
+  newPassword: string
+) {
+  const account = await getAccount(id)
+  if (bcryptjs.compareSync(oldPassword, account?.password as string)) {
+    const hashedPassword = bcryptjs.hashSync(newPassword)
+    await updatePassword(id, hashedPassword)
+  } else {
+    return "wrong password"
+  }
+  return { message: "success" }
 }
 
 export async function updateEmailAndUsernameController(
