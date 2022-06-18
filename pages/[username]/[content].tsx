@@ -74,7 +74,7 @@ function Content({ content }: { content: ContentWithProfile }) {
   const publicId = getPublicIdFromUrl(contentQuery.data.createdBy.image)
   const contentPublicId = getPublicIdFromUrl(contentQuery.data.image)
   const userImage = getThumnailSizedImage(publicId)
-  const shareUrl = `${process.env.VERCEL}${router.asPath}`
+  const shareUrl = `${process.env.NEXT_PUBLIC_URL}${router.asPath}`
 
   const onLikeButtonClicked = () => {
     contentQuery.data.isLikedByCurrentUser

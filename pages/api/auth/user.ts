@@ -70,7 +70,7 @@ export default async function userHandler(
                 <h2 style="margin:0px">You're on your way! Let's confirm your email address.</h2>
                 <h3 style="margin:15px; font-weight:200;">By clicking on the following link, you are confirming your email address.</h3> 
                 <div style="width:150px; pointer:cursor; background-color:skyblue; color:white; padding:15px; text-align:center;  margin:0 auto;">
-                <a  style="text-decoration:none; color:white;" href="${process.env.NEXTAUTH_URL}/api/auth/verifyEmail?id=${account.userId}&token=${verificationToken}">
+                <a  style="text-decoration:none; color:white;" href="${process.env.NEXT_PUBLIC_URL}/api/auth/verifyEmail?id=${account.userId}&token=${verificationToken}">
                     Confirm your Email
                 </a>
                 </div>
