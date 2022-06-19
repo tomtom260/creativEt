@@ -32,6 +32,7 @@ import {
 import {
   getLikesGroupedDay,
   getMostLikedContent,
+  getMostSoldContent,
   getTotalLikes,
   getTotalLikesLastMonth,
 } from "@/modules/likes/server"
@@ -65,6 +66,7 @@ function Dashboard({
   mostLikedContent,
   mostViewedContent,
   groupedRevenue,
+  mostSoldContent,
   revenueDistribution,
 }: any) {
   const { data: user } = useGetCurrentUser()
@@ -162,18 +164,18 @@ function Dashboard({
             />
           </div>
           <Card
+            title="Highest Grossing Content"
+            name={mostSoldContent.title}
+            image={mostSoldContent.image}
+            label="ETB"
+            value={mostSoldContent.revenue}
+          />
+          <Card
             title="Most Liked Content"
             name={mostLikedContent.title}
             image={mostLikedContent.image}
             label="likes"
             value={mostLikedContent._count.likes}
-          />
-          <Card
-            title="Most Viewed Content"
-            name={mostViewedContent.title}
-            image={mostViewedContent.image}
-            label="views"
-            value={mostViewedContent._count.View}
           />
         </div>
         <div className="pb-16 col-span-4 flex md:flex-row flex-col gap-4  md:gap-14 overflow-x-auto items-center md:items-end  ">
@@ -218,6 +220,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     groupedViews,
     mostLikedContent,
     mostViewedContent,
+    mostSoldContent,
   ] = await Promise.all([
     (await getFollowers(id)).length,
     (await getFollowing(id)).length,
@@ -232,6 +235,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     getViewsGroupedDay(id),
     getMostLikedContent(id),
     getMostViewedContent(id),
+    getMostSoldContent(id),
   ])
 
   const profileStats = { followers, following, likes }
@@ -274,6 +278,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
       groupedViews,
       mostLikedContent,
       mostViewedContent,
+      mostSoldContent,
       revenueDistribution,
     }),
   }

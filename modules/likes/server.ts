@@ -40,6 +40,23 @@ export async function getMostLikedContent(id: string) {
   return contents.sort((a, b) => b._count.likes - a._count.likes)[0]
 }
 
+export async function getMostSoldContent(id: string) {
+  const contents = await prisma.content.findMany({
+    include: {
+      Transaction: true,
+    },
+    where: {
+      userId: id,
+    },
+  })
+  return contents
+    .map((cont) => {
+      cont.revenue = cont.Transaction.reduce((acc, red) => acc + red.amount, 0)
+      return cont
+    })
+    .sort((a, b) => b.revenue - a.revenue)[0]
+}
+
 export async function getLikesGroupedDay(id: string) {
   const data: {
     close: number
