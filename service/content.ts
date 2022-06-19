@@ -23,8 +23,10 @@ export default function useContentService() {
   })
 
   const buyContentMutatation = useBuyContentMutation({
-    onSuccess: (res) =>
-      queryClient.invalidateQueries(["content", res.data.data.contentId]),
+    onSuccess: (res) => {
+      queryClient.invalidateQueries(["content", res.data.data.contentId])
+      queryClient.invalidateQueries(["content", res.data.data.contentId])
+    },
   })
 
   async function uploadContent({

@@ -90,6 +90,7 @@ export function useBoostContentMutation(id: string) {
   return useMutation(() => boostContent(id), {
     onSuccess: () => {
       queryClient.invalidateQueries(["myContents", "boost"])
+      queryClient.invalidateQueries(["currentUser"])
     },
   })
 }
