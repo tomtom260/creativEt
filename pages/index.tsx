@@ -186,7 +186,7 @@ export async function getServerSideProps({ req }) {
   const session = await getSession({ req })
   const contents = await getContents(session?.user.id)
 
-  const tags = await getTags(8)
+  const tags = await getTags(6)
   return {
     props: {
       protected: true,
@@ -209,10 +209,15 @@ function Tag({ selectedTag, changeSelectedTag, tag }: TagProps) {
       onClick={changeSelectedTag}
       className={classNames(
         tag === selectedTag ? "bg-gray-200 text-black " : "",
-        "px-4 py-[6px] rounded-lg cursor-pointer"
+        "px-4 py-[6px]  rounded-lg cursor-pointer"
       )}
     >
-      <Text varaint={TypographyVariant.Body1}>{tag}</Text>
+      <Text
+        className="whitespace-nowrap max-w-40 truncate  overflow-hidden"
+        varaint={TypographyVariant.Body1}
+      >
+        {tag}
+      </Text>
     </div>
   )
 }
