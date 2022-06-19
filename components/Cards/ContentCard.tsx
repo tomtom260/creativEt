@@ -214,24 +214,24 @@ function ContentCard({
                     </Button>
                   </div>
                   <div className="grid grid-cols-3 h-full gap-5 mt-5">
-                    {getBest3ContentsQuery.isFetching ? (
-                      <p>Fetching</p>
-                    ) : (
-                      getBest3ContentsQuery.data?.map((content) => (
-                        <div
-                          key={content.id}
-                          className="relative w-[106px] h-[82px]"
-                        >
-                          <ImageWithSkeleton
-                            src={getOptimisedProfileImage(content.image)}
-                            alt=""
-                            layout="fill"
-                            objectFit="cover"
-                            className="rounded-md"
-                          />
-                        </div>
-                      ))
-                    )}
+                    {getBest3ContentsQuery.isLoading
+                      ? Array(3)
+                          .fill("")
+                          .map((_, i) => <Skeleton key={i} height={82} />)
+                      : getBest3ContentsQuery.data?.map((content) => (
+                          <div
+                            key={content.id}
+                            className="relative w-[106px] h-[82px]"
+                          >
+                            <ImageWithSkeleton
+                              src={getOptimisedProfileImage(content.image)}
+                              alt=""
+                              layout="fill"
+                              objectFit="cover"
+                              className="rounded-md"
+                            />
+                          </div>
+                        ))}
                   </div>
                 </div>
               </div>

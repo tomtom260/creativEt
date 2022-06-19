@@ -160,7 +160,7 @@ function UploadContent({
               <>
                 <div className="relative w-20 h-20 md:w-40 md:h-40 flex-shrink-0">
                   <Image
-                    src={images.picturePlaceholder}
+                    src={"/assets/images/picture-placeholder.png"}
                     layout="fill"
                     alt="picture placeholder"
                   />
