@@ -259,6 +259,34 @@ export async function getLikedContents(userId: string) {
     })
   )
 }
+export async function getBoostedContents(userId: string) {
+  const contents = await prisma.content.findMany({
+    include: {
+      tags: true,
+      createdBy: true,
+      likes: true,
+      Transaction: true,
+      View: true,
+      Boost: true,
+      _count: {
+        select: { likes: true, View: true },
+      },
+    },
+    where: {
+      published: true,
+      Boost: {
+        boostedAt: {
+          gte: moment().subtract(process.env.BOOST_LASTS_DAYS, "days").toDate(),
+        },
+      },
+    },
+  })
+  return await Promise.all(
+    contents.map(async (content: Exclude<typeof contents[number], void>) => {
+      return await addProfileToContentCreator(content, userId)
+    })
+  )
+}
 
 export async function getBoughtContents(userId: string) {
   const contents = await prisma.content.findMany({

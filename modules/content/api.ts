@@ -82,8 +82,26 @@ async function getLikedContents() {
   ).data.data
 }
 
+async function getBoostedContents() {
+  return await (
+    await axios.get(`/api/content/getBoostedContent`)
+  ).data.data
+}
+
 export async function ContentLikedQuery() {
   const contents = await getLikedContents()
+  // return useQueries(
+  //   contents.map((content) => ({
+  //     queryFn: () => getContentById(content.id, userId),
+  //     queryKey: ["content", content.id],
+  //     initialData: content,
+  //   }))
+  // )
+  return contents
+}
+
+export async function ContentBoostedQuery() {
+  const contents = await getBoostedContents()
   // return useQueries(
   //   contents.map((content) => ({
   //     queryFn: () => getContentById(content.id, userId),

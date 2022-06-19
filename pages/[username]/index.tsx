@@ -15,7 +15,7 @@ import { getSession } from "next-auth/react"
 import { MailIcon } from "@heroicons/react/outline"
 import { changeDateInJSONToMoment } from "@/utils/changeDateToMoment"
 import { getContents } from "../../modules/content/server"
-import { ContentBoughtQuery, ContentLikedQuery } from "@/modules/content/api"
+import { ContentBoostedQuery, ContentBoughtQuery, ContentLikedQuery } from "@/modules/content/api"
 import {
   useUserWithProfileQuery,
   useFollowUserMutation,
@@ -67,6 +67,12 @@ function ProfilePage({ profile, myProfile, contents }: ProfileProps) {
         break
       case MenuItems["Bought Content"]:
         ContentBoughtQuery().then((res) => {
+          setLoading(false)
+          setFilteredContents(res)
+        })
+        break
+      case MenuItems["Boosted Shots"]:
+        ContentBoostedQuery().then((res) => {
           setLoading(false)
           setFilteredContents(res)
         })

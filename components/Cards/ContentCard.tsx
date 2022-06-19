@@ -108,7 +108,7 @@ function ContentCard({
               ETB
             </Text>
           </div>
-          {content.isBoosted && loading && (
+          {content.isBoosted && !loading && (
             <div className="z-10 absolute right-4 top-4 px-2 bg-secondary-normal  opacity-70  ">
               <Text
                 className="font-extrabold  tracking-wider text-white "
