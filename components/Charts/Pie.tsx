@@ -6,13 +6,13 @@ import { GradientPinkBlue } from "@visx/gradient"
 import { animated, useTransition, interpolate } from "react-spring"
 
 // data and types
-const incomes: Income[] = [
+const distribution: Income[] = [
   {
-    label: "Jobs",
+    label: "Gigs",
     usage: 23,
   },
   {
-    label: "Posts",
+    label: "Content",
     usage: 77,
   },
 ]
@@ -29,7 +29,7 @@ const usage = (d: Income) => d.usage
 
 // color scales
 const getBrowserColor = scaleOrdinal({
-  domain: incomes,
+  domain: distribution,
   range: [
     "rgba(93,30,91,1)",
     "rgba(93,30,91,0.8)",
@@ -45,6 +45,7 @@ export type PieProps = {
   height: number
   margin?: typeof defaultMargin
   animate?: boolean
+  distribution: Income[]
 }
 
 export default function PieChart({
@@ -52,6 +53,7 @@ export default function PieChart({
   height,
   margin = defaultMargin,
   animate = true,
+  distribution,
 }: PieProps) {
   const [selectedBrowser, setSelectedBrowser] = useState<string | null>(null)
 
@@ -77,8 +79,8 @@ export default function PieChart({
         <Pie
           data={
             selectedBrowser
-              ? incomes.filter(({ label }) => label === selectedBrowser)
-              : incomes
+              ? distribution.filter(({ label }) => label === selectedBrowser)
+              : distribution
           }
           pieValue={usage}
           outerRadius={radius}

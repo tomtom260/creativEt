@@ -41,6 +41,12 @@ import {
 } from "@/modules/views/server"
 import { changeDateInJSONToMoment } from "@/utils/changeDateToMoment"
 import { useRouter } from "next/router"
+import {
+  getRevenueFromContent,
+  getRevenueGroupedDay,
+  getTotalRevenue,
+  getTotalRevenueLastMonth,
+} from "@/modules/walet/server"
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -58,6 +64,8 @@ function Dashboard({
   groupedViews,
   mostLikedContent,
   mostViewedContent,
+  groupedRevenue,
+  revenueDistribution,
 }: any) {
   const { data: user } = useGetCurrentUser()
   const isSmallScreen = useMediaQuery({ query: "(max-width: 500px)" })
@@ -74,7 +82,11 @@ function Dashboard({
                 <Text className="mb-4" varaint={TypographyVariant.Body1}>
                   Revenue per day
                 </Text>
-                <AreaChart width={isSmallScreen ? 300 : 500} height={200} />
+                <AreaChart
+                  stock={groupedRevenue}
+                  width={isSmallScreen ? 300 : 500}
+                  height={200}
+                />
               </div>
               <div>
                 <Text
@@ -83,7 +95,11 @@ function Dashboard({
                 >
                   Revenue Distribution
                 </Text>
-                <PieChart width={300} height={200} />
+                <PieChart
+                  distribution={revenueDistribution}
+                  width={300}
+                  height={200}
+                />
               </div>
             </div>
           </div>
@@ -192,8 +208,12 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     followers,
     following,
     likes,
+    revenue,
     followersLastMonth,
     likesLastMonth,
+    revenueLastMonth,
+    revenueFromContent,
+    groupedRevenue,
     groupedLikes,
     groupedViews,
     mostLikedContent,
@@ -202,8 +222,12 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     (await getFollowers(id)).length,
     (await getFollowing(id)).length,
     (await getTotalLikes(id)).length,
+    await getTotalRevenue(id),
     (await getFollowersLastMonth(id)).length,
     (await getTotalLikesLastMonth(id)).length,
+    await getTotalRevenueLastMonth(id),
+    await getRevenueFromContent(id),
+    getRevenueGroupedDay(id),
     getLikesGroupedDay(id),
     getViewsGroupedDay(id),
     getMostLikedContent(id),
@@ -214,8 +238,8 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   const performanceStats = [
     {
       name: "Total Revenue",
-      stat: "71,897",
-      previousStat: "70,946",
+      stat: revenue,
+      previousStat: revenueLastMonth,
     },
     {
       name: "Total Followers",
@@ -229,15 +253,28 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     },
   ]
 
+  const revenueDistribution = [
+    {
+      label: "Gigs",
+      usage: 100 - (revenueFromContent / revenue) * 100,
+    },
+    {
+      label: "Content",
+      usage: (revenueFromContent / revenue) * 100,
+    },
+  ]
+
   return {
     props: changeDateInJSONToMoment({
       protected: true,
       profileStats,
       performanceStats,
       groupedLikes,
+      groupedRevenue,
       groupedViews,
       mostLikedContent,
       mostViewedContent,
+      revenueDistribution,
     }),
   }
 }
