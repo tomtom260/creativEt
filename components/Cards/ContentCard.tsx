@@ -53,8 +53,8 @@ function ContentCard({
 
   const ownerImageURL = getOptimisedProfileImage(createdBy.image)
 
-  const followMutation = useFollowUserMutation(createdBy.id)
-  const unfollowMutation = useUnfollowUserMutation(createdBy.id)
+  const followMutation = useFollowUserMutation(createdBy.id, content.id)
+  const unfollowMutation = useUnfollowUserMutation(createdBy.id, content.id)
 
   const onFollowButtonCliked = () => {
     createdByQuery.data.isFollowedByCurrentUser

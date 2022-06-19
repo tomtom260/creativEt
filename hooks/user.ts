@@ -83,7 +83,6 @@ export const useSearchUsers = (
 
 export const useFollowUserMutation = (
   id: string,
-  contentId?: string,
   props?: CustomUseMutationOptions
 ) => {
   const queryClient = useQueryClient()
@@ -91,14 +90,12 @@ export const useFollowUserMutation = (
     ...props,
     onSuccess: () => {
       queryClient.invalidateQueries(["user", id])
-      contentId && queryClient.invalidateQueries(["content", contentId])
     },
   })
 }
 
 export const useUnfollowUserMutation = (
   id: string,
-  contentId?: string,
   props?: CustomUseMutationOptions
 ) => {
   const queryClient = useQueryClient()
@@ -106,7 +103,6 @@ export const useUnfollowUserMutation = (
     ...props,
     onSuccess: () => {
       queryClient.invalidateQueries(["user", id])
-      contentId && queryClient.invalidateQueries(["content", contentId])
     },
   })
 }

@@ -69,15 +69,17 @@ function Content({ content }: { content: ContentWithProfile }) {
 
   const { onContentLiked, onContentDisliked } = useContentService()
 
-  const onFollow = useFollowUserMutation(
-    contentQuery.data.createdBy.id,
-    contentQuery.data.id
-  )
-  const onUnfollow = useUnfollowUserMutation(
-    contentQuery.data.createdBy.id,
-    contentQuery.data.id
-  )
+  const onFollow = useFollowUserMutation(contentQuery.data.createdBy.id)
+  const onUnfollow = useUnfollowUserMutation(contentQuery.data.createdBy.id)
 
+  const createdByQuery = useQuery(
+    ["user", contentQuery.data.createdBy.id],
+    () => fetchUserWithProfile(contentQuery.data.createdBy.id),
+    {
+      initialData: { data: { data: contentQuery.data.createdBy } },
+      select: transformUserResponse,
+    }
+  )
   const publicId = getPublicIdFromUrl(contentQuery.data.createdBy.image)
   const contentPublicId = getPublicIdFromUrl(contentQuery.data.image)
   const userImage = getThumnailSizedImage(publicId)
@@ -90,7 +92,7 @@ function Content({ content }: { content: ContentWithProfile }) {
   }
 
   const onFollowButtonClicked = () => {
-    contentQuery.data.createdBy.isFollowedByCurrentUser
+    createdByQuery.data.isFollowedByCurrentUser
       ? onUnfollow.mutate(contentQuery.data.createdBy.id)
       : onFollow.mutate(contentQuery.data.createdBy.id)
   }
@@ -311,7 +313,7 @@ function Content({ content }: { content: ContentWithProfile }) {
                 onClick={onFollowButtonClicked}
                 variant={ButtonVariants.OUTLINED}
               >
-                {contentQuery.data.createdBy.isFollowedByCurrentUser
+                {createdByQuery.data.isFollowedByCurrentUser
                   ? "Following"
                   : "Follow"}
               </Button>
