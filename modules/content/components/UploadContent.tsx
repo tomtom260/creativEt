@@ -35,7 +35,7 @@ function UploadContent({
   userId?: string
   jobId?: string
   afterUpload?: () => void
-  gigPrice: number
+  gigPrice?: number
 }) {
   const [imageToBeUploaded, setImageToBeUploaded] = useState<File | null>(null)
   const [imageError, setImageError] = useState<string[]>([])

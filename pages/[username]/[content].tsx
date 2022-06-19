@@ -49,6 +49,7 @@ import BuyModal from "@/modules/content/components/BuyModal"
 import { useAppDispatch } from "@/hooks/redux"
 import { ModalType, showModal } from "store/modalSlice"
 import InsufficientBalanceModal from "@/modules/content/components/InsufficientBalanceModal"
+import { fetchUserWithProfile, transformUserResponse } from "@/modules/user/api"
 
 function Content({ content }: { content: ContentWithProfile }) {
   const { data: user } = useGetCurrentUser()
@@ -68,8 +69,14 @@ function Content({ content }: { content: ContentWithProfile }) {
 
   const { onContentLiked, onContentDisliked } = useContentService()
 
-  const onFollow = useFollowUserMutation(contentQuery.data.createdBy.id)
-  const onUnfollow = useUnfollowUserMutation(contentQuery.data.createdBy.id)
+  const onFollow = useFollowUserMutation(
+    contentQuery.data.createdBy.id,
+    contentQuery.data.id
+  )
+  const onUnfollow = useUnfollowUserMutation(
+    contentQuery.data.createdBy.id,
+    contentQuery.data.id
+  )
 
   const publicId = getPublicIdFromUrl(contentQuery.data.createdBy.image)
   const contentPublicId = getPublicIdFromUrl(contentQuery.data.image)
@@ -83,9 +90,9 @@ function Content({ content }: { content: ContentWithProfile }) {
   }
 
   const onFollowButtonClicked = () => {
-    contentQuery.data.isFollowedByCurrentUser
-      ? onFollow.mutate(contentQuery.data.createdBy.id)
-      : onUnfollow.mutate(contentQuery.data.createdBy.id)
+    contentQuery.data.createdBy.isFollowedByCurrentUser
+      ? onUnfollow.mutate(contentQuery.data.createdBy.id)
+      : onFollow.mutate(contentQuery.data.createdBy.id)
   }
 
   const onBuyClicked = () => {
@@ -279,20 +286,20 @@ function Content({ content }: { content: ContentWithProfile }) {
           <div className="hidden sm:block flex-1 py-6 px-12 ">
             <div className="flex flex-1 justify-between items-center">
               <div className="flex items-center gap-4">
-                <div className="relative w-10 h-10 rounded-full overflow-hidden ">
+                <div className="relative w-14 self-start h-14 rounded-full overflow-hidden ">
                   <ImageWithSkeleton
                     layout="fill"
                     className="rounded-full"
                     src={userImage}
                   />
                 </div>
-                <div className="flex flex-col">
+                <div className="flex flex-col gap-1">
                   <Text className="semi-bold" varaint={TypographyVariant.H2}>
-                    {contentQuery.data.createdBy.username}
+                    {contentQuery.data.createdBy.name}
                   </Text>
-                  <div className="flex gap-2 text-gray-dark">
+                  <div className="flex gap-2  text-gray-dark">
                     <Text className="" varaint={TypographyVariant.Body2}>
-                      {contentQuery.data.createdBy.name}
+                      {contentQuery.data.createdBy.username}
                     </Text>
                     <Text varaint={TypographyVariant.Body2}>
                       {moment(contentQuery.data.createdAt).fromNow()}
@@ -304,13 +311,15 @@ function Content({ content }: { content: ContentWithProfile }) {
                 onClick={onFollowButtonClicked}
                 variant={ButtonVariants.OUTLINED}
               >
-                Follow
+                {contentQuery.data.createdBy.isFollowedByCurrentUser
+                  ? "Following"
+                  : "Follow"}
               </Button>
             </div>
-            <Text className="mt-4" varaint={TypographyVariant.Body1}>
+            <Text className="mt-8 mb-4" varaint={TypographyVariant.Body1}>
               {contentQuery.data.description}
             </Text>
-            <div className="flex gap-2">
+            <div className="flex mb-8 gap-2">
               {contentQuery.data.tags.map((tag) => (
                 <Text
                   key={tag.id}
@@ -321,37 +330,41 @@ function Content({ content }: { content: ContentWithProfile }) {
                 </Text>
               ))}
             </div>
-            <div className="flex my-4 gap-4  text-gray-dark">
-              <div className="flex flex-col items-center justify-center">
-                <Button
-                  onClick={onLikeButtonClicked}
-                  className={`text-white
-            ${
-              contentQuery.data.isLikedByCurrentUser
-                ? " bg-secondary-normal "
-                : "bg-gray-dark"
-            }
-              `}
-                  variant={ButtonVariants.ICON}
-                >
-                  <HeartFilledSVG />
-                </Button>
-                <Text className="mt-2" varaint={TypographyVariant.Body1}>
-                  {contentQuery.data.totalLikes}
-                </Text>
+            <div className="flex items-center justify-between">
+              <div className="flex my-4 gap-4 flex-shrink-0  text-gray-dark">
+                <div className="flex flex-col items-center justify-center">
+                  <Button
+                    onClick={onLikeButtonClicked}
+                    className={`text-white
+                  ${
+                    contentQuery.data.isLikedByCurrentUser
+                      ? " bg-secondary-normal "
+                      : "bg-gray-dark"
+                  }
+                  `}
+                    variant={ButtonVariants.ICON}
+                  >
+                    <HeartFilledSVG />
+                  </Button>
+                  <Text className="mt-2" varaint={TypographyVariant.Body1}>
+                    {contentQuery.data.totalLikes}
+                  </Text>
+                </div>
+                <div className="flex flex-col items-center justify-center ">
+                  <Button onClick={() => {}} variant={ButtonVariants.ICON}>
+                    <EyeIcon className="h-6 w-6" />
+                  </Button>
+                  <Text className="mt-2" varaint={TypographyVariant.Body1}>
+                    {contentQuery.data.views}
+                  </Text>
+                </div>
               </div>
-              <div className="flex flex-col items-center justify-center ">
-                <Button
-                  onClick={() => {}}
-                  className={`first-letter:
-            
-            `}
-                  variant={ButtonVariants.ICON}
-                >
-                  <EyeIcon className="h-6 w-6" />
-                </Button>
-                <Text className="mt-2" varaint={TypographyVariant.Body1}>
-                  {contentQuery.data.views}
+              <div className="flex items-end gap-1">
+                <Text className="!text-5xl" varaint={TypographyVariant.H1}>
+                  {content.price}
+                </Text>
+                <Text className="" varaint={TypographyVariant.H1}>
+                  ETB
                 </Text>
               </div>
             </div>
