@@ -8,7 +8,7 @@ import {
 type NextApiRequestType = Omit<NextApiRequest, "query"> & {
   body: {
     password: string
-    email: string
+    id: string
   }
 }
 
@@ -20,7 +20,7 @@ export default async function userHandler(
     case "POST":
       return SuccessAPIResponse(
         res,
-        await resetPasswordController(req.body.email, req.body.password)
+        await resetPasswordController(req.body.id, req.body.password)
       )
 
     default:

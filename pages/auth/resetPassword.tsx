@@ -1,5 +1,5 @@
 import { GetServerSidePropsContext } from "next"
-import { useRouter } from "next/router"
+import { Router, useRouter } from "next/router"
 import {
   getCsrfToken,
   getProviders,
@@ -15,6 +15,7 @@ import Link from "next/link"
 import { getAccount, getVerificationToken } from "@/modules/user/server"
 import bcryptjs from "bcryptjs"
 import moment from "moment"
+import { useResetPasswordMutation } from "@/hooks/user"
 
 type SignInPropsType = {
   providers: Record<
@@ -25,13 +26,14 @@ type SignInPropsType = {
   eror?: string
 }
 
-export default function SignUp({ csrfToken, eror }: SignInPropsType) {
+export default function SignUp({ eror }: SignInPropsType) {
   const router = useRouter()
   const [password, setPassword] = useState<string>("")
   const [passwordConfirm, setPasswordConfirm] = useState<string>("")
   const [error, setError] = useState<string>("")
 
   const { status } = useSession()
+  const resetPasswordMutation = useResetPasswordMutation()
 
   if (status === "loading") {
     return "Loading"
@@ -59,14 +61,7 @@ export default function SignUp({ csrfToken, eror }: SignInPropsType) {
               <p className="text-sm  font-medium mb-4 text-red-500 text-center">
                 {error}
               </p>
-              <form
-                autoComplete="off"
-                className="space-y-6"
-                action="/api/auth/user"
-                method="POST"
-              >
-                <input hidden name="csrfToken" defaultValue={csrfToken} />
-
+              <form autoComplete="off" className="space-y-6" method="POST">
                 <div>
                   <label
                     htmlFor="password"
@@ -129,7 +124,12 @@ export default function SignUp({ csrfToken, eror }: SignInPropsType) {
 
                 <div>
                   <button
-                    type="submit"
+                    onClick={() => {
+                      resetPasswordMutation.mutate({
+                        password,
+                        id: router.query.id as string,
+                      })
+                    }}
                     disabled={!!error}
                     className="w-full flex disabled:bg-opacity-40 justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   >
@@ -146,28 +146,23 @@ export default function SignUp({ csrfToken, eror }: SignInPropsType) {
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const providers = await getProviders()
   const { verTokenid, id, token } = context.query as Record<string, string>
 
   const verToken = await getVerificationToken(verTokenid)
   if (!bcryptjs.compareSync(token, verToken?.token)) {
     return {
       props: {
-        error: "token expired",
+        eror: "token invalid",
       },
     }
   } else if (moment(verToken?.expires).isBefore(moment())) {
     return {
       props: {
-        error: "token invalid",
+        eror: "token expired",
       },
     }
   }
-  const csrfToken = await getCsrfToken(context)
   return {
-    props: {
-      providers,
-      csrfToken,
-    },
+    props: {},
   }
 }

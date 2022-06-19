@@ -182,17 +182,21 @@ export async function updateEmail(id: string, email: string) {
 }
 
 export async function updatePassword(id: string, password: string) {
-  return await prisma.account.update({
-    data: {
-      password,
-    },
-    where: {
-      provider_providerAccountId: {
-        provider: "user&Password",
-        providerAccountId: id,
+  return await prisma.account
+    .update({
+      data: {
+        password,
       },
-    },
-  })
+      where: {
+        provider_providerAccountId: {
+          provider: "user&Password",
+          providerAccountId: id,
+        },
+      },
+    })
+    .then((res) => {
+      console.log(res)
+    })
 }
 
 export async function getAccount(id: string) {

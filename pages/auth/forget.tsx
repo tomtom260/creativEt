@@ -1,38 +1,21 @@
-import { GetServerSidePropsContext } from "next"
 import { useRouter } from "next/router"
-import {
-  getCsrfToken,
-  getProviders,
-  signIn,
-  LiteralUnion,
-  ClientSafeProvider,
-  useSession,
-} from "next-auth/react"
-import { BuiltInProviderType } from "next-auth/providers"
-import { Router } from "next/router"
-import Link from "next/link"
+import { useSession } from "next-auth/react"
 import Image from "next/image"
 import { useState } from "react"
 import Text from "@/components/Typography"
 import { TypographyVariant } from "@/components/Typography/textVariant.enum"
-import { check } from "prettier"
 import { checkifEmailIsValid } from "@/utils/emailRegex"
+import { useForgetPasswordMutation } from "@/hooks/user"
 
-type SignInPropsType = {
-  providers: Record<
-    LiteralUnion<BuiltInProviderType, string>,
-    ClientSafeProvider
-  > | null
-  csrfToken: string | undefined
-}
-
-export default function SignIn({ providers, csrfToken }: SignInPropsType) {
+export default function SignIn() {
   const router = useRouter()
 
   const { status } = useSession()
   const [sent, isSent] = useState(false)
   const [email, setEmail] = useState("")
   const [emailError, setEmailError] = useState("")
+
+  const forgetPasswordMutation = useForgetPasswordMutation()
 
   if (status === "loading") {
     return "Loading"
@@ -62,7 +45,6 @@ export default function SignIn({ providers, csrfToken }: SignInPropsType) {
                   {emailError}
                 </p>
                 <form className="space-y-6">
-                  <input hidden name="csrfToken" defaultValue={csrfToken} />
                   <div>
                     <label
                       htmlFor="email"
@@ -102,7 +84,12 @@ export default function SignIn({ providers, csrfToken }: SignInPropsType) {
                           setEmailError("Insert a valid Email")
                           return
                         }
-                        if (!emailError) isSent(true)
+                        if (!emailError) {
+                          forgetPasswordMutation.mutate({
+                            email,
+                          })
+                          isSent(true)
+                        }
                       }}
                       className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     >
@@ -133,16 +120,4 @@ export default function SignIn({ providers, csrfToken }: SignInPropsType) {
       </div>
     </>
   )
-}
-
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const providers = await getProviders()
-  const csrfToken = await getCsrfToken(context)
-  return {
-    props: {
-      providers,
-      csrfToken,
-      protected: false,
-    },
-  }
 }

@@ -1,6 +1,8 @@
 import {
   fetchUserWithProfile,
+  forgetPasswordAPI,
   getUsersAvailableForHire,
+  resetPasswordAPI,
   searchUsers,
   toggleAvailableForHire,
   transformUserResponse,
@@ -20,6 +22,7 @@ import { useEffect, useState } from "react"
 import { useSession } from "next-auth/react"
 import { User } from "types/user"
 import { Room } from "@prisma/client"
+import { useRouter } from "next/router"
 
 type CustomUseMutationOptions = UseMutationOptions<
   unknown,
@@ -153,4 +156,16 @@ export function useUpdateEmailAndUsernameMutation(id: string) {
 
 export function useUpdatePasswordMutation() {
   return useMutation(updatepasswordAPI)
+}
+
+export function useResetPasswordMutation() {
+  const router = useRouter()
+  return useMutation(resetPasswordAPI, {
+    onSuccess() {
+      router.push("/auth/signin")
+    },
+  })
+}
+export function useForgetPasswordMutation() {
+  return useMutation(forgetPasswordAPI)
 }

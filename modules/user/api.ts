@@ -150,6 +150,25 @@ export async function updatepasswordAPI({
   })
 }
 
+export async function forgetPasswordAPI({ email }: { email: string }) {
+  return await axios.post(`/api/account/forget`, {
+    email,
+  })
+}
+
+export async function resetPasswordAPI({
+  id,
+  password,
+}: {
+  id: string
+  password: string
+}) {
+  return await axios.post(`/api/account/reset`, {
+    id,
+    password,
+  })
+}
+
 export const useGetUserQuery = (id: string, options?: QueryOptions) => {
   return useQuery(["user", id], () => fetchUserWithProfile(id), {
     refetchOnWindowFocus: false,

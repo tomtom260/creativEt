@@ -27,15 +27,10 @@ export async function updatePasswordController(
   return { message: "success" }
 }
 
-export async function resetPasswordController(email: string, password: string) {
-  const user = await prisma.user.findUnique({
-    where: {
-      email,
-    },
-  })
-  if (user) {
-    return updatePassword(user.id, password)
-  }
+export async function resetPasswordController(id: string, password: string) {
+  const hashedPassword = bcryptjs.hashSync(password)
+  console.log("yes")
+  await updatePassword(id, hashedPassword)
   return {}
 }
 
@@ -105,9 +100,9 @@ export async function forgetPasswordController(email: string) {
         <div style="background-color:#fbf0f099; padding:50px;" >
             <div style="background-color:white; color:black; text-align:center; border-radius:30px; padding:30px;">
                 <h2 style="margin:0px">Let's Reset your Password.</h2>
-                <h3 style="margin:15px; font-weight:200;">By clicking on the following link, you are reseting your email address.</h3> 
+                <h3 style="margin:15px; font-weight:200;">By clicking on the following link, you are reseting your password.</h3> 
                 <div style="width:150px; pointer:cursor; background-color:skyblue; color:white; padding:15px; text-align:center;  margin:0 auto;">
-                <a  style="text-decoration:none; color:white;" href="${process.env.NEXT_PUBLIC_URL}/api/auth/resetPassword?verTokenid=${verTokenid}&id=${id}&token=${verificationToken}">
+                <a  style="text-decoration:none; color:white;" href="${process.env.NEXT_PUBLIC_URL}/auth/resetPassword?verTokenid=${verTokenid}&id=${id}&token=${verificationToken}">
                     Reset Password
                 </a>
                 </div>
