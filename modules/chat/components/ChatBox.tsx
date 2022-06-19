@@ -39,11 +39,11 @@ function ChatBox({ name, image, id, roomId }: ChatBoxProps) {
 
   return (
     <div
-      className={` flex-col flex-1 gap-4 ${
+      className={` flex-col flex-1 ${
         router.query.username ? "flex" : "hidden md:flex"
       } `}
     >
-      <div className="flex gap-4 px-2 bg-gray-light justify-between items-center">
+      <div className="flex gap-4 px-2 bg-slate-100 justify-between items-center">
         <div className="flex gap-4 h-[70px] items-center ">
           <div className="relative w-14  h-14 rounded-full overflow-hidden">
             <ImageWithSkeleton src={image} layout="fill" />
@@ -67,8 +67,11 @@ function ChatBox({ name, image, id, roomId }: ChatBoxProps) {
           </Button>
         </div>
       </div>
-      <div className="bg-white h-[calc(100vh)] md:h-[calc(100vh-192px)]   md:rounded-xl md:px-4 md:pt-4 p-2 col-span-8 md:col-span-5 w-full flex flex-col">
-        <div ref={messageBoxRef} className="flex flex-col overflow-auto gap-4">
+      <div className="bg-white   h-[calc(100vh)] md:h-[calc(100vh-192px)]   md:rounded-xl md:px-4 md:pt-0 p-2 col-span-8 md:col-span-5 w-full flex flex-col">
+        <div
+          ref={messageBoxRef}
+          className="flex flex-col overflow-auto pt-2 md:pt-4 gap-4"
+        >
           {messagesQuery.data &&
             messagesQuery.data.map(({ message, id, createdAt, senderId }) => (
               <Message

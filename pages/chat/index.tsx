@@ -50,7 +50,7 @@ function Chat({ user, rooms }: ChatPageProps) {
             router.query.username ? "hidden" : ""
           } md:flex w-full md:w-auto flex-col md:gap-y-4`}
         >
-          <div className="flex gap-x-10 py-2 bg-gray-light px-2">
+          <div className="flex gap-x-10 py-2 bg-slate-100 px-2">
             <div className="">
               <SearchInput
                 label=""

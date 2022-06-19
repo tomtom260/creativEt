@@ -10,7 +10,7 @@ import { useDismissNotifictionMutatation } from "../hooks"
 import { TGetNotifcation } from "../types"
 import classNames from "@/utils/classNames"
 
-function selectMessage(type: NotificationType) {
+export function selectMessage(type: NotificationType) {
   switch (type) {
     case NotificationType.JOB:
       return (
@@ -27,12 +27,18 @@ function selectMessage(type: NotificationType) {
   }
 }
 
-function NotificationCard({ notification }: { notification: TGetNotifcation }) {
+function NotificationCard({
+  notification,
+  isToast = false,
+}: {
+  notification: TGetNotifcation
+  isToast?: boolean
+}) {
   const dismissNotificationMutatation = useDismissNotifictionMutatation()
   return (
     <div
       className={classNames(
-        "flex gap-2 md:gap-6 p-3",
+        `flex gap-2 md:gap-6 ${isToast ? "p-0" : "p-3"}`,
         notification.seen ? " text-gray-dark" : " text-black "
       )}
     >
@@ -62,7 +68,7 @@ function NotificationCard({ notification }: { notification: TGetNotifcation }) {
           </div>
         </div>
       </div>
-      {!notification.seen && (
+      {!notification.seen && !isToast && (
         <Text
           className="self-end underline cursor-pointer underline-offset-2 text-secondary-light"
           varaint={TypographyVariant.Body2}

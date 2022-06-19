@@ -2,7 +2,6 @@ import Text from "@/components/Typography"
 import { TypographyVariant } from "@/components/Typography/textVariant.enum"
 import React from "react"
 import { useGetNotifictionsQuery } from "../hooks"
-import { TGetNotifcation } from "../types"
 import NotificationCard from "./NotificationCard"
 
 function NotificationContainer() {

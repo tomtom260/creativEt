@@ -16,6 +16,14 @@ import { addToast } from "store/toastSlice"
 import { Notification } from "@prisma/client"
 import { useQueryClient } from "react-query"
 import { useRouter } from "next/router"
+import { toast } from "react-toastify"
+import { TGetNotifcation } from "@/modules/notification/types"
+import ImageWithSkeleton from "../ImageWithSkeleton"
+import NotifcationCard, {
+  selectMessage,
+} from "@/modules/notification/components/NotificationCard"
+import Text from "../Typography"
+import { TypographyVariant } from "../Typography/textVariant.enum"
 
 function SignedInNavigation() {
   const { data: user } = useGetCurrentUser()
@@ -33,12 +41,14 @@ function SignedInNavigation() {
     )
     notificationsChannel.bind(
       "notification:new",
-      (notification: Notification) => {
+      (notification: TGetNotifcation) => {
         queryClient.setQueryData(
           "notifications",
           [notification].concat(queryClient.getQueryData("notifications") || [])
         )
-        dispatch(addToast(notification))
+        toast(<NotifcationCard isToast notification={notification} />)
+
+        // dispatch(addToast(notification))
       }
     )
   }, [])

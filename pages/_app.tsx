@@ -1,8 +1,11 @@
 import "../styles/globals.css"
 import "react-loading-skeleton/dist/skeleton.css"
 import "react-datepicker/dist/react-datepicker.css"
+import "@fontsource/quicksand"
+import "@fontsource/poppins"
+import "react-toastify/dist/ReactToastify.css"
 import type { AppProps } from "next/app"
-import { ReactNode, useContext, useEffect, useRef, ReactElement } from "react"
+import { ReactNode, useEffect, useRef, ReactElement } from "react"
 import { SessionProvider, useSession } from "next-auth/react"
 import { Provider } from "react-redux"
 import { store } from "store"
@@ -10,15 +13,10 @@ import { QueryClient, QueryClientProvider } from "react-query"
 import { useRouter } from "next/router"
 import { ReactQueryDevtools } from "react-query/devtools"
 import { useGetCurrentUser } from "@/hooks/user"
-import Modal from "@/components/Dialog/Modal"
 import { useAppSelector } from "@/hooks/redux"
-import PusherProvider, { PusherContext } from "@/hooks/pusher"
-import { Notification } from "@prisma/client"
-import { useGetNotifictionsQuery } from "@/modules/notification/hooks"
-import ToastContainer from "@/components/Dialog/Toast/Container"
+import PusherProvider from "@/hooks/pusher"
+import { ToastContainer } from "react-toastify"
 import type { NextPage } from "next"
-import "@fontsource/quicksand"
-import "@fontsource/poppins"
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode
@@ -50,7 +48,13 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
               {getLayout(
                 <>
                   <Component {...pageProps} />
-                  <ToastContainer />
+                  <ToastContainer
+                    style={{
+                      width: "450px",
+                    }}
+                    className={"w-40"}
+                    hideProgressBar
+                  />
                 </>
               )}
             </App>
