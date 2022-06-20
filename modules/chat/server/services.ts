@@ -62,12 +62,20 @@ export async function getRoomWithMembers(id: string) {
 
 export async function toggleSeen({ id }: ToggleSeenUpdate) {
   console.log(id)
-  // return await prisma.message.update({
-  //   where: {
-  //     id,
-  //   },
-  //   data: {
-  //     seen: true,
-  //   },
-  // })
+  return await prisma.message.update({
+    where: {
+      id,
+    },
+    data: {
+      seen: true,
+    },
+  })
+}
+
+export async function getMessage(id: string) {
+  return await prisma.message.findUnique({
+    where: {
+      id,
+    },
+  })
 }

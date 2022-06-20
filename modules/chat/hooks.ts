@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import {
   useMutation,
   UseMutationOptions,
+  useQueries,
   useQuery,
   useQueryClient,
   UseQueryOptions,
@@ -11,9 +12,11 @@ import {
 import {
   createMessage,
   createRoom,
+  getMessage,
   getMessagesWithRoomId,
   toggleMessageSeen,
 } from "./api"
+import { Message } from "@prisma/client"
 
 export type CustomUseMutationOptions = UseMutationOptions<
   unknown,
@@ -26,13 +29,15 @@ export function useCreateMessageMutation(props?: CustomUseMutationOptions) {
   return useMutation(createMessage, props)
 }
 
-export function useGetMessagesWithRoomId(
-  id: string,
-  options?: UseQueryOptions
-) {
-  return useQuery(["room", id], () => getMessagesWithRoomId(id), {
-    ...options,
-  })
+export function useGetMessagesWithRoomId(id: string) {
+  const room = useQuery(["room", id], () => getMessagesWithRoomId(id))
+  return useQueries(
+    (room.data || []).map((message) => ({
+      queryKey: ["message", message.id],
+      queryFn: () => getMessage({ id: message.id }),
+      initialData: message,
+    }))
+  )
 }
 
 export function useCreateRoomMutation(props?: CustomUseMutationOptions) {
@@ -57,7 +62,13 @@ export function useSendMessage({
   const [room, setRoom] = useState(roomId)
   const { id: currentUserId } = useGetCurrentUser().data!
 
-  const createMessageMutation = useCreateMessageMutation()
+  const createMessageMutation = useCreateMessageMutation({
+    onMutate(message: Message) {
+      message.senderId = currentUserId
+      const room = queryClient.getQueryData(["room", roomId])
+      queryClient.setQueryData(["room", roomId], [...room, message])
+    },
+  })
   const createRoomMutation = useCreateRoomMutation({
     onSuccess: (res: any) => {
       setRoom(res.data.data.id)

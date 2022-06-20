@@ -11,10 +11,10 @@ import { useToggleMessageSeen } from "../hooks"
 export type MessageProps = {
   type: "Sent" | "Recieved"
   message: string
-  time: string
+  time: Date
   image: string
   seen: boolean
-  id
+  id: string
 }
 
 function Message({ type, message, time, image, seen, id }: MessageProps) {
@@ -67,12 +67,16 @@ function Message({ type, message, time, image, seen, id }: MessageProps) {
           </Text>
           {isSentMessage && (
             <>
-              {/* <ClockIcon className="h-4 w-4 " />
-              <CheckIcon className="h-4 w-4 " /> */}
+              {!time ? (
+                <ClockIcon className="h-4 w-4 " />
+              ) : (
+                <CheckIcon className="h-4 w-4 " />
+              )}
+              {/* <CheckIcon className="h-4 w-4 " />
               <div className="flex">
                 <CheckIcon className="h-4 w-4 " />
                 <CheckIcon className="h-4 w-4 -ml-[19px] " />
-              </div>
+              </div> */}
             </>
           )}
         </div>

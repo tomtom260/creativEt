@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from "react"
 import { PaperAirplaneIcon } from "@heroicons/react/solid"
-import moment from "moment"
 import MessageInput from "@/modules/chat/components/MessageInput"
-import Message, { MessageProps } from "@/modules/chat/components/Message"
+import Message from "@/modules/chat/components/Message"
 import ImageWithSkeleton from "@/components/ImageWithSkeleton"
 import Text from "@/components/Typography"
 import { TypographyVariant } from "@/components/Typography/textVariant.enum"
@@ -12,6 +11,7 @@ import ButtonVariants from "@/components/Button/button.enum"
 import { useGetMessagesWithRoomId, useSendMessage } from "../hooks"
 import { useGetCurrentUser } from "@/hooks/user"
 import { useRouter } from "next/router"
+import { Message as TMessage } from "@prisma/client"
 
 export type ChatBoxProps = {
   name: string
@@ -22,8 +22,8 @@ export type ChatBoxProps = {
 
 function ChatBox({ name, image, id, roomId }: ChatBoxProps) {
   const [newMessage, setNewMessage] = useState("")
-  const messagesQuery = useGetMessagesWithRoomId(roomId)
-  const { id: currentUserid } = useGetCurrentUser().data
+  const messagesQueries = useGetMessagesWithRoomId(roomId)
+  const { id: currentUserid } = useGetCurrentUser().data!
 
   const sendMessage = useSendMessage({
     roomId,
@@ -34,7 +34,7 @@ function ChatBox({ name, image, id, roomId }: ChatBoxProps) {
 
   useEffect(() => {
     messageBoxRef.current.scrollTop = messageBoxRef.current.scrollHeight
-  }, [messagesQuery])
+  }, [messagesQueries])
   const router = useRouter()
 
   return (
@@ -59,10 +59,20 @@ function ChatBox({ name, image, id, roomId }: ChatBoxProps) {
           </div>
         </div>
         <div className="flex">
-          <Button onClick={() => {}} variant={ButtonVariants.ICON}>
+          <Button
+            onClick={() => {
+              console.log("clicked")
+            }}
+            variant={ButtonVariants.ICON}
+          >
             <SearchIcon className="text-gray-normal w-7 h-7" />
           </Button>
-          <Button onClick={() => {}} variant={ButtonVariants.ICON}>
+          <Button
+            onClick={() => {
+              console.log("clicked")
+            }}
+            variant={ButtonVariants.ICON}
+          >
             <DotsVerticalIcon className="text-gray-normal w-7 h-7" />
           </Button>
         </div>
@@ -72,16 +82,17 @@ function ChatBox({ name, image, id, roomId }: ChatBoxProps) {
           ref={messageBoxRef}
           className="flex flex-col overflow-auto pt-2 md:pt-4 gap-4"
         >
-          {messagesQuery.data &&
-            messagesQuery.data.map(({ message, id, createdAt, senderId }) => (
+          {messagesQueries
+            .map((messagesQuery) => messagesQuery.data as TMessage)
+            .map(({ message, id, createdAt, senderId, seen }) => (
               <Message
-                key={message.id}
-                id={message.id}
+                key={id}
+                id={id}
                 message={message}
                 type={senderId === currentUserid ? "Sent" : "Recieved"}
                 time={createdAt}
                 image={image}
-                seen={message.seen}
+                seen={seen}
               />
             ))}
         </div>

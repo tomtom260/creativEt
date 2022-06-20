@@ -13,7 +13,7 @@ import { getAllRooms } from "@/modules/chat/server/controller"
 import { getSession } from "next-auth/react"
 import { useQueryClient } from "react-query"
 import { PusherContext } from "@/hooks/pusher"
-import { Room } from "@prisma/client"
+import { Message, Room } from "@prisma/client"
 import { useRouter } from "next/router"
 
 type ChatPageProps = {
@@ -33,10 +33,21 @@ function Chat({ user, rooms }: ChatPageProps) {
   useEffect(() => {
     rooms.map(({ id }) => {
       const channel = pusherClient.subscribe(`presence-room-${id}`)
-      channel.bind("message:new", function (message) {
-        console.log("message", message)
-        const room = queryClient.getQueryData(["room", id])
-        queryClient.setQueryData(["room", id], [...room, message])
+      channel.bind("message:new", function (message: Message) {
+        const room = queryClient.getQueryData<Message[]>(["room", id])
+        if (room) {
+          const newMessageIndex = room.findIndex(
+            (mess) =>
+              !mess.id &&
+              message.senderId === mess.senderId &&
+              message.message === mess.message &&
+              message.roomId === mess.roomId
+          ) as number
+          room[newMessageIndex].seen = message.seen
+          room[newMessageIndex].createdAt = message.createdAt
+          room[newMessageIndex].id = message.id
+        }
+        queryClient.setQueryData(["room", id], room)
       })
       channel.bind("member:status", (member) => alert(JSON.stringify(member)))
     })

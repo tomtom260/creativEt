@@ -22,11 +22,7 @@ export default async function userHandler(
     case "POST":
       createNewMessage({ ...req.body, senderId: session?.user.id })
       return SuccessAPIResponse(res, {})
-    case "PATCH":
-      console.log("message",req.body.id)
-      // toggleMessageSeen(req.body.id)
-      return SuccessAPIResponse(res, {})
     default:
-      wrongRequestMethodError(res, ["POST", "PATCH", "GET"])
+      wrongRequestMethodError(res, ["POST", "GET"])
   }
 }
