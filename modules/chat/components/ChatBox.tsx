@@ -132,7 +132,6 @@ function ChatBox({ name, image, id, roomId }: ChatBoxProps) {
     }
   }, [isTyping])
 
-  console.log(moment(typingRef.current?.members?.me?.info?.lastSeen).fromNow())
   return (
     <div
       className={` flex-col flex-1 ${

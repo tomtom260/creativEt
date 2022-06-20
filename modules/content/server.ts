@@ -273,6 +273,7 @@ export async function getBoostedContents(userId: string) {
       },
     },
     where: {
+      userId,
       published: true,
       Boost: {
         boostedAt: {

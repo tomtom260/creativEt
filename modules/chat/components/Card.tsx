@@ -2,9 +2,14 @@ import Badge from "@/components/Badge"
 import ImageWithSkeleton from "@/components/ImageWithSkeleton"
 import Text from "@/components/Typography"
 import { TypographyVariant } from "@/components/Typography/textVariant.enum"
+import { PusherContext } from "@/hooks/pusher"
+import { useGetCurrentUser } from "@/hooks/user"
+import { Message } from "@prisma/client"
 import { useRouter } from "next/router"
-import React from "react"
-import { ChatBoxProps } from "./ChatBox"
+import { Channel } from "pusher-js"
+import React, { useContext, useEffect, useRef, useState } from "react"
+import { useQueryClient } from "react-query"
+import { ChatBoxProps, TTypingUser } from "./ChatBox"
 
 type UserCardProps = {
   image: string
@@ -26,6 +31,85 @@ function Card({
   roomId,
 }: UserCardProps) {
   const router = useRouter()
+
+  const queryClient = useQueryClient()
+  const pusherClient = useContext(PusherContext)
+  const typingRef = useRef<Channel>({} as Channel)
+  const [isTyping, setIsTyping] = useState(false)
+  const [typingUser, setTypingUser] = useState<TTypingUser | null>(null)
+  const [isOnline, setIsOnline] = useState<boolean>(false)
+  const { id: currentUserid, name: currentUserName } = useGetCurrentUser().data!
+
+  useEffect(() => {
+    const channel = pusherClient.subscribe(`presence-room-${roomId}`)
+    channel.bind("message:new", function (message: Message) {
+      const room = queryClient.getQueryData<Message[]>(["room", roomId])
+      if (room) {
+        const newMessageIndex = room.findIndex(
+          (mess) =>
+            mess.id === mess.message &&
+            message.senderId === mess.senderId &&
+            message.message === mess.message &&
+            message.roomId === mess.roomId
+        ) as number
+        if (newMessageIndex !== -1) {
+          console.log(newMessageIndex)
+          room[newMessageIndex] = message
+        } else {
+          room.push(message)
+        }
+        queryClient.setQueryData(["room", roomId], room)
+      }
+    })
+
+    typingRef.current = channel.bind(
+      "client-message:typing",
+      function (typingUser: TTypingUser | null) {
+        setTypingUser(typingUser)
+      }
+    )
+
+    channel.bind("pusher:subscription_succeeded", function (members) {
+      setIsOnline(members.count === 2)
+      console.log(members)
+    })
+    channel.bind("pusher:member_added", function (member) {
+      // console.log(Object.keys(channel.members.members).includes(id))
+      setIsOnline(true)
+    })
+
+    channel.bind("pusher:member_removed", function (member) {
+      // console.log(Object.keys(channel.members.members).includes(id))
+      setIsOnline(false)
+    })
+
+    channel.bind("message:seen", function (message: TMessage) {
+      const seenMessage = queryClient.getQueryData<TMessage>([
+        "message",
+        message.id,
+      ])
+      if (seenMessage) {
+        seenMessage.seen = true
+        queryClient.invalidateQueries(["message", message.id])
+      }
+    })
+
+    return () => channel.unsubscribe()
+  }, [roomId])
+
+  useEffect(() => {
+    if (typingRef.current.subscribed) {
+      if (isTyping) {
+        typingRef.current.trigger("client-message:typing", {
+          senderId: currentUserid,
+          name: currentUserName,
+        } as TTypingUser)
+      } else {
+        typingRef.current.trigger("client-message:typing", "false")
+      }
+    }
+  }, [isTyping])
+
   return (
     <div
       onClick={() => {
