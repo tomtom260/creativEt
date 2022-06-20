@@ -1,4 +1,11 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react"
 import { PaperAirplaneIcon } from "@heroicons/react/solid"
 import MessageInput from "@/modules/chat/components/MessageInput"
 import Message from "@/modules/chat/components/Message"
@@ -12,18 +19,30 @@ import { useGetMessagesWithRoomId, useSendMessage } from "../hooks"
 import { useGetCurrentUser } from "@/hooks/user"
 import { useRouter } from "next/router"
 import { Message as TMessage } from "@prisma/client"
+import { PusherContext } from "@/hooks/pusher"
+import { useQueryClient } from "react-query"
+import { Channel } from "pusher-js"
+
+export type TTypingUser = {
+  senderId: string
+  name: string
+}
 
 export type ChatBoxProps = {
   name: string
   image: string
   roomId: string
   id: string
+  typingUser: TTypingUser
+  setIsTyping: Dispatch<SetStateAction<boolean>>
 }
 
 function ChatBox({ name, image, id, roomId }: ChatBoxProps) {
   const [newMessage, setNewMessage] = useState("")
   const messagesQueries = useGetMessagesWithRoomId(roomId)
-  const { id: currentUserid } = useGetCurrentUser().data!
+  const { id: currentUserid, name: currentUserName } = useGetCurrentUser().data!
+  const [isTyping, setIsTyping] = useState(false)
+  const [typingUser, setTypingUser] = useState<TTypingUser | null>(null)
 
   const sendMessage = useSendMessage({
     roomId,
@@ -36,6 +55,69 @@ function ChatBox({ name, image, id, roomId }: ChatBoxProps) {
     messageBoxRef.current.scrollTop = messageBoxRef.current.scrollHeight
   }, [messagesQueries])
   const router = useRouter()
+
+  const queryClient = useQueryClient()
+  const pusherClient = useContext(PusherContext)
+  const typingRef = useRef<Channel>({} as Channel)
+
+  useEffect(() => {
+    const channel = pusherClient.subscribe(`presence-room-${roomId}`)
+    channel.bind(
+      "message:new",
+      function (message: TMessage) {
+        const room = queryClient.getQueryData<TMessage[]>(["room", roomId])
+        if (room) {
+          const newMessageIndex = room.findIndex(
+            (mess) =>
+              mess.id === mess.message &&
+              message.senderId === mess.senderId &&
+              message.message === mess.message &&
+              message.roomId === mess.roomId
+          ) as number
+          if (newMessageIndex !== -1) {
+            console.log(newMessageIndex)
+            room[newMessageIndex] = message
+          } else {
+            room.push(message)
+          }
+          queryClient.setQueryData(["room", roomId], room)
+        }
+      },
+      []
+    )
+
+    typingRef.current = channel.bind(
+      "client-message:typing",
+      function (typingUser: TTypingUser | null) {
+        console.log(typingUser)
+        setTypingUser(typingUser)
+      }
+    )
+
+    channel.bind("message:seen", function (message: TMessage) {
+      const seenMessage = queryClient.getQueryData<TMessage>([
+        "message",
+        message.id,
+      ])
+      if (seenMessage) {
+        seenMessage.seen = true
+        queryClient.invalidateQueries(["message", message.id])
+      }
+    })
+  }, [])
+
+  useEffect(() => {
+    if (typingRef.current.subscribed) {
+      if (isTyping) {
+        typingRef.current.trigger("client-message:typing", {
+          senderId: currentUserid,
+          name: currentUserName,
+        } as TTypingUser)
+      } else {
+        typingRef.current.trigger("client-message:typing", "false")
+      }
+    }
+  }, [isTyping])
 
   return (
     <div
@@ -54,7 +136,7 @@ function ChatBox({ name, image, id, roomId }: ChatBoxProps) {
               className="text-gray-normal"
               varaint={TypographyVariant.Body2}
             >
-              last seen recently
+              {typingUser ? typingUser.name : "last seen recently"}
             </Text>
           </div>
         </div>
@@ -106,8 +188,12 @@ function ChatBox({ name, image, id, roomId }: ChatBoxProps) {
                 sendMessage(newMessage)
               }
             }}
-            onFocus={() => {}}
-            onBlur={() => {}}
+            onFocus={() => {
+              setIsTyping(true)
+            }}
+            onBlur={() => {
+              setIsTyping(false)
+            }}
           />
           <Button
             className="text-white mb-1 flex-shrink-0 !pb-4 bg-secondary-normal hover:bg-secondary-normal p-2 !w-12 !h-12 rotate-45"

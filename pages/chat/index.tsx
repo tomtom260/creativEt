@@ -1,11 +1,14 @@
 import DefaultLayout from "@/layouts/DefaultLayout"
 import Card from "@/modules/chat/components/Card"
 import SearchInput from "modules/chat/components/SearchInput"
-import React, { useContext, useEffect, useState } from "react"
+import React, { useContext, useEffect, useRef, useState } from "react"
 import { NextPageContext } from "next"
 import { searchUser } from "modules/user/server"
 import { useGetCurrentUser, useSearchUsers } from "@/hooks/user"
-import ChatBox, { ChatBoxProps } from "@/modules/chat/components/ChatBox"
+import ChatBox, {
+  ChatBoxProps,
+  TTypingUser,
+} from "@/modules/chat/components/ChatBox"
 import { TypographyVariant } from "@/components/Typography/textVariant.enum"
 import Text from "@/components/Typography"
 import { changeDateInJSONToMoment } from "@/utils/changeDateToMoment"
@@ -15,6 +18,7 @@ import { useQueryClient } from "react-query"
 import { PusherContext } from "@/hooks/pusher"
 import { Message, Room } from "@prisma/client"
 import { useRouter } from "next/router"
+import { Channel } from "pusher-js"
 
 type ChatPageProps = {
   user: ChatBoxProps
@@ -25,45 +29,57 @@ function Chat({ user, rooms }: ChatPageProps) {
   const [search, setSearch] = useState("")
   const [selectedUser, setSelectedUser] = useState<ChatBoxProps>(user)
   const searchUserQuery = useSearchUsers(search, rooms)
-  const { id } = useGetCurrentUser().data
+  const [isTyping, setIsTyping] = useState(false)
+  const [typingUser, setTypingUser] = useState<TTypingUser | null>(null)
+  const { id: currentUserId, name } = useGetCurrentUser().data!
   const pusherClient = useContext(PusherContext)
   const queryClient = useQueryClient()
   const router = useRouter()
+  const typingChannelRef = useRef<Channel>({} as Channel)
 
-  useEffect(() => {
-    rooms.map(({ id }) => {
-      const channel = pusherClient.subscribe(`presence-room-${id}`)
-      channel.bind("message:new", function (message: Message) {
-        const room = queryClient.getQueryData<Message[]>(["room", id])
-        if (room) {
-          const newMessageIndex = room.findIndex(
-            (mess) =>
-              mess.id === mess.message &&
-              message.senderId === mess.senderId &&
-              message.message === mess.message &&
-              message.roomId === mess.roomId
-          ) as number
-          if (newMessageIndex !== -1) {
-            room[newMessageIndex] = message
-          } else {
-            room.push(message)
-          }
-          queryClient.setQueryData(["room", id], room)
-        }
-      })
-      channel.bind("message:seen", function (message: Message) {
-        console.log("seen", message.message)
-        const seenMessage = queryClient.getQueryData<Message>([
-          "message",
-          message.id,
-        ])
-        if (seenMessage) {
-          seenMessage.seen = true
-          queryClient.invalidateQueries(["message", message.id])
-        }
-      })
-    })
-  }, [])
+  // useEffect(() => {
+  //   rooms.map(({ id }) => {
+  //     const channel = pusherClient.subscribe(`presence-room-${id}`)
+  //     channel.bind("message:new", function (message: Message) {
+  //       const room = queryClient.getQueryData<Message[]>(["room", id])
+  //       if (room) {
+  //         const newMessageIndex = room.findIndex(
+  //           (mess) =>
+  //             mess.id === mess.message &&
+  //             message.senderId === mess.senderId &&
+  //             message.message === mess.message &&
+  //             message.roomId === mess.roomId
+  //         ) as number
+  //         if (newMessageIndex !== -1) {
+  //           room[newMessageIndex] = message
+  //         } else {
+  //           room.push(message)
+  //         }
+  //         queryClient.setQueryData(["room", id], room)
+  //       }
+  //     })
+
+  //     const typingChannel = channel.bind(
+  //       "message:typing",
+  //       function (typingUser: TTypingUser | null) {
+  //         setTypingUser(typingUser)
+  //       }
+  //     )
+
+  //     typingChannelRef.current = typingChannel
+
+  //     channel.bind("message:seen", function (message: Message) {
+  //       const seenMessage = queryClient.getQueryData<Message>([
+  //         "message",
+  //         message.id,
+  //       ])
+  //       if (seenMessage) {
+  //         seenMessage.seen = true
+  //         queryClient.invalidateQueries(["message", message.id])
+  //       }
+  //     })
+  //   })
+  // }, [])
 
   return (
     <DefaultLayout>
@@ -103,7 +119,7 @@ function Chat({ user, rooms }: ChatPageProps) {
                   rooms
                     .map((room) => {
                       const [{ Profile, ...user }] = room.members.filter(
-                        (user) => user.id !== id
+                        (user) => user.id !== currentUserId
                       )
                       user.username = Profile.username
                       return { id: room.id, user }
@@ -133,6 +149,8 @@ function Chat({ user, rooms }: ChatPageProps) {
         >
           {selectedUser ? (
             <ChatBox
+              typingUser={typingUser}
+              setIsTyping={setIsTyping}
               id={selectedUser.id}
               name={selectedUser.name}
               image={selectedUser.image}
