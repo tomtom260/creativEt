@@ -43,6 +43,7 @@ function ChatBox({ name, image, id, roomId }: ChatBoxProps) {
   const { id: currentUserid, name: currentUserName } = useGetCurrentUser().data!
   const [isTyping, setIsTyping] = useState(false)
   const [typingUser, setTypingUser] = useState<TTypingUser | null>(null)
+  const [isOnline, setIsOnline] = useState<boolean>(false)
 
   const sendMessage = useSendMessage({
     roomId,
@@ -89,10 +90,23 @@ function ChatBox({ name, image, id, roomId }: ChatBoxProps) {
     typingRef.current = channel.bind(
       "client-message:typing",
       function (typingUser: TTypingUser | null) {
-        console.log(typingUser)
         setTypingUser(typingUser)
       }
     )
+
+    channel.bind("pusher:subscription_succeeded", function (members) {
+      setIsOnline(members.count === 2)
+      console.log(members)
+    })
+    channel.bind("pusher:member_added", function (member) {
+      // console.log(Object.keys(channel.members.members).includes(id))
+      setIsOnline(true)
+    })
+
+    channel.bind("pusher:member_removed", function (member) {
+      // console.log(Object.keys(channel.members.members).includes(id))
+      setIsOnline(false)
+    })
 
     channel.bind("message:seen", function (message: TMessage) {
       const seenMessage = queryClient.getQueryData<TMessage>([
@@ -136,7 +150,11 @@ function ChatBox({ name, image, id, roomId }: ChatBoxProps) {
               className="text-gray-normal"
               varaint={TypographyVariant.Body2}
             >
-              {typingUser ? typingUser.name : "last seen recently"}
+              {typingUser
+                ? typingUser.name
+                : isOnline
+                ? "Online"
+                : "last seen recently"}
             </Text>
           </div>
         </div>
