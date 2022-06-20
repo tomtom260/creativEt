@@ -7,7 +7,6 @@ import {
   useQueries,
   useQuery,
   useQueryClient,
-  UseQueryOptions,
 } from "react-query"
 import {
   createMessage,
@@ -44,8 +43,22 @@ export function useCreateRoomMutation(props?: CustomUseMutationOptions) {
   return useMutation(createRoom, props)
 }
 
-export function useToggleMessageSeen(props?: CustomUseMutationOptions) {
-  return useMutation(toggleMessageSeen, props)
+export function useToggleMessageSeen() {
+  const [eventFired, setIsEventFired] = useState(false)
+  const queryClient = useQueryClient()
+  return useMutation(
+    async ({ id }: { id: string }) => {
+      if (!eventFired) {
+        setIsEventFired(true)
+        await toggleMessageSeen({ id })
+      }
+    },
+    {
+      onSuccess(res) {
+        queryClient.invalidateQueries(["message", res.id])
+      },
+    }
+  )
 }
 
 export function useSendMessage({

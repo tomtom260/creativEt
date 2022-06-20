@@ -17,8 +17,10 @@ export default async function userHandler(
         (await getMessage(req.query.id as string)) || {}
       )
     case "PATCH":
-      toggleMessageSeen(req.query.id as string)
-      return SuccessAPIResponse(res, {})
+      return SuccessAPIResponse(
+        res,
+        await toggleMessageSeen(req.query.id as string)
+      )
     default:
       wrongRequestMethodError(res, ["PATCH", "GET"])
   }

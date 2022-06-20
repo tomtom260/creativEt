@@ -4,7 +4,7 @@ import { TypographyVariant } from "@/components/Typography/textVariant.enum"
 import { useGetCurrentUser } from "@/hooks/user"
 import { CheckIcon, ClockIcon } from "@heroicons/react/outline"
 import moment from "moment"
-import React from "react"
+import React, { useEffect } from "react"
 import { useInView } from "react-intersection-observer"
 import { useToggleMessageSeen } from "../hooks"
 
@@ -21,19 +21,18 @@ function Message({ type, message, time, image, seen, id }: MessageProps) {
   const isSentMessage = type === "Sent"
   const currentUserImage = useGetCurrentUser().data!.image
   const toggleMessageSeenMutation = useToggleMessageSeen()
-
   const { ref, inView } = useInView({
     threshold: 1,
     triggerOnce: true,
   })
 
-  // if (!seen && !isSentMessage) {
-  //   if (inView) {
-  //     toggleMessageSeenMutation.mutate({
-  //       id,
-  //     })
-  //   }
-  // }
+  if (!seen && !isSentMessage) {
+    if (inView) {
+      toggleMessageSeenMutation.mutate({
+        id,
+      })
+    }
+  }
 
   return (
     <div
@@ -69,14 +68,14 @@ function Message({ type, message, time, image, seen, id }: MessageProps) {
             <>
               {!time ? (
                 <ClockIcon className="h-4 w-4 " />
+              ) : !seen ? (
+                <CheckIcon className="h-4 w-4 " />
               ) : (
-                <CheckIcon className="h-4 w-4 " />
+                <div className="flex">
+                  <CheckIcon className="h-4 w-4 " />
+                  <CheckIcon className="h-4 w-4 -ml-[19px] " />
+                </div>
               )}
-              {/* <CheckIcon className="h-4 w-4 " />
-              <div className="flex">
-                <CheckIcon className="h-4 w-4 " />
-                <CheckIcon className="h-4 w-4 -ml-[19px] " />
-              </div> */}
             </>
           )}
         </div>

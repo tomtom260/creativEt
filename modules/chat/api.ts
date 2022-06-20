@@ -17,7 +17,9 @@ export async function createRoom(members: NewRoomDTO) {
 }
 
 export async function toggleMessageSeen({ id }: ToggleSeenUpdate) {
-  return await axios.patch(`/api/chat/${id}`)
+  return await (
+    await axios.patch<{ data: Message }>(`/api/chat/${id}`)
+  ).data.data
 }
 
 export async function getMessage({ id }: ToggleSeenUpdate) {
