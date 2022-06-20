@@ -2,14 +2,12 @@ import { prisma } from "@/utils/db"
 import { createNewMessageParams, ToggleSeenUpdate } from "../types"
 
 export async function createMessage(message: createNewMessageParams) {
-  const a = await prisma.message.create({
+  return await prisma.message.create({
     data: message,
     include: {
       room: true,
     },
   })
-  console.log(a)
-  return a
 }
 
 export async function createRoom(members: string[]) {
@@ -61,7 +59,6 @@ export async function getRoomWithMembers(id: string) {
 }
 
 export async function toggleSeen({ id }: ToggleSeenUpdate) {
-  console.log(id)
   return await prisma.message.update({
     where: {
       id,

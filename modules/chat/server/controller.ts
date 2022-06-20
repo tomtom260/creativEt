@@ -31,7 +31,11 @@ export async function getMessagesWithRoomId(id: string) {
 
 export async function toggleMessageSeen(id: ToggleSeenUpdate["id"]) {
   const message = await toggleSeen({ id })
-  // pusherServer.trigger(`room:${message.roomId}`, "message:seen", message)
+  pusherServer.trigger(
+    `presence-room-${message.roomId}`,
+    "message:seen",
+    message
+  )
   return message
 }
 

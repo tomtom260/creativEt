@@ -15,7 +15,8 @@ import {
   getMessagesWithRoomId,
   toggleMessageSeen,
 } from "./api"
-import { Message } from "@prisma/client"
+import { Message, Room } from "@prisma/client"
+import { NewMessageDTO } from "./types"
 
 export type CustomUseMutationOptions = UseMutationOptions<
   unknown,
@@ -25,7 +26,30 @@ export type CustomUseMutationOptions = UseMutationOptions<
 >
 
 export function useCreateMessageMutation(props?: CustomUseMutationOptions) {
-  return useMutation(createMessage, props)
+  const { id: currentUserId } = useGetCurrentUser().data!
+  const queryClient = useQueryClient()
+
+  return useMutation(
+    async ({ message, roomId }: { message: string; roomId: string }) => {
+      const newMessage = {
+        senderId: currentUserId,
+        message,
+        roomId,
+      }
+
+      await createMessage(newMessage)
+    },
+    {
+      onMutate(message) {
+        message.senderId = currentUserId
+        message.id = message.message
+        const room = queryClient.getQueryData<Room[]>(["room", message.roomId])!
+        room.push(message as Message)
+        console.log(room[room.length - 1])
+        queryClient.setQueryData(["room", message.roomId], room)
+      },
+    }
+  )
 }
 
 export function useGetMessagesWithRoomId(id: string) {
@@ -44,21 +68,7 @@ export function useCreateRoomMutation(props?: CustomUseMutationOptions) {
 }
 
 export function useToggleMessageSeen() {
-  const [eventFired, setIsEventFired] = useState(false)
-  const queryClient = useQueryClient()
-  return useMutation(
-    async ({ id }: { id: string }) => {
-      if (!eventFired) {
-        setIsEventFired(true)
-        await toggleMessageSeen({ id })
-      }
-    },
-    {
-      onSuccess(res) {
-        queryClient.invalidateQueries(["message", res.id])
-      },
-    }
-  )
+  return useMutation(toggleMessageSeen)
 }
 
 export function useSendMessage({
@@ -75,13 +85,7 @@ export function useSendMessage({
   const [room, setRoom] = useState(roomId)
   const { id: currentUserId } = useGetCurrentUser().data!
 
-  const createMessageMutation = useCreateMessageMutation({
-    onMutate(message: Message) {
-      message.senderId = currentUserId
-      const room = queryClient.getQueryData(["room", roomId])
-      queryClient.setQueryData(["room", roomId], [...room, message])
-    },
-  })
+  const createMessageMutation = useCreateMessageMutation()
   const createRoomMutation = useCreateRoomMutation({
     onSuccess: (res: any) => {
       setRoom(res.data.data.id)

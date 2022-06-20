@@ -4,7 +4,7 @@ import { TypographyVariant } from "@/components/Typography/textVariant.enum"
 import { useGetCurrentUser } from "@/hooks/user"
 import { CheckIcon, ClockIcon } from "@heroicons/react/outline"
 import moment from "moment"
-import React, { useEffect } from "react"
+import React, { useState } from "react"
 import { useInView } from "react-intersection-observer"
 import { useToggleMessageSeen } from "../hooks"
 
@@ -25,13 +25,13 @@ function Message({ type, message, time, image, seen, id }: MessageProps) {
     threshold: 1,
     triggerOnce: true,
   })
+  const [eventFired, setIsEventFired] = useState(false)
 
-  if (!seen && !isSentMessage) {
-    if (inView) {
-      toggleMessageSeenMutation.mutate({
-        id,
-      })
-    }
+  if (inView && !seen && !isSentMessage && !eventFired) {
+    setIsEventFired(true)
+    toggleMessageSeenMutation.mutate({
+      id,
+    })
   }
 
   return (

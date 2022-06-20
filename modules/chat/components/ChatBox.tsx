@@ -80,13 +80,13 @@ function ChatBox({ name, image, id, roomId }: ChatBoxProps) {
       <div className="bg-white   h-[calc(100vh)] md:h-[calc(100vh-192px)]   md:rounded-xl md:px-4 md:pt-0 p-2 col-span-8 md:col-span-5 w-full flex flex-col">
         <div
           ref={messageBoxRef}
-          className="flex flex-col overflow-auto pt-2 md:pt-4 gap-4"
+          className="flex flex-col overflow-auto pt-2 pb-4 md:pt-4 gap-4"
         >
           {messagesQueries
             .map((messagesQuery) => messagesQuery.data as TMessage)
             .map(({ message, id, createdAt, senderId, seen }) => (
               <Message
-                key={id}
+                key={id || message}
                 id={id}
                 message={message}
                 type={senderId === currentUserid ? "Sent" : "Recieved"}
@@ -106,6 +106,8 @@ function ChatBox({ name, image, id, roomId }: ChatBoxProps) {
                 sendMessage(newMessage)
               }
             }}
+            onFocus={() => {}}
+            onBlur={() => {}}
           />
           <Button
             className="text-white mb-1 flex-shrink-0 !pb-4 bg-secondary-normal hover:bg-secondary-normal p-2 !w-12 !h-12 rotate-45"

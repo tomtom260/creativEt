@@ -38,18 +38,30 @@ function Chat({ user, rooms }: ChatPageProps) {
         if (room) {
           const newMessageIndex = room.findIndex(
             (mess) =>
-              !mess.id &&
+              mess.id === mess.message &&
               message.senderId === mess.senderId &&
               message.message === mess.message &&
               message.roomId === mess.roomId
           ) as number
-          room[newMessageIndex].seen = message.seen
-          room[newMessageIndex].createdAt = message.createdAt
-          room[newMessageIndex].id = message.id
+          if (newMessageIndex !== -1) {
+            room[newMessageIndex] = message
+          } else {
+            room.push(message)
+          }
+          queryClient.setQueryData(["room", id], room)
         }
-        queryClient.setQueryData(["room", id], room)
       })
-      channel.bind("member:status", (member) => alert(JSON.stringify(member)))
+      channel.bind("message:seen", function (message: Message) {
+        console.log("seen", message.message)
+        const seenMessage = queryClient.getQueryData<Message>([
+          "message",
+          message.id,
+        ])
+        if (seenMessage) {
+          seenMessage.seen = true
+          queryClient.invalidateQueries(["message", message.id])
+        }
+      })
     })
   }, [])
 
