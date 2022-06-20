@@ -22,6 +22,7 @@ import { Message as TMessage } from "@prisma/client"
 import { PusherContext } from "@/hooks/pusher"
 import { useQueryClient } from "react-query"
 import { Channel } from "pusher-js"
+import moment from "moment"
 
 export type TTypingUser = {
   senderId: string
@@ -63,29 +64,25 @@ function ChatBox({ name, image, id, roomId }: ChatBoxProps) {
 
   useEffect(() => {
     const channel = pusherClient.subscribe(`presence-room-${roomId}`)
-    channel.bind(
-      "message:new",
-      function (message: TMessage) {
-        const room = queryClient.getQueryData<TMessage[]>(["room", roomId])
-        if (room) {
-          const newMessageIndex = room.findIndex(
-            (mess) =>
-              mess.id === mess.message &&
-              message.senderId === mess.senderId &&
-              message.message === mess.message &&
-              message.roomId === mess.roomId
-          ) as number
-          if (newMessageIndex !== -1) {
-            console.log(newMessageIndex)
-            room[newMessageIndex] = message
-          } else {
-            room.push(message)
-          }
-          queryClient.setQueryData(["room", roomId], room)
+    channel.bind("message:new", function (message: TMessage) {
+      const room = queryClient.getQueryData<TMessage[]>(["room", roomId])
+      if (room) {
+        const newMessageIndex = room.findIndex(
+          (mess) =>
+            mess.id === mess.message &&
+            message.senderId === mess.senderId &&
+            message.message === mess.message &&
+            message.roomId === mess.roomId
+        ) as number
+        if (newMessageIndex !== -1) {
+          console.log(newMessageIndex)
+          room[newMessageIndex] = message
+        } else {
+          room.push(message)
         }
-      },
-      []
-    )
+        queryClient.setQueryData(["room", roomId], room)
+      }
+    })
 
     typingRef.current = channel.bind(
       "client-message:typing",
@@ -118,7 +115,9 @@ function ChatBox({ name, image, id, roomId }: ChatBoxProps) {
         queryClient.invalidateQueries(["message", message.id])
       }
     })
-  }, [])
+
+    return () => channel.unsubscribe()
+  }, [roomId])
 
   useEffect(() => {
     if (typingRef.current.subscribed) {
@@ -133,6 +132,7 @@ function ChatBox({ name, image, id, roomId }: ChatBoxProps) {
     }
   }, [isTyping])
 
+  console.log(moment(typingRef.current?.members?.me?.info?.lastSeen).fromNow())
   return (
     <div
       className={` flex-col flex-1 ${
