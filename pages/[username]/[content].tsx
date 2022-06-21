@@ -50,6 +50,7 @@ import { ModalType, showModal } from "store/modalSlice"
 import InsufficientBalanceModal from "@/modules/content/components/InsufficientBalanceModal"
 import { fetchUserWithProfile, transformUserResponse } from "@/modules/user/api"
 import Link from "next/link"
+import axios from "axios"
 
 function Content({ content }: { content: ContentWithProfile }) {
   const { data: user } = useGetCurrentUser()
@@ -227,8 +228,20 @@ function Content({ content }: { content: ContentWithProfile }) {
                 </Button>
               </div>
               <Button
-                className="absolute hidden  sm:flex z- right-4 top-6"
+                className="absolute hidden md:visible z-10  sm:flex z- left-4 bottom-6"
                 variant={ButtonVariants.PRIMARY}
+                onClick={
+                  async ()=>{
+                  // console.log(content.id)
+                  await axios.patch(`http://localhost:3000/api/content/reportedContents?contentId=${content.id}&description=inappropriate`)
+
+                }
+                // ()=>{
+
+                  // console.log(content)
+                // }
+                  // reportContent
+                }
                 appendComponent={<WarnSVG />}
               >
                 Report
@@ -489,3 +502,8 @@ const EmailShare = ({ shareUrl }: { shareUrl: string }) => (
     <EmailIcon size={36} round />
   </EmailShareButton>
 )
+
+const reportContent = async ()=>{
+  // contents.
+  // await addToReport('cl4nxo7a90130jsur4o7pplm6','inappropriate')
+}

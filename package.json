@@ -21,7 +21,9 @@
     "test": "is-ci \"test:coverage\" \"test:watch\"",
     "test:coverage": "jest --coverage",
     "test:watch": "jest --watch",
-    "test:debug": "node --inspect-brk ./node_modules/jest/bin/jest.js --runInBand --watch"
+    "test:debug": "node --inspect-brk ./node_modules/jest/bin/jest.js --runInBand --watch",
+    "prisma-generate": "dotenv -e .env.local -- npx prisma generate",
+    "prisma-migrate": "dotenv -e .env.local -- npx prisma migrate dev"
   },
   "dependencies": {
     "@cloudinary/url-gen": "^1.6.0",

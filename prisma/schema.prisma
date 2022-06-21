@@ -77,6 +77,7 @@ model User {
   notifiedBy       Notification[]     @relation("notifiedBy")
   availableForHire Boolean            @default(false)
   Ratings          Ratings[]
+  // reports          Report[]           @relation("reportedBy")
 }
 
 model VerificationToken {
@@ -107,6 +108,8 @@ model Content {
   Boost       Boost?
   published   Boolean       @default(true)
   Jobs        Jobs?
+  reports     Report[]      @relation("contentReported")
+  deleted     Boolean       @default(false)
 }
 
 model Likes {
@@ -154,6 +157,19 @@ model MoneyTransaction {
   description   String
   transactionAt DateTime               @default(now())
   status        MoneyTransactionStatus @default(PENDING)
+}
+
+model Report {
+  id              String       @id @default(cuid())
+  // reporterId      String
+  // reportedBy      User         @relation("reportedBy", fields: [reporterId], references: [id])
+  contentId       String       @unique
+  contentReported Content      @relation("contentReported", fields: [contentId], references: [id])
+  description     String
+  resolved        ReportStatus @default(PENDING)
+  reportCount     Int          @default(0)
+  reportedAt      DateTime     @default(now())
+
 }
 
 model Message {
@@ -257,4 +273,10 @@ enum JobsStatus {
   SUCCESS
   CANCELED
   SUBMITTED
+}
+
+enum ReportStatus {
+  PENDING
+  REMOVED
+  ALLOWED
 }

@@ -56,6 +56,21 @@ export async function deleteContent(id: string) {
   })
 }
 
+export async function addToReport(contentId: string, description: string) {
+  return await prisma.report.upsert({
+    where: {
+      contentId,
+    },
+    update: {
+      reportCount: {increment: 1}
+    },
+    create: {
+      contentId,
+      description
+    }
+  })
+}
+
 export async function PublishContent(id: string) {
   return await prisma.content.update({
     where: {
