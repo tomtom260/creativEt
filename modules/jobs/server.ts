@@ -77,3 +77,9 @@ export async function updateJob(
     data,
   })
 }
+
+export async function addRating(data: Prisma.RatingsUncheckedCreateInput) {
+  return await prisma.ratings.create({
+    data,
+  })
+}

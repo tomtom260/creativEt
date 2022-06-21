@@ -225,11 +225,11 @@ model Notification {
 
 model Ratings {
   id     String @id @default(cuid())
-  jobId  String
-  Job    Jobs   @relation(fields: [jobsId], references: [id])
-  userId String
+  Job    Jobs   @relation(fields: [jobId], references: [id])
   User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  jobsId String
+  jobId  String
+  userId String
+  value  Int
 }
 
 enum MoneyTransactionType {

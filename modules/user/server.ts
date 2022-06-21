@@ -1,7 +1,11 @@
 import { getSession } from "next-auth/react"
 import { prisma } from "@/utils/db"
 import { ErrorAPIResponse } from "@/utils/apiResponses"
-import { MoneyTransactionStatus, MoneyTransactionType } from "@prisma/client"
+import {
+  JobsStatus,
+  MoneyTransactionStatus,
+  MoneyTransactionType,
+} from "@prisma/client"
 
 export async function isFollwingUser(currentUser = "", followedUser: string) {
   const result = await prisma.follow.findUnique({
@@ -111,6 +115,8 @@ export async function getUsersForHIre(
     include: {
       Profile: true,
       followers: true,
+      Ratings: true,
+      employee: true,
     },
     where: {
       OR: query
@@ -147,16 +153,33 @@ export async function getUsersForHIre(
           : undefined,
     },
   })
-  return users.map((user) => {
-    const newUser = {
-      ...user,
-      location: user.Profile?.location,
-      bio: user.Profile?.bio,
-      username: user.Profile?.username,
-    }
-    delete newUser.Profile
-    return newUser
-  })
+  return users
+    .map((user) => {
+      const newUser = {
+        ...user,
+        location: user.Profile?.location,
+        bio: user.Profile?.bio,
+        username: user.Profile?.username,
+      }
+      delete newUser.Profile
+      return newUser
+    })
+    .map((user) => {
+      user.numberOfJobs = user.employee.filter(
+        (job) => job.status === JobsStatus.SUCCESS
+      ).length
+      delete user.employee
+
+      user.rating = user.Ratings.length
+        ? (
+            user.Ratings.reduce((acc, red) => {
+              return acc + red.value
+            }, 0) / user.Ratings.length
+          ).toFixed(1)
+        : 0
+      delete user.Ratings
+      return user
+    })
 }
 
 export async function updateUsername(id: string, username: string) {

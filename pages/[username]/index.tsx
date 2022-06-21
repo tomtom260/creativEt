@@ -107,6 +107,11 @@ function ProfilePage({ profile, myProfile, contents }: ProfileProps) {
     return <div>NO User with that username exists</div>
   }
 
+  const profileImageUrl = profileQuery.data.image as string
+  const profileImage = profileImageUrl.includes("cloudinary")
+    ? getResponsiveImage(getPublicIdFromUrl(profileImageUrl), 128)
+    : profileImageUrl
+
   return (
     <>
       <Head>
@@ -117,10 +122,7 @@ function ProfilePage({ profile, myProfile, contents }: ProfileProps) {
           <div className="flex mx-auto">
             <div className="relative w-20 md:w-32 h-20 md:h-32 mr-12">
               <Image
-                src={getResponsiveImage(
-                  getPublicIdFromUrl(profileQuery.data.image!),
-                  128
-                )}
+                src={profileImage}
                 className="rounded-full"
                 layout="fill"
                 alt="profile image"

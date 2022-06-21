@@ -27,6 +27,7 @@ type HomeProps = {
 
 const filterOptions = ["Top Rated", "Following"]
 export default function Home({ users }: HomeProps) {
+  console.log(users)
   const [selectedFilterOption, setSelectedFilterOption] = useState(
     filterOptions[0]
   )
@@ -60,7 +61,7 @@ export default function Home({ users }: HomeProps) {
       />
       <div
         id="content"
-        className="max-w-7xl w-full mb-[800px] flex flex-col px-2  sm:px-6  md:px-4 lg:px-8 pb-2 md:py-8 mx-auto"
+        className="max-w-7xl w-full mb-[800px] flex flex-col px-0  sm:px-6  md:px-4 lg:px-8 pb-2 md:py-8 mx-auto"
       >
         <div className=" flex  sticky top-[60px] py-8 px-2  bg-white z-20 w-full  flex-1 justify-between  items-center">
           <div className="w-32 ">
@@ -81,7 +82,7 @@ export default function Home({ users }: HomeProps) {
             Filters
           </Button> */}
         </div>
-        <div className="mb-[800px] px-12  grid  mt-8 md:mt-14 gap-8  mx-auto grid-rows-2 grid-cols-1 w-full  flex-wrap">
+        <div className="mb-[800px]  px-4 md:px-12 grid  mt-8 md:mt-14 gap-8  mx-auto grid-rows-2 grid-cols-1 w-full  flex-wrap">
           {usersQuery
             .map((userQuery) => userQuery.data)
             .map((user) => (

@@ -6,6 +6,7 @@ import { useMutation, useQueries, useQuery, useQueryClient } from "react-query"
 import { CustomUseMutationOptions } from "../chat/hooks"
 import {
   acceptJobAPI,
+  addRatingAPI,
   createJobAPI,
   finishJobAPI,
   getJobAPI,
@@ -14,6 +15,7 @@ import {
   reviseJobAPI,
   successJobAPI,
 } from "./api"
+import { addRating } from "./server"
 import { FilterOptions, TJOb } from "./types"
 
 export function useCreateJobMutatation() {
@@ -144,5 +146,14 @@ export function useFinishJobMutation() {
     onSuccess: (res) => {
       queryClient.invalidateQueries(["job", res.data.data.id])
     },
+  })
+}
+
+export function useAddRatingMutation() {
+  // const queryClient = useQueryClient()
+  return useMutation(addRatingAPI, {
+    // onSuccess: (res) => {
+    // queryClient.invalidateQueries(["job", res.data.data.id])
+    // },
   })
 }

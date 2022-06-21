@@ -5,7 +5,7 @@ import {
   reviseContentJobController,
   successJobController,
 } from "@/modules/jobs/controller"
-import { getJobsById } from "@/modules/jobs/server"
+import { addRating, getJobsById } from "@/modules/jobs/server"
 import { TJOb } from "@/modules/jobs/types"
 import { NextApiRequest, NextApiResponse } from "next"
 import {
@@ -18,6 +18,8 @@ export default async function userHandler(
   res: NextApiResponse
 ) {
   switch (req.method) {
+    case "POST":
+      return SuccessAPIResponse(res, await addRating(req.body))
     case "GET":
       return SuccessAPIResponse(
         res,
@@ -54,6 +56,6 @@ export default async function userHandler(
       break
 
     default:
-      wrongRequestMethodError(res, ["GET", "PATCH"])
+      wrongRequestMethodError(res, ["GET", "PATCH", "POST"])
   }
 }

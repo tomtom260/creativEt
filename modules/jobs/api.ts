@@ -54,3 +54,13 @@ export async function finishJobAPI({
     image,
   })
 }
+
+export async function addRatingAPI({
+  id,
+  data,
+}: {
+  id: string
+  data: Prisma.RatingsUncheckedCreateInput
+}) {
+  return await axios.post<{ data: TJOb }>(`/api/jobs/${id}`, data)
+}

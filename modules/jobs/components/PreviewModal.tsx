@@ -1,7 +1,7 @@
 import React from "react"
 import Modal from "@/components/Dialog/Modal"
 import { useAppDispatch, useAppSelector } from "@/hooks/redux"
-import { hideModal, ModalType } from "store/modalSlice"
+import { hideModal, ModalType, showModal } from "store/modalSlice"
 
 import { TJOb } from "@/modules/jobs/types"
 import ImageWithSkeleton from "@/components/ImageWithSkeleton"
@@ -29,6 +29,17 @@ function PreviewModal() {
         <Button
           variant={ButtonVariants.PRIMARY}
           onClick={() => {
+            setTimeout(() => {
+              dispatch(
+                showModal({
+                  modalType: ModalType.RATING_MODAL,
+                  payload: {
+                    userId: job.employeeId,
+                    jobId: job.id,
+                  },
+                })
+              )
+            }, 3000)
             successJobMutation.mutate(job.id)
             dispatch(hideModal())
           }}
