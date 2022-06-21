@@ -54,3 +54,10 @@
 * {
   font-family: poppins;
 }
+
+
+
+#nprogress .bar {
+  background: #4546e5 !important;
+  height: 3px !important;
+}

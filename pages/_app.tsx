@@ -4,19 +4,21 @@ import "react-datepicker/dist/react-datepicker.css"
 import "@fontsource/quicksand"
 import "@fontsource/poppins"
 import "react-toastify/dist/ReactToastify.css"
+import "nprogress/nprogress.css"
 import type { AppProps } from "next/app"
 import { ReactNode, useEffect, useRef, ReactElement } from "react"
 import { SessionProvider, useSession } from "next-auth/react"
 import { Provider } from "react-redux"
 import { store } from "store"
 import { QueryClient, QueryClientProvider } from "react-query"
-import { useRouter } from "next/router"
+import { Router, useRouter } from "next/router"
 import { ReactQueryDevtools } from "react-query/devtools"
 import { useGetCurrentUser } from "@/hooks/user"
 import { useAppSelector } from "@/hooks/redux"
 import PusherProvider from "@/hooks/pusher"
 import { ToastContainer } from "react-toastify"
 import type { NextPage } from "next"
+import NProgress from "nprogress"
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode
@@ -87,7 +89,26 @@ const App = ({
   }, [isModalVisible])
 
   const userQuery = useGetCurrentUser()
+  useEffect(() => {
+    const handleRouteStart = () => NProgress.start()
+    const handleRouteDone = () => NProgress.done()
 
+    NProgress.configure({
+      showSpinner: false,
+      easing: "ease",
+      speed: 500,
+    })
+    Router.events.on("routeChangeStart", handleRouteStart)
+    Router.events.on("routeChangeComplete", handleRouteDone)
+    Router.events.on("routeChangeError", handleRouteDone)
+
+    return () => {
+      // Make sure to remove the event handler on unmount!
+      Router.events.off("routeChangeStart", handleRouteStart)
+      Router.events.off("routeChangeComplete", handleRouteDone)
+      Router.events.off("routeChangeError", handleRouteDone)
+    }
+  }, [])
   if (privatePage) {
     if (status === "unauthenticated") {
       router.push("/auth/signin")
