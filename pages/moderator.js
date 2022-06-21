@@ -40,6 +40,7 @@ function moderator({contents}) {
                         numReport={content.reportCount}
                         reportId={content.id}
                         resolutionStat={content.resolved}
+                        setReportedContents
                      />
 
                  })

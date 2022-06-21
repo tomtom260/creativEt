@@ -3,7 +3,7 @@ import PrimaryButton from '../../Button/PrimaryButton'
 import axios from 'axios'
 function index(
     {
-        contentId, imgSrc, contentTitle, contentCreator, reportDetail, numReport, reportId, resolutionStat
+        contentId, imgSrc, contentTitle, contentCreator, reportDetail, numReport, reportId, resolutionStat, setReportedContents
     }
 ) {
     return (

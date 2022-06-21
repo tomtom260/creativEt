@@ -19,6 +19,7 @@ import PusherProvider from "@/hooks/pusher"
 import { ToastContainer } from "react-toastify"
 import type { NextPage } from "next"
 import NProgress from "nprogress"
+import LoadingIcon from "@/components/LoadingIcon"
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode
@@ -113,7 +114,8 @@ const App = ({
     if (status === "unauthenticated") {
       router.push("/auth/signin")
     }
-    if (!userQuery.data) return <div>Loading...</div>
+    if (!userQuery.data) 
+    return <div><LoadingIcon></LoadingIcon></div>
   }
 
   return <div>{Children}</div>
