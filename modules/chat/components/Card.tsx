@@ -110,16 +110,9 @@ function Card({
           roomId: roomid,
           id,
         })
-        router.push(
-          {
-            pathname: `/chat`,
-            query: { username },
-          },
-          undefined,
-          {
-            shallow: true,
-          }
-        )
+        router.replace(`/chat?${username}`, `/chat?${username}`, {
+          shallow: true,
+        })
       }}
       className="flex justify-between bg-white p-2"
     >

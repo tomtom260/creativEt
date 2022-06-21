@@ -12,6 +12,7 @@ export enum ModalType {
   PREVIEW_MODAL,
   EDIT_MODAL,
   UPDATE_PROFILE,
+  RATING_MODAL,
 }
 
 type ModalSlice = {

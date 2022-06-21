@@ -11,6 +11,7 @@ import moment from "moment"
 import { getSession } from "next-auth/react"
 import React, { useState } from "react"
 import PreviewModal from "@/modules/jobs/components/PreviewModal"
+import RatingModal from "@/modules/jobs/components/RatingModal"
 
 export enum MenuItems {
   "Your Gigs",
@@ -80,6 +81,7 @@ function Jobs({ jobs }: JobsPageProps) {
       </DefaultLayout>
       <FinishJobModal />
       <PreviewModal />
+      <RatingModal />
     </>
   )
 }
