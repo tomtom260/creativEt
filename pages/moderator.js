@@ -16,7 +16,7 @@ function moderator({ contents }) {
                 selected={selectedFilterOption}
                 changeSelected={(val) => {
                     setSelectedFilterOption(val);
-                    axios.get(`http://localhost:3000/api/content/reportedContents?filter=${val}`, {}).then(
+                    axios.get(`/api/content/reportedContents?filter=${val}`, {}).then(
                         (dat) => {
                             setReportedContents(dat.data.data)
                         }

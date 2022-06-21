@@ -34,10 +34,10 @@ function index(
                         </p> :
                         <span className='flex space-x-3 self-end mt-5'>
                             <OutlinedButton onClick={()=>{
-                                axios.patch(`http://localhost:3000/api/content/manageReport?contentId=${contentId}&action=ALLOWED&reportId=${reportId}`, {})
+                                axios.patch(`/api/content/manageReport?contentId=${contentId}&action=ALLOWED&reportId=${reportId}`, {})
                             }}>Dismiss</OutlinedButton>
                             <PrimaryButton onClick={()=>{
-                                axios.patch(`http://localhost:3000/api/content/manageReport?contentId=${contentId}&action=REMOVED&reportId=${reportId}`, {})
+                                axios.patch(`/api/content/manageReport?contentId=${contentId}&action=REMOVED&reportId=${reportId}`, {})
                             }}>Remove</PrimaryButton>
                         </span>
 
