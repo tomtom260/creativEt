@@ -17,4 +17,5 @@ export type Content = {
   isLikedByCurrentUser: boolean
   isBoosted: boolean
   price: number
+  deleted: boolean
 }
