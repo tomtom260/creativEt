@@ -14,13 +14,11 @@ import Text from "@/components/Typography"
 import { changeDateInJSONToMoment } from "@/utils/changeDateToMoment"
 import { getAllRooms } from "@/modules/chat/server/controller"
 import { getSession } from "next-auth/react"
-import { useQueryClient } from "react-query"
-import { PusherContext } from "@/hooks/pusher"
-import { Message, Room } from "@prisma/client"
+import { Room } from "@prisma/client"
 import { useRouter } from "next/router"
-import { Channel } from "pusher-js"
-import { useCreateRoomMutation } from "@/modules/chat/hooks"
 import { createRoom } from "@/modules/chat/server/services"
+import { useGetAllRoomsQuery } from "@/modules/chat/hooks"
+import moment from "moment"
 
 type ChatPageProps = {
   user: ChatBoxProps
@@ -30,13 +28,14 @@ type ChatPageProps = {
 function Chat({ user, rooms }: ChatPageProps) {
   const [search, setSearch] = useState("")
   const [selectedUser, setSelectedUser] = useState<ChatBoxProps>(user)
-  const searchUserQuery = useSearchUsers(search, rooms)
+  const roomsQuery = useGetAllRoomsQuery(rooms)
+  const searchUserQuery = useSearchUsers(search, roomsQuery.data || [])
   const { id: currentUserId } = useGetCurrentUser().data!
   const router = useRouter()
 
   return (
     <DefaultLayout>
-      <div className="flex flex-1">
+      <div className="flex flex-1 md:-my-9">
         <div
           className={`${
             router.query.username ? "hidden" : ""
@@ -69,26 +68,36 @@ function Chat({ user, rooms }: ChatPageProps) {
                     )
                   })}
                 {!search &&
-                  rooms
+                  (roomsQuery.data || [])
+                    .sort((a, b) =>
+                      moment(a.Message[0].createdAt).isBefore(
+                        moment(b.Message[0].createdAt)
+                      )
+                        ? 1
+                        : -1
+                    )
                     .map((room) => {
                       const [{ Profile, ...user }] = room.members.filter(
                         (user) => user.id !== currentUserId
                       )
                       user.username = Profile.username
-                      return { id: room.id, user }
+                      return { id: room.id, user, message: room.Message[0] }
                     })
-                    .map(({ user, id }) => {
+                    .map(({ user, id, message }) => {
                       return (
-                        <Card
-                          id={user.id}
-                          roomId={id}
-                          changeSelectedUser={(val) => setSelectedUser(val)}
-                          key={user.id}
-                          username={user.username}
-                          name={user.name}
-                          searchString={search}
-                          image={user.image}
-                        />
+                        message && (
+                          <Card
+                            message={message}
+                            id={user.id}
+                            roomId={id}
+                            changeSelectedUser={(val) => setSelectedUser(val)}
+                            key={user.id}
+                            username={user.username}
+                            name={user.name}
+                            searchString={search}
+                            image={user.image}
+                          />
+                        )
                       )
                     })}
               </div>

@@ -5,6 +5,7 @@ import { createNewMessageParams, NewRoomDTO, ToggleSeenUpdate } from "../types"
 import {
   createMessage,
   createRoom,
+  getLastMessage,
   getMessagesByRoomId,
   getRoom,
   toggleSeen,

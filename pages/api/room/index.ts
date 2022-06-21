@@ -10,12 +10,13 @@ export default async function userHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const session = await getSession({ req })
   switch (req.method) {
     case "POST":
       const room = await createNewRoom(req.body)
       return SuccessAPIResponse(res, room)
     case "GET":
-      const rooms = await getAllRooms(req.body)
+      const rooms = await getAllRooms(session?.user.id)
       return SuccessAPIResponse(res, rooms)
     default:
       wrongRequestMethodError(res, ["POST", "GET"])

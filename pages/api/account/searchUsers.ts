@@ -21,7 +21,9 @@ export default async function userHandler(
   const session = await getSession({ req })
   switch (req.method) {
     case "GET":
-      const rooms = await getAllRooms(session?.user.id)
+      const rooms = await (
+        await getAllRooms(session?.user.id)
+      ).filter((room) => room.Message.length)
       const users = (await searchUsers(username)).filter((user) => {
         return !rooms.find((room) =>
           room.members.find((mem) => mem.id === user.id)

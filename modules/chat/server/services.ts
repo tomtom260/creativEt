@@ -30,6 +30,12 @@ export async function getRoom(id: string) {
           Profile: true,
         },
       },
+      Message: {
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: 1,
+      },
     },
     where: {
       members: {
@@ -73,6 +79,22 @@ export async function getMessage(id: string) {
   return await prisma.message.findUnique({
     where: {
       id,
+    },
+  })
+}
+
+export async function getLastMessage(id: string) {
+  return await prisma.room.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      Message: {
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: 1,
+      },
     },
   })
 }

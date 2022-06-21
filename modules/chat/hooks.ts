@@ -1,4 +1,3 @@
-import { transformUserResponse } from "@/modules/user/api"
 import { useGetCurrentUser } from "@/hooks/user"
 import { useEffect, useState } from "react"
 import {
@@ -11,12 +10,12 @@ import {
 import {
   createMessage,
   createRoom,
+  getAllRoomsAPI,
   getMessage,
   getMessagesWithRoomId,
   toggleMessageSeen,
 } from "./api"
-import { Message, Room } from "@prisma/client"
-import { NewMessageDTO } from "./types"
+import { Message, Prisma, Room } from "@prisma/client"
 
 export type CustomUseMutationOptions = UseMutationOptions<
   unknown,
@@ -28,6 +27,7 @@ export type CustomUseMutationOptions = UseMutationOptions<
 export function useCreateMessageMutation(props?: CustomUseMutationOptions) {
   const { id: currentUserId } = useGetCurrentUser().data!
   const queryClient = useQueryClient()
+  const roomsQuery = useGetAllRoomsQuery()
 
   return useMutation(
     async ({ message, roomId }: { message: string; roomId: string }) => {
@@ -36,9 +36,9 @@ export function useCreateMessageMutation(props?: CustomUseMutationOptions) {
         message,
         roomId,
       }
-
       await createMessage(newMessage)
     },
+
     {
       onMutate(message) {
         message.senderId = currentUserId
@@ -48,11 +48,14 @@ export function useCreateMessageMutation(props?: CustomUseMutationOptions) {
         console.log(room[room.length - 1])
         queryClient.setQueryData(["room", message.roomId], room)
       },
+      onSuccess() {
+        roomsQuery.refetch()
+      },
     }
   )
 }
 
-export function useGetMessagesWithRoomId(id: string) {
+export function useGetMessagesWithRoomId(id?: string) {
   const room = useQuery(["room", id], () => getMessagesWithRoomId(id))
   return useQueries(
     (room.data || []).map((message) => ({
@@ -61,6 +64,19 @@ export function useGetMessagesWithRoomId(id: string) {
       initialData: message,
     }))
   )
+}
+
+export function useGetAllRoomsQuery(
+  initialData: Prisma.RoomGetPayload<{
+    include: {
+      Message: true
+      members: true
+    }
+  }>
+) {
+  return useQuery(["rooms"], () => getAllRoomsAPI(), {
+    initialData,
+  })
 }
 
 export function useCreateRoomMutation(props?: CustomUseMutationOptions) {
@@ -91,7 +107,6 @@ export function useSendMessage({
       setRoom(res.data.data.id)
     },
   })
-  const queryClient = useQueryClient()
 
   async function sendMessage(message: string) {
     if (!room) {

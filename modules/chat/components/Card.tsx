@@ -4,11 +4,17 @@ import Text from "@/components/Typography"
 import { TypographyVariant } from "@/components/Typography/textVariant.enum"
 import { PusherContext } from "@/hooks/pusher"
 import { useGetCurrentUser } from "@/hooks/user"
-import { Message } from "@prisma/client"
+import { Message, Prisma, Room } from "@prisma/client"
+import moment from "moment"
 import { useRouter } from "next/router"
 import { Channel } from "pusher-js"
 import React, { useContext, useEffect, useRef, useState } from "react"
 import { useQueryClient } from "react-query"
+import {
+  useCreateRoomMutation,
+  useGetAllRoomsQuery,
+  useGetMessagesWithRoomId,
+} from "../hooks"
 import { ChatBoxProps, TTypingUser } from "./ChatBox"
 
 type UserCardProps = {
@@ -18,7 +24,8 @@ type UserCardProps = {
   searchString: string
   changeSelectedUser: (user: ChatBoxProps) => void
   id: string
-  roomId: string
+  roomId?: string
+  message?: Message
 }
 
 function Card({
@@ -29,40 +36,44 @@ function Card({
   changeSelectedUser,
   id,
   roomId,
+  message,
 }: UserCardProps) {
   const router = useRouter()
-
   const queryClient = useQueryClient()
   const pusherClient = useContext(PusherContext)
-  const typingRef = useRef<Channel>({} as Channel)
-  const [isTyping, setIsTyping] = useState(false)
   const [typingUser, setTypingUser] = useState<TTypingUser | null>(null)
   const [isOnline, setIsOnline] = useState<boolean>(false)
   const { id: currentUserid, name: currentUserName } = useGetCurrentUser().data!
+  const messagesQueries = useGetMessagesWithRoomId(roomId)
+  const numberOfNewMessages = messagesQueries.filter(
+    (messagesQuery) =>
+      !messagesQuery.data.seen && messagesQuery.data.senderId !== currentUserid
+  ).length
+
+  let roomid = roomId
+
+  const createRoomMutation = useCreateRoomMutation()
 
   useEffect(() => {
     const channel = pusherClient.subscribe(`presence-room-${roomId}`)
     channel.bind("message:new", function (message: Message) {
-      const room = queryClient.getQueryData<Message[]>(["room", roomId])
-      if (room) {
-        const newMessageIndex = room.findIndex(
-          (mess) =>
-            mess.id === mess.message &&
-            message.senderId === mess.senderId &&
-            message.message === mess.message &&
-            message.roomId === mess.roomId
-        ) as number
-        if (newMessageIndex !== -1) {
-          console.log(newMessageIndex)
-          room[newMessageIndex] = message
-        } else {
-          room.push(message)
+      const rooms = queryClient.getQueryData<
+        Prisma.RoomGetPayload<{
+          include: {
+            members: true
+            Message: true
+          }
+        }>[]
+      >(["rooms"])
+      if (rooms) {
+        const roomIndex = rooms.findIndex((room) => room.id === message.roomId)
+        if (roomIndex !== -1) {
+          rooms[roomIndex].Message[0] = message
+          queryClient.setQueryData(["rooms"], rooms)
         }
-        queryClient.setQueryData(["room", roomId], room)
       }
     })
-
-    typingRef.current = channel.bind(
+    channel.bind(
       "client-message:typing",
       function (typingUser: TTypingUser | null) {
         setTypingUser(typingUser)
@@ -71,58 +82,44 @@ function Card({
 
     channel.bind("pusher:subscription_succeeded", function (members) {
       setIsOnline(members.count === 2)
-      console.log(members)
     })
     channel.bind("pusher:member_added", function (member) {
-      // console.log(Object.keys(channel.members.members).includes(id))
       setIsOnline(true)
     })
 
     channel.bind("pusher:member_removed", function (member) {
-      // console.log(Object.keys(channel.members.members).includes(id))
       setIsOnline(false)
-    })
-
-    channel.bind("message:seen", function (message: TMessage) {
-      const seenMessage = queryClient.getQueryData<TMessage>([
-        "message",
-        message.id,
-      ])
-      if (seenMessage) {
-        seenMessage.seen = true
-        queryClient.invalidateQueries(["message", message.id])
-      }
     })
 
     return () => channel.unsubscribe()
   }, [roomId])
 
-  useEffect(() => {
-    if (typingRef.current.subscribed) {
-      if (isTyping) {
-        typingRef.current.trigger("client-message:typing", {
-          senderId: currentUserid,
-          name: currentUserName,
-        } as TTypingUser)
-      } else {
-        typingRef.current.trigger("client-message:typing", "false")
-      }
-    }
-  }, [isTyping])
+  const time = moment(message?.createdAt)
 
   return (
     <div
-      onClick={() => {
+      onClick={async () => {
+        if (!roomId) {
+          roomid = await (
+            await createRoomMutation.mutateAsync([currentUserid, id])
+          ).data.data.id
+        }
         changeSelectedUser({
           name,
           image,
-          roomId,
+          roomId: roomid,
           id,
         })
-        router.replace({
-          pathname: `/chat`,
-          query: { username },
-        })
+        router.push(
+          {
+            pathname: `/chat`,
+            query: { username },
+          },
+          undefined,
+          {
+            shallow: true,
+          }
+        )
       }}
       className="flex justify-between bg-white p-2"
     >
@@ -135,28 +132,37 @@ function Card({
               className="rounded-full"
             />
           </div>
-          <div className=" bg-emerald-800 absolute bottom-2 right-2 w-3 h-3 rounded-full overflow-hidden text-xl "></div>
+          {isOnline && (
+            <div className=" bg-secondary-dark border-2 absolute bottom-1 right-1.5 w-3 h-3 rounded-full overflow-hidden text-xl "></div>
+          )}
         </div>
         <div className="flex flex-col">
           <Text
-            className="!text-xl w-[3ch] overflow-ellipsis"
+            className="!text-lg w-[10ch] truncate"
             varaint={TypographyVariant.H2}
           >
             {name}
           </Text>
-          <Text className="text-gray-dark" varaint={TypographyVariant.Body2}>
+          <Text className=" text-gray-normal" varaint={TypographyVariant.Body1}>
             <span className="text-secondary-dark font-medium">
               {searchString.toLowerCase()}
             </span>
-            {username.toLowerCase().replace(searchString.toLowerCase(), "")}
+            {typingUser
+              ? "typing"
+              : message?.message ||
+                username.toLowerCase().replace(searchString.toLowerCase(), "")}
           </Text>
         </div>
       </div>
       <div className="flex-col justify-between flex items-end">
-        <Text className="font-semibold" varaint={TypographyVariant.Body2}>
-          9:00 AM
+        <Text className="font-semibold mt-1" varaint={TypographyVariant.Body2}>
+          {time.isSame(new Date(), "day")
+            ? time.format("h:mm A")
+            : time.isAfter(moment().subtract(7, "day"))
+            ? time.format("ddd")
+            : time.format("M/D/YYYY")}
         </Text>
-        <Badge count={4} />
+        {numberOfNewMessages ? <Badge count={numberOfNewMessages} /> : null}
       </div>
     </div>
   )

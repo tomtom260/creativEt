@@ -1,4 +1,4 @@
-import { Message, Room } from "@prisma/client"
+import { Message, Room, Prisma } from "@prisma/client"
 import axios from "axios"
 import { NewMessageDTO, NewRoomDTO, ToggleSeenUpdate } from "./types"
 
@@ -10,6 +10,19 @@ export async function getMessagesWithRoomId(id: string) {
   return await (
     await axios.get<Room[]>(`/api/chat?id=${id}`)
   ).data
+}
+
+export async function getAllRoomsAPI() {
+  return await (
+    await axios.get<{
+      data: Prisma.RoomGetPayload<{
+        include: {
+          Message: true
+          members: true
+        }
+      }>[]
+    }>(`/api/room`)
+  ).data.data
 }
 
 export async function createRoom(members: NewRoomDTO) {
