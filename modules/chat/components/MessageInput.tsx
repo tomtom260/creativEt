@@ -45,11 +45,11 @@ function MessageInput(props: Omit<InputProps, "variant">) {
             <EmojiHappyIcon width={25} height={25} className="ml-1 sm:ml-2" />
           </div>
         }
-        appendComponent={
-          <div className="flex-shrink-0 text-gray-dark ">
-            <PaperClipIcon className="mr-1 sm:mr-2" width={25} height={25} />
-          </div>
-        }
+        // appendComponent={
+        //   <div className="flex-shrink-0 text-gray-dark ">
+        //     <PaperClipIcon className="mr-1 sm:mr-2" width={25} height={25} />
+        //   </div>
+        // }
         {...props}
       />
     </div>

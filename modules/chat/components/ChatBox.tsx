@@ -148,7 +148,7 @@ function ChatBox({ name, image, id, roomId }: ChatBoxProps) {
               varaint={TypographyVariant.Body2}
             >
               {typingUser
-                ? typingUser.name
+                ? `${typingUser.name} is typing`
                 : isOnline
                 ? "Online"
                 : "last seen recently"}
@@ -200,6 +200,7 @@ function ChatBox({ name, image, id, roomId }: ChatBoxProps) {
             onChange={(val) => setNewMessage(val)}
             onKeyPress={(e) => {
               if (e.code === "Enter") {
+                setNewMessage("")
                 sendMessage(newMessage)
               }
             }}
@@ -211,8 +212,11 @@ function ChatBox({ name, image, id, roomId }: ChatBoxProps) {
             }}
           />
           <Button
-            className="text-white mb-1 flex-shrink-0 !pb-4 bg-secondary-normal hover:bg-secondary-normal p-2 !w-12 !h-12 rotate-45"
-            onClick={() => sendMessage(newMessage)}
+            className="text-white mb-1 flex-shrink-0 !pb-4 bg-secondary-normal hover:!bg-secondary-dark p-2 !w-12 !h-12 rotate-45"
+            onClick={() => {
+              sendMessage(newMessage)
+              setNewMessage("")
+            }}
             variant={ButtonVariants.ICON}
           >
             <PaperAirplaneIcon />

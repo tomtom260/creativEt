@@ -143,7 +143,10 @@ function Card({
           >
             {name}
           </Text>
-          <Text className=" text-gray-normal" varaint={TypographyVariant.Body1}>
+          <Text
+            className=" text-gray-normal !text-sm  w-[14ch] truncate"
+            varaint={TypographyVariant.Body2}
+          >
             <span className="text-secondary-dark font-medium">
               {searchString.toLowerCase()}
             </span>
