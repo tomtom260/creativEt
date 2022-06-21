@@ -21,6 +21,7 @@ export default async function userHandler(
         type: MoneyTransactionType.WITHDRAW,
         description: `Boosted ${content.content.title}`,
         userId: session?.user.id!,
+        status: MoneyTransactionStatus.SUCCESS,
       })
       return SuccessAPIResponse(res, {})
     default:
