@@ -44,6 +44,13 @@ export async function getUser(id: string) {
   return user
 }
 
+export async function deleteAccount(id: string) {
+  const user = await axios
+    .delete(`/api/user/${id}`)
+    .catch((err) => console.log(err))
+  return user
+}
+
 async function updateUserProfile({
   name,
   location,

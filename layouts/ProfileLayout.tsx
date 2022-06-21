@@ -8,6 +8,9 @@ import Image from "next/image"
 import { useSession } from "next-auth/react"
 import { useGetCurrentUser } from "@/hooks/user"
 import { getOptimisedProfileImage } from "@/utils/cloudinary"
+import { useAppDispatch } from "@/hooks/redux"
+import { ModalType, showModal } from "store/modalSlice"
+import DeleteAccountModal from "@/modules/user/component/DeleteAccountModal"
 
 function ProfileLayout({ children: Children }: { children: ReactNode }) {
   const SidebarMenuItems = [
@@ -38,6 +41,7 @@ function ProfileLayout({ children: Children }: { children: ReactNode }) {
   )!
 
   const imageUrl = getOptimisedProfileImage(user?.image!)
+  const dispatch = useAppDispatch()
 
   return (
     <DefaultLayout>
@@ -77,17 +81,26 @@ function ProfileLayout({ children: Children }: { children: ReactNode }) {
             )
           })}
           <div className="w-full h-px bg-gray-light my-5" />
-          <Link href="#" passHref>
-            <Text
-              varaint={TypographyVariant.Body1}
-              className={` capitalize text-red-600 font-bold`}
-            >
-              Delete Account
-            </Text>
-          </Link>
+          <Text
+            onClick={() => {
+              dispatch(
+                showModal({
+                  modalType: ModalType.DELETE_ACCOUNT,
+                  payload: {
+                    id: user?.id,
+                  },
+                })
+              )
+            }}
+            varaint={TypographyVariant.Body1}
+            className={` capitalize cursor-pointer text-red-600 font-bold`}
+          >
+            Deactivate Account
+          </Text>
         </div>
         {Children}
       </div>
+      <DeleteAccountModal />
     </DefaultLayout>
   )
 }

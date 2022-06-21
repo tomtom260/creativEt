@@ -2,7 +2,7 @@ import {
   updateEmailAndUsernameController,
   updatePasswordController,
 } from "@/modules/user/controller"
-import { getUsersForHIre } from "@/modules/user/server"
+import { deleteAccount, getUsersForHIre } from "@/modules/user/server"
 import { NextApiRequest, NextApiResponse } from "next"
 import { getSession } from "next-auth/react"
 import {
@@ -39,7 +39,10 @@ export default async function userHandler(
         SuccessAPIResponse(res, {})
       }
       break
+    case "DELETE":
+      SuccessAPIResponse(res, await deleteAccount(session?.user.id))
+      break
     default:
-      wrongRequestMethodError(res, ["PATCH"])
+      wrongRequestMethodError(res, ["PATCH", "DELETE"])
   }
 }

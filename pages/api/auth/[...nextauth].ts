@@ -35,7 +35,6 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
         return session
       },
       async signIn({ profile, user, account }) {
-        
         if (account.type === "oauth") {
           const existingUser = await prisma.user.findFirst({
             where: {
@@ -44,6 +43,10 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
           })
 
           if (existingUser) {
+            if (existingUser.deleted) {
+              return false
+            }
+
             if (!existingUser.emailVerified) {
               if (account.provider === "google" && !profile.email_verified) {
                 return false
@@ -121,7 +124,6 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
         authorize: async (
           credentials: Record<"email" | "password", string> | undefined
         ) => {
-          console.log("ggg")
           const { email, password } = credentials!
           const user = await prisma.user.findUnique({
             include: {
@@ -136,6 +138,11 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
               email,
             },
           })
+
+          if (user?.deleted) {
+            return false
+          }
+
           const credentialAccount = user?.accounts.find(
             (acc) => acc.type === "credentials"
           )
@@ -152,4 +159,3 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
     ],
   })
 }
- 

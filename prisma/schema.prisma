@@ -55,6 +55,7 @@ model Profile {
 model User {
   id               String             @id @default(cuid())
   name             String
+  deleted          Boolean            @default(false)
   email            String?            @unique
   emailVerified    DateTime?          @default(now())
   image            String?            @default("https://res.cloudinary.com/dlqzrhr6r/image/upload/v1648297324/profile/22-223968_default-profile-picture-circle-hd-png-download_xrlhqm.png")

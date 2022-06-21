@@ -1,4 +1,5 @@
 import {
+  deleteAccount,
   fetchUserWithProfile,
   forgetPasswordAPI,
   getUsersAvailableForHire,
@@ -19,7 +20,7 @@ import {
 } from "react-query"
 import { followUser, unfollowUser } from "@/modules/user/api"
 import { useEffect, useState } from "react"
-import { useSession } from "next-auth/react"
+import { signOut, useSession } from "next-auth/react"
 import { User } from "types/user"
 import { Room } from "@prisma/client"
 import { useRouter } from "next/router"
@@ -144,12 +145,19 @@ export const useGetUsersForHireQuery = (
   )
 }
 
-export function useUpdateEmailAndUsernameMutation(id: string) {
+export function useUpdateEmailAndUsernameMutation() {
   const queryClient = useQueryClient()
   return useMutation(updateEmailAndUsernameAPI, {
     onSuccess: () => {
-      queryClient.invalidateQueries(["user", id])
       queryClient.invalidateQueries("currentUser")
+    },
+  })
+}
+
+export function useDeleteAccountMutation() {
+  return useMutation(deleteAccount, {
+    onSuccess: () => {
+      signOut()
     },
   })
 }

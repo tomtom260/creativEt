@@ -204,6 +204,17 @@ export async function updateEmail(id: string, email: string) {
   })
 }
 
+export async function deleteAccount(id: string) {
+  return await prisma.user.update({
+    data: {
+      deleted: true,
+    },
+    where: {
+      id,
+    },
+  })
+}
+
 export async function updatePassword(id: string, password: string) {
   return await prisma.account
     .update({

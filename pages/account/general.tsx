@@ -10,6 +10,11 @@ import {
 } from "@/hooks/user"
 import { checkifEmailExists, checkifUsernameExists } from "@/modules/user/api"
 import { checkifEmailIsValid } from "@/utils/emailRegex"
+import { TypographyVariant } from "@/components/Typography/textVariant.enum"
+import Text from "@/components/Typography"
+import { toast } from "react-toastify"
+import NotificationCard from "@/modules/notification/components/NotificationCard"
+import DeleteAccountModal from "@/modules/user/component/DeleteAccountModal"
 
 function General() {
   const { data: user } = useGetCurrentUser()
@@ -19,68 +24,79 @@ function General() {
   const [usernameError, setUsernameError] = useState<string>("")
   const [emailError, setEmailError] = useState<string>("")
   const updateEmailUsernameMutation = useUpdateEmailAndUsernameMutation()
+  const [showEmailSentMessage, setEmailSentMessage] = useState(false)
 
   return (
-    <ProfileLayout>
-      <div className="grid grid-cols-1">
-        <div className="flex flex-1">
-          <div className="grid grid-cols-1 gap-4 px-10 flex-1">
-            <Input
-              variant={InputType.NORMAL}
-              value={email}
-              onChange={(val) => {
-                val && checkifEmailIsValid(val)
-                  ? user?.email !== val &&
-                    checkifEmailExists(val).then((val) => {
+    <>
+      <ProfileLayout>
+        <div className="grid grid-cols-1">
+          <div className="flex flex-1">
+            <div className="grid grid-cols-1 gap-4 px-10 flex-1">
+              <Input
+                variant={InputType.NORMAL}
+                value={email}
+                onChange={(val) => {
+                  val && checkifEmailIsValid(val)
+                    ? user?.email !== val &&
+                      checkifEmailExists(val).then((val) => {
+                        if (val) {
+                          setEmailError("Email Already Exists")
+                        } else {
+                          setEmailError("")
+                        }
+                      })
+                    : setEmailError("Not a valid Email")
+                  setEmail(val)
+                }}
+                label="Email"
+                error={emailError}
+              />
+              <Input
+                error={usernameError}
+                variant={InputType.NORMAL}
+                value={username}
+                onChange={(val) => {
+                  val &&
+                    user?.username !== val &&
+                    checkifUsernameExists(val).then((val) => {
                       if (val) {
-                        setEmailError("Email Already Exists")
+                        setUsernameError("Username Exists")
                       } else {
-                        setEmailError("")
+                        setUsernameError("")
                       }
                     })
-                  : setEmailError("Not a valid Email")
-                setEmail(val)
-              }}
-              label="Email"
-              error={emailError}
-            />
-            <Input
-              error={usernameError}
-              variant={InputType.NORMAL}
-              value={username}
-              onChange={(val) => {
-                val &&
-                  user?.username !== val &&
-                  checkifUsernameExists(val).then((val) => {
-                    if (val) {
-                      setUsernameError("Username Exists")
-                    } else {
-                      setUsernameError("")
-                    }
-                  })
-                setUsername(val)
-              }}
-              label="Username"
-            />
-            <Button
-              onClick={() => {
-                if (!usernameError && !emailError) {
-                  updateEmailUsernameMutation.mutate({
-                    id: user?.id as string,
-                    email: email !== user?.email ? email : undefined,
-                    username:
-                      username !== user?.username ? username : undefined,
-                  })
-                }
-              }}
-              variant={ButtonVariants.PRIMARY}
-            >
-              Save
-            </Button>
+                  setUsername(val)
+                }}
+                label="Username"
+              />
+              <Button
+                onClick={() => {
+                  if (!usernameError && !emailError) {
+                    updateEmailUsernameMutation
+                      .mutateAsync({
+                        id: user?.id as string,
+                        email: email !== user?.email ? email : undefined,
+                        username:
+                          username !== user?.username ? username : undefined,
+                      })
+                      .then(() => {
+                        email !== user?.email
+                          ? toast.success(
+                              "Email has been sent to user email address"
+                            )
+                          : toast.success("Profile Updated")
+                      })
+                  }
+                }}
+                variant={ButtonVariants.PRIMARY}
+              >
+                Save
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
-    </ProfileLayout>
+      </ProfileLayout>
+    </>
   )
 }
 
