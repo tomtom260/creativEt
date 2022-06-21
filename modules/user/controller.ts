@@ -2,6 +2,7 @@ import sendMail from "@/utils/mail"
 import bcryptjs from "bcryptjs"
 import crypto from "crypto"
 import {
+  deleteAccount,
   getAccount,
   updateEmail,
   updatePassword,
@@ -11,6 +12,8 @@ import { prisma } from "@/utils/db"
 import moment from "moment"
 import { error } from "console"
 import { ErrorAPIResponse } from "@/utils/apiResponses"
+import { getJobs, getJobsById } from "../jobs/server"
+import { cancelJobController } from "../jobs/controller"
 
 export async function updatePasswordController(
   id: string,
@@ -110,4 +113,19 @@ export async function forgetPasswordController(email: string) {
         </div>`,
   })
   return {}
+}
+
+export async function deleteAccountController(id: string) {
+  const jobs = await getJobs({
+    OR: [
+      {
+        employeeId: id,
+      },
+      {
+        employerId: id,
+      },
+    ],
+  })
+  jobs.map((job) => cancelJobController(job.id, id))
+  return deleteAccount(id)
 }

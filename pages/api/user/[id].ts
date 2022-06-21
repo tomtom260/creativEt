@@ -1,4 +1,5 @@
 import {
+  deleteAccountController,
   updateEmailAndUsernameController,
   updatePasswordController,
 } from "@/modules/user/controller"
@@ -40,7 +41,7 @@ export default async function userHandler(
       }
       break
     case "DELETE":
-      SuccessAPIResponse(res, await deleteAccount(session?.user.id))
+      SuccessAPIResponse(res, await deleteAccountController(session?.user.id))
       break
     default:
       wrongRequestMethodError(res, ["PATCH", "DELETE"])

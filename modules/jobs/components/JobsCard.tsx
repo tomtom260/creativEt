@@ -13,6 +13,7 @@ import Jobs from "pages/account/jobs"
 import moment from "moment"
 import {
   useAcceptJobMutation,
+  useCancelJobMutation,
   useRejectJobMutation,
 } from "@/modules/jobs/hooks"
 import { JobsStatus } from "@prisma/client"
@@ -37,8 +38,9 @@ function JobsCard({
   const dueIn = moment(job.dueIn)
   const acceptJobMutattion = useAcceptJobMutation()
   const rejectJobMutattion = useRejectJobMutation()
+  const cancelJobMutattion = useCancelJobMutation()
   const dispatch = useAppDispatch()
-  const user = useGetCurrentUser().data
+  const user = useGetCurrentUser().data!
 
   return isLoading ? (
     <div className="w-full min-h-[330px] h-full">
@@ -188,17 +190,23 @@ function JobsCard({
             Options
           </Text>
           <Text
+            onClick={() => {
+              cancelJobMutattion.mutate({
+                id: job.id,
+                userId: user.id,
+              })
+            }}
             className=" text-red-600 cursor-pointer    "
             varaint={TypographyVariant.Body1}
           >
             Cancel Gig
           </Text>
-          <Text
+          {/* <Text
             className=" cursor-pointer    "
             varaint={TypographyVariant.Body1}
           >
             Report
-          </Text>
+          </Text> */}
         </div>
       )}
     </div>

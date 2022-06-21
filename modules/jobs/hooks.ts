@@ -7,6 +7,7 @@ import { CustomUseMutationOptions } from "../chat/hooks"
 import {
   acceptJobAPI,
   addRatingAPI,
+  cancelJobAPI,
   createJobAPI,
   finishJobAPI,
   getJobAPI,
@@ -107,6 +108,15 @@ export function useGetJobsQuery(
 export function useAcceptJobMutation() {
   const queryClient = useQueryClient()
   return useMutation(acceptJobAPI, {
+    onSuccess: (res) => {
+      queryClient.invalidateQueries(["job", res.data.data.id])
+    },
+  })
+}
+
+export function useCancelJobMutation() {
+  const queryClient = useQueryClient()
+  return useMutation(cancelJobAPI, {
     onSuccess: (res) => {
       queryClient.invalidateQueries(["job", res.data.data.id])
     },

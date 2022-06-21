@@ -31,6 +31,16 @@ export async function acceptJobAPI(id: string) {
   return await axios.patch<{ data: TJOb }>(`/api/jobs/${id}?accept`)
 }
 
+export async function cancelJobAPI({
+  id,
+  userId,
+}: {
+  id: string
+  userId: string
+}) {
+  return await axios.delete<{ data: TJOb }>(`/api/jobs/${id}?userId=${userId}`)
+}
+
 export async function rejectJobAPI(id: string) {
   return await axios.patch<{ data: TJOb }>(`/api/jobs/${id}?reject`)
 }

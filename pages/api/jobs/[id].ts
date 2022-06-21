@@ -1,5 +1,6 @@
 import {
   acceptJobController,
+  cancelJobController,
   finishJobController,
   rejectJobController,
   reviseContentJobController,
@@ -24,6 +25,14 @@ export default async function userHandler(
       return SuccessAPIResponse(
         res,
         (await getJobsById(req.query.id as string)) as TJOb
+      )
+    case "DELETE":
+      return SuccessAPIResponse(
+        res,
+        await cancelJobController(
+          req.query.id as string,
+          req.query.userId as string
+        )
       )
     case "PATCH":
       switch (Object.keys(req.query).filter((key) => key !== "id")[0]) {
@@ -56,6 +65,6 @@ export default async function userHandler(
       break
 
     default:
-      wrongRequestMethodError(res, ["GET", "PATCH", "POST"])
+      wrongRequestMethodError(res, ["GET", "PATCH", "POST", "DELETE"])
   }
 }

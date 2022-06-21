@@ -64,6 +64,7 @@ export async function successJobController(id: string) {
     description: `Gig ${job.title}`,
     userId: job.employeeId,
     type: MoneyTransactionType.DEPOSIT,
+    status: MoneyTransactionStatus.SUCCESS,
   })
   return job
 }
@@ -72,4 +73,21 @@ export async function reviseContentJobController(id: string) {
   return await updateJob(id, {
     status: JobsStatus.IN_PROGRESS,
   })
+}
+
+export async function cancelJobController(id: string, canceledBy: string) {
+  const job = await updateJob(id, {
+    status: JobsStatus.CANCELED,
+  })
+  createMoneyTransaction({
+    amount: job.price,
+    description:
+      canceledBy === job.employerId
+        ? `Gig ${job.title}`
+        : `Refund ${job.title}`,
+    userId: canceledBy === job.employeeId ? job.employerId : job.employeeId,
+    type: MoneyTransactionType.DEPOSIT,
+    status: MoneyTransactionStatus.SUCCESS,
+  })
+  return {}
 }

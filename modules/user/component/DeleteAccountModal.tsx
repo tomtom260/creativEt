@@ -24,7 +24,7 @@ function DeleteAccountModal() {
             {" "}
             Deactivate{" "}
           </span>{" "}
-          this Account. It&apos;s irreversible.
+          this Account. Your current Jobs will be canceled.
         </Text>
         <div className="flex gap-20">
           <Button
