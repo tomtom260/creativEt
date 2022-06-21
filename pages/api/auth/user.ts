@@ -93,6 +93,7 @@ export default async function userHandler(
       const User = await prisma.user.findFirst({
         where: {
           id: userId,
+          deleted: false,
         },
         include: {
           Profile: true,

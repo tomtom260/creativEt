@@ -24,6 +24,9 @@ export default async function checkifUsernameExists(
       const user = await prisma.profile.findFirst({
         where: {
           username,
+          user: {
+            deleted: false,
+          },
         },
       })
 

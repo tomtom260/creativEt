@@ -10,11 +10,7 @@ import {
 } from "@/hooks/user"
 import { checkifEmailExists, checkifUsernameExists } from "@/modules/user/api"
 import { checkifEmailIsValid } from "@/utils/emailRegex"
-import { TypographyVariant } from "@/components/Typography/textVariant.enum"
-import Text from "@/components/Typography"
 import { toast } from "react-toastify"
-import NotificationCard from "@/modules/notification/components/NotificationCard"
-import DeleteAccountModal from "@/modules/user/component/DeleteAccountModal"
 
 function General() {
   const { data: user } = useGetCurrentUser()
@@ -24,7 +20,6 @@ function General() {
   const [usernameError, setUsernameError] = useState<string>("")
   const [emailError, setEmailError] = useState<string>("")
   const updateEmailUsernameMutation = useUpdateEmailAndUsernameMutation()
-  const [showEmailSentMessage, setEmailSentMessage] = useState(false)
 
   return (
     <>

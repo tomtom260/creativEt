@@ -24,6 +24,7 @@ export default async function checkifEmailExists(
       const user = await prisma.user.findFirst({
         where: {
           email,
+          deleted: false,
         },
       })
 

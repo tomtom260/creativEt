@@ -79,6 +79,9 @@ export async function searchUsers(username: string) {
       username: {
         startsWith: username,
       },
+      user: {
+        deleted: false,
+      },
     },
   })
   return profiles.map((profile) => ({
@@ -96,6 +99,9 @@ export async function searchUser(username: string) {
     },
     where: {
       username,
+      user: {
+        deleted: false,
+      },
     },
   })
   return profiles.map((profile) => ({
@@ -119,6 +125,7 @@ export async function getUsersForHIre(
       employee: true,
     },
     where: {
+      deleted: false,
       OR: query
         ? [
             {
