@@ -143,14 +143,14 @@ export async function getUsersForHIre(
       id: {
         not: id,
       },
-      followers:
-        FILTERS.FOLLOWING === filters
-          ? {
-              some: {
-                followerId: id,
-              },
-            }
-          : undefined,
+      // followers:
+      //   FILTERS.FOLLOWING === filters
+      //     ? {
+      //         some: {
+      //           followerId: id,
+      //         },
+      //       }
+      //     : undefined,
     },
   })
   return users
