@@ -17,7 +17,7 @@ function HorizontalMenu({
     <div className="flex w-full flex-1 overflow-auto justify justify-between">
       {menuItems.map((item, i) => (
         <div
-          className={`flex flex-1 h-10 px-2 md:px-4 md:py-10 justify-center items-center border-b  
+          className={`flex flex-1 h-10 px-2 md:px-4 md:py-8 justify-center items-center border-b  
           `}
           onClick={() => setSelectedMenuItem(i)}
           key={item}

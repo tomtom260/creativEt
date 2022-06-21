@@ -139,7 +139,7 @@ function ProfilePage({ profile, myProfile, contents }: ProfileProps) {
                 </Text>
               )}
               {myProfile ? (
-                <div className="flex flex-col gap-4 mt-8 ">
+                <div className="flex flex-col gap-4 mt-4 ">
                   <Button
                     onClick={() => {
                       router.push("/account/Profile")
@@ -234,7 +234,7 @@ function ProfilePage({ profile, myProfile, contents }: ProfileProps) {
               )}
             </div>
           </div>
-          <div className="mt-8 md:mt-16"></div>
+          <div className="mt-8 md:mt-8"></div>
           {myProfile && (
             <HorizontalMenu
               setSelectedMenuItem={setSelectedMenuItem}
@@ -244,7 +244,7 @@ function ProfilePage({ profile, myProfile, contents }: ProfileProps) {
               )}
             />
           )}
-          <div className="grid mb-96  mt-8 md:mt-14 gap-8  mx-auto  grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4  flex-wrap">
+          <div className="grid mb-96  mt-8 md:mt-8 gap-8  mx-auto  grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4  flex-wrap">
             {filteredContents?.map((content) => {
               return (
                 <MyContent

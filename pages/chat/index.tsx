@@ -29,57 +29,8 @@ function Chat({ user, rooms }: ChatPageProps) {
   const [search, setSearch] = useState("")
   const [selectedUser, setSelectedUser] = useState<ChatBoxProps>(user)
   const searchUserQuery = useSearchUsers(search, rooms)
-  const [isTyping, setIsTyping] = useState(false)
-  const [typingUser, setTypingUser] = useState<TTypingUser | null>(null)
-  const { id: currentUserId, name } = useGetCurrentUser().data!
-  const pusherClient = useContext(PusherContext)
-  const queryClient = useQueryClient()
+  const { id: currentUserId } = useGetCurrentUser().data!
   const router = useRouter()
-  const typingChannelRef = useRef<Channel>({} as Channel)
-
-  // useEffect(() => {
-  //   rooms.map(({ id }) => {
-  //     const channel = pusherClient.subscribe(`presence-room-${id}`)
-  //     channel.bind("message:new", function (message: Message) {
-  //       const room = queryClient.getQueryData<Message[]>(["room", id])
-  //       if (room) {
-  //         const newMessageIndex = room.findIndex(
-  //           (mess) =>
-  //             mess.id === mess.message &&
-  //             message.senderId === mess.senderId &&
-  //             message.message === mess.message &&
-  //             message.roomId === mess.roomId
-  //         ) as number
-  //         if (newMessageIndex !== -1) {
-  //           room[newMessageIndex] = message
-  //         } else {
-  //           room.push(message)
-  //         }
-  //         queryClient.setQueryData(["room", id], room)
-  //       }
-  //     })
-
-  //     const typingChannel = channel.bind(
-  //       "message:typing",
-  //       function (typingUser: TTypingUser | null) {
-  //         setTypingUser(typingUser)
-  //       }
-  //     )
-
-  //     typingChannelRef.current = typingChannel
-
-  //     channel.bind("message:seen", function (message: Message) {
-  //       const seenMessage = queryClient.getQueryData<Message>([
-  //         "message",
-  //         message.id,
-  //       ])
-  //       if (seenMessage) {
-  //         seenMessage.seen = true
-  //         queryClient.invalidateQueries(["message", message.id])
-  //       }
-  //     })
-  //   })
-  // }, [])
 
   return (
     <DefaultLayout>
@@ -149,8 +100,6 @@ function Chat({ user, rooms }: ChatPageProps) {
         >
           {selectedUser ? (
             <ChatBox
-              typingUser={typingUser}
-              setIsTyping={setIsTyping}
               id={selectedUser.id}
               name={selectedUser.name}
               image={selectedUser.image}

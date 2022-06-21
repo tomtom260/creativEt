@@ -49,6 +49,7 @@ import { useAppDispatch } from "@/hooks/redux"
 import { ModalType, showModal } from "store/modalSlice"
 import InsufficientBalanceModal from "@/modules/content/components/InsufficientBalanceModal"
 import { fetchUserWithProfile, transformUserResponse } from "@/modules/user/api"
+import Link from "next/link"
 
 function Content({ content }: { content: ContentWithProfile }) {
   const { data: user } = useGetCurrentUser()
@@ -127,7 +128,7 @@ function Content({ content }: { content: ContentWithProfile }) {
   return (
     <>
       <DefaultLayout>
-        <div className=" w-full h-[calc(100vh-100px)] sm:h-[70vh] grow grid grid-col-1 sm:grid-cols-2 ">
+        <div className=" w-full h-[calc(100vh-100px)] sm:h-min grow grid grid-col-1 sm:grid-cols-2 ">
           <div className="flex-1 flex-shrink-0  relative  ">
             <div className={`${!isImageLoaded ? "hidden" : "block"} `}>
               <Button
@@ -293,9 +294,17 @@ function Content({ content }: { content: ContentWithProfile }) {
                   />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <Text className="semi-bold" varaint={TypographyVariant.H2}>
-                    {contentQuery.data.createdBy.name}
-                  </Text>
+                  <Link
+                    passHref
+                    href={`/${contentQuery.data.createdBy.username}`}
+                  >
+                    <Text
+                      className="semi-bold cursor-pointer"
+                      varaint={TypographyVariant.H2}
+                    >
+                      {contentQuery.data.createdBy.name}
+                    </Text>
+                  </Link>
                   <div className="flex  gap-2  text-gray-dark">
                     <Text className="" varaint={TypographyVariant.Body2}>
                       {contentQuery.data.createdBy.username}
@@ -322,10 +331,10 @@ function Content({ content }: { content: ContentWithProfile }) {
                 </Button>
               )}
             </div>
-            <Text className="mt-8 mb-4" varaint={TypographyVariant.Body1}>
+            <Text className="mt-4 mb-2" varaint={TypographyVariant.Body1}>
               {contentQuery.data.description}
             </Text>
-            <div className="flex mb-8 gap-2">
+            <div className="flex mb-4 gap-2">
               {contentQuery.data.tags.map((tag) => (
                 <Text
                   key={tag.id}
@@ -389,7 +398,7 @@ function Content({ content }: { content: ContentWithProfile }) {
                 ? "Download"
                 : " Buy"}
             </Button>
-            <div className="relative mt-24">
+            <div className="relative mt-16">
               <Input
                 value={shareUrl}
                 onChange={() => {}}
