@@ -27,27 +27,27 @@ export default async function userHandler(
       //   },
       // })
 
-      switch(req.query.filter){
+      switch (req.query.filter) {
         case "REMOVED":
           contents = await prisma.report.findMany({
             where: {
-              resolved: "REMOVED"
+              resolved: "REMOVED",
             },
             include: {
               // reportedBy: true,
               contentReported: true,
-            }
+            },
           })
           break
-          case "DISMISSED":
+        case "DISMISSED":
           contents = await prisma.report.findMany({
             where: {
-              resolved: "ALLOWED"
+              resolved: "ALLOWED",
             },
             include: {
               // reportedBy: true,
               contentReported: true,
-            }
+            },
           })
           break
 
@@ -55,16 +55,16 @@ export default async function userHandler(
           contents = await prisma.report.findMany({
             // by: ['contentId'],
             where: {
-              resolved: "PENDING"
+              resolved: "PENDING",
             },
             include: {
               // reportedBy: true,
               contentReported: true,
-            }
+            },
           })
           break
-        
-          default:
+
+        default:
           contents = await prisma.report.findMany({
             // where: {
             //   resolved: "ALLOWED"
@@ -74,41 +74,40 @@ export default async function userHandler(
               // contentId: true,
               // reportedBy: true,
               contentReported: true,
-            }
+            },
           })
       }
       // contents = await prisma.report.findMany({
-        
+
       //   include: {
       //       reportedBy: true,
       //       contentReported: true,
       //   }
       // })
       return SuccessAPIResponse(res, contents)
-      // break
+    // break
 
     case "PATCH":
-      const contentId = req.query.contentId
-      const description = req.query.description
-      
-        await prisma.report.upsert({
-          where: {
-            contentId,
-          },
-          update: {
-            reportCount: {increment: 1}
-          },
-          create: {
-            contentId,
-            description
-          }
-        })
-      
-      return SuccessAPIResponse(res, {msg: "successfully added to report"})
-      // break
-      
-      
+      const contentId = req.query.contentId as string
+      const description = req.query.description as string
+
+      await prisma.report.upsert({
+        where: {
+          contentId,
+        },
+        update: {
+          reportCount: { increment: 1 },
+        },
+        create: {
+          contentId,
+          description,
+        },
+      })
+
+      return SuccessAPIResponse(res, { msg: "successfully added to report" })
+    // break
+
     default:
       wrongRequestMethodError(res, ["PATCH"])
   }
-} 
+}
