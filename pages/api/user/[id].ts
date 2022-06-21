@@ -3,7 +3,6 @@ import {
   updateEmailAndUsernameController,
   updatePasswordController,
 } from "@/modules/user/controller"
-import { deleteAccount, getUsersForHIre } from "@/modules/user/server"
 import { NextApiRequest, NextApiResponse } from "next"
 import { getSession } from "next-auth/react"
 import {

@@ -79,13 +79,17 @@ export async function cancelJobController(id: string, canceledBy: string) {
   const job = await updateJob(id, {
     status: JobsStatus.CANCELED,
   })
+
   createMoneyTransaction({
     amount: job.price,
     description:
       canceledBy === job.employerId
         ? `Gig ${job.title}`
         : `Refund ${job.title}`,
-    userId: canceledBy === job.employeeId ? job.employerId : job.employeeId,
+    userId:
+      canceledBy === job.employeeId || job.status === JobsStatus.PENDING
+        ? job.employerId
+        : job.employeeId,
     type: MoneyTransactionType.DEPOSIT,
     status: MoneyTransactionStatus.SUCCESS,
   })

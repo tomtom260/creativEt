@@ -189,18 +189,21 @@ function JobsCard({
           >
             Options
           </Text>
-          <Text
-            onClick={() => {
-              cancelJobMutattion.mutate({
-                id: job.id,
-                userId: user.id,
-              })
-            }}
-            className=" text-red-600 cursor-pointer    "
-            varaint={TypographyVariant.Body1}
-          >
-            Cancel Gig
-          </Text>
+          {job.status !== JobsStatus.CANCELED &&
+            job.status !== JobsStatus.SUCCESS && (
+              <Text
+                onClick={() => {
+                  cancelJobMutattion.mutate({
+                    id: job.id,
+                    userId: user.id,
+                  })
+                }}
+                className=" text-red-600 cursor-pointer    "
+                varaint={TypographyVariant.Body1}
+              >
+                Cancel Gig
+              </Text>
+            )}
           {/* <Text
             className=" cursor-pointer    "
             varaint={TypographyVariant.Body1}
