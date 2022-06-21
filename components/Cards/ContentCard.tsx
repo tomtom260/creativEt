@@ -18,7 +18,11 @@ import Skeleton from "../Skeleton"
 import Text from "../Typography"
 import { TypographyVariant } from "../Typography/textVariant.enum"
 import Cards from "./BaseCard"
-import { useFollowUserMutation, useUnfollowUserMutation } from "@/hooks/user"
+import {
+  useFollowUserMutation,
+  useGetCurrentUser,
+  useUnfollowUserMutation,
+} from "@/hooks/user"
 import { useInView } from "react-intersection-observer"
 import { useCreateViewMutation } from "@/modules/views/hooks"
 import Link from "next/link"
@@ -34,6 +38,8 @@ function ContentCard({
   const onLikePress: React.MouseEventHandler<HTMLButtonElement> = () => {
     isLikedByCurrentUser ? onContentDisliked(id) : onContentLiked(id)
   }
+
+  const { id: currentUserId } = useGetCurrentUser().data!
 
   const createdByQuery = useQuery(
     ["user", createdBy.id],
@@ -162,12 +168,14 @@ function ContentCard({
                     src={ownerImageURL}
                   />
                 </div>
-                <Text
-                  className="ml-3 whitespace-nowrap !w-[15ch] flex-shrink   text-ellipsis font-medium cursor-pointer"
-                  varaint={TypographyVariant.Body1}
-                >
-                  {createdBy.name}
-                </Text>
+                <Link href={`/${createdBy.username}`} passHref>
+                  <Text
+                    className="ml-3 whitespace-nowrap !w-[15ch] flex-shrink   text-ellipsis font-medium cursor-pointer"
+                    varaint={TypographyVariant.Body1}
+                  >
+                    {createdBy.name}
+                  </Text>
+                </Link>
               </div>
               <div className="pt-6 absolute">
                 <div
@@ -199,19 +207,21 @@ function ContentCard({
                         </Text>
                       </div>
                     </div>
-                    <Button
-                      onClick={onFollowButtonCliked}
-                      className={`${
-                        createdByQuery.data.isFollowedByCurrentUser
-                          ? "bg-secondary-normal"
-                          : "bg-gray-light"
-                      } `}
-                      variant={ButtonVariants.PRIMARY}
-                    >
-                      {createdByQuery.data.isFollowedByCurrentUser
-                        ? "Following"
-                        : "Follow"}
-                    </Button>
+                    {currentUserId !== createdBy.id && (
+                      <Button
+                        onClick={onFollowButtonCliked}
+                        className={`${
+                          createdByQuery.data.isFollowedByCurrentUser
+                            ? "bg-secondary-normal"
+                            : "bg-gray-light"
+                        } `}
+                        variant={ButtonVariants.PRIMARY}
+                      >
+                        {createdByQuery.data.isFollowedByCurrentUser
+                          ? "Following"
+                          : "Follow"}
+                      </Button>
+                    )}
                   </div>
                   <div className="grid grid-cols-3 h-full gap-5 mt-5">
                     {getBest3ContentsQuery.isLoading

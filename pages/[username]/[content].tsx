@@ -9,7 +9,6 @@ import Button from "@/components/Button"
 import ButtonVariants from "@/components/Button/button.enum"
 import BackSVG from "@/assets/icons/Back"
 import { useRouter } from "next/router"
-import FlagSVG from "@/assets/icons/Flag"
 import {
   getDownloadUrl,
   getPublicIdFromUrl,
@@ -124,8 +123,6 @@ function Content({ content }: { content: ContentWithProfile }) {
     link.download = "image"
     link.click()
   }
-
-  console.log(user?.id === contentQuery.data.createdBy.id)
 
   return (
     <>
@@ -309,14 +306,16 @@ function Content({ content }: { content: ContentWithProfile }) {
                   </div>
                 </div>
               </div>
-              <Button
-                onClick={onFollowButtonClicked}
-                variant={ButtonVariants.OUTLINED}
-              >
-                {createdByQuery.data.isFollowedByCurrentUser
-                  ? "Following"
-                  : "Follow"}
-              </Button>
+              {user?.id != createdByQuery.data?.id && (
+                <Button
+                  onClick={onFollowButtonClicked}
+                  variant={ButtonVariants.OUTLINED}
+                >
+                  {createdByQuery.data.isFollowedByCurrentUser
+                    ? "Following"
+                    : "Follow"}
+                </Button>
+              )}
             </div>
             <Text className="mt-8 mb-4" varaint={TypographyVariant.Body1}>
               {contentQuery.data.description}

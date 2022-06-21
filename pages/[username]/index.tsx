@@ -15,7 +15,11 @@ import { getSession } from "next-auth/react"
 import { MailIcon } from "@heroicons/react/outline"
 import { changeDateInJSONToMoment } from "@/utils/changeDateToMoment"
 import { getContents } from "../../modules/content/server"
-import { ContentBoostedQuery, ContentBoughtQuery, ContentLikedQuery } from "@/modules/content/api"
+import {
+  ContentBoostedQuery,
+  ContentBoughtQuery,
+  ContentLikedQuery,
+} from "@/modules/content/api"
 import {
   useUserWithProfileQuery,
   useFollowUserMutation,
@@ -34,6 +38,13 @@ import { useAppDispatch } from "@/hooks/redux"
 import { ModalType, showModal } from "store/modalSlice"
 import EditModal from "@/modules/user/component/EditModal"
 import EnterFullProfileModal from "@/modules/user/component/EnterFullProfileModal"
+import { CheckIcon, PlusIcon } from "@heroicons/react/solid"
+import Link from "next/link"
+import {
+  getOptimisedProfileImage,
+  getPublicIdFromUrl,
+  getResponsiveImage,
+} from "@/utils/cloudinary"
 
 type Contents = Awaited<ReturnType<typeof getContents>>
 type ProfileProps = Awaited<ReturnType<typeof getServerSideProps>>["props"]
@@ -106,7 +117,10 @@ function ProfilePage({ profile, myProfile, contents }: ProfileProps) {
           <div className="flex mx-auto">
             <div className="relative w-20 md:w-32 h-20 md:h-32 mr-12">
               <Image
-                src={profileQuery.data.image!}
+                src={getResponsiveImage(
+                  getPublicIdFromUrl(profileQuery.data.image!),
+                  128
+                )}
                 className="rounded-full"
                 layout="fill"
                 alt="profile image"
@@ -163,6 +177,16 @@ function ProfilePage({ profile, myProfile, contents }: ProfileProps) {
               ) : (
                 <div className="flex gap-4 ">
                   <Button
+                    appendComponent={
+                      !profileQuery.data.isFollowedByCurrentUser && (
+                        <PlusIcon className="w-5 h-5" />
+                      )
+                    }
+                    prependComponent={
+                      profileQuery.data.isFollowedByCurrentUser && (
+                        <CheckIcon className="w-5 h-5" />
+                      )
+                    }
                     className="w-min"
                     onClick={() => {
                       profileQuery.data.isFollowedByCurrentUser
@@ -175,31 +199,37 @@ function ProfilePage({ profile, myProfile, contents }: ProfileProps) {
                       ? "Following"
                       : "Follow"}
                   </Button>
-                  <Button
-                    appendComponent={<MailIcon />}
-                    className=""
-                    onClick={() => {
-                      dispatch(
-                        showModal({
-                          modalType: ModalType.HIRE_MODAL,
-                          payload: {
-                            userId: profileQuery.data.id,
-                          },
-                        })
-                      )
-                    }}
-                    variant={ButtonVariants.PRIMARY}
+                  {profileQuery.data.availableForHire && (
+                    <Button
+                      className=""
+                      onClick={() => {
+                        dispatch(
+                          showModal({
+                            modalType: ModalType.HIRE_MODAL,
+                            payload: {
+                              userId: profileQuery.data.id,
+                            },
+                          })
+                        )
+                      }}
+                      variant={ButtonVariants.PRIMARY}
+                    >
+                      Hire
+                    </Button>
+                  )}
+                  <Link
+                    passHref
+                    href={`chat?username=${profileQuery.data.username}`}
                   >
-                    Hire
-                  </Button>
-                  <Button
-                    // appendComponent={<MailIcon />}
-                    className=""
-                    onClick={() => {}}
-                    variant={ButtonVariants.OUTLINED}
-                  >
-                    Message
-                  </Button>
+                    <Button
+                      appendComponent={<MailIcon className="h-5 w-5" />}
+                      className=""
+                      onClick={() => {}}
+                      variant={ButtonVariants.OUTLINED}
+                    >
+                      Message
+                    </Button>
+                  </Link>
                 </div>
               )}
             </div>
@@ -271,13 +301,19 @@ export async function getServerSideProps(
       },
     },
   })
+
+  if (!profile) {
+    return {
+      notFound: true,
+    }
+  }
+
   profile.isFollowedByCurrentUser = await isFollwingUser(
     session?.user.id,
     profile?.user.id
   )
   const contents = await getContents(session?.user.id, profile?.user.id)
   const formattedProfileObject = formatProfileObject(profile)
-
   return {
     props: changeDateInJSONToMoment({
       profile: formattedProfileObject,
