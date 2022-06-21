@@ -52,7 +52,7 @@ export async function updateEmailAndUsernameController(
     ).id
 
     await sendMail({
-      to: "thomasmesfin260@gmail.com",
+      to: email,
       subject: "creativeET account email change",
       message: `
         <div style="background-color:#fbf0f099; padding:50px;" >

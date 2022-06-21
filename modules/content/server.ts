@@ -62,12 +62,12 @@ export async function addToReport(contentId: string, description: string) {
       contentId,
     },
     update: {
-      reportCount: {increment: 1}
+      reportCount: { increment: 1 },
     },
     create: {
       contentId,
-      description
-    }
+      description,
+    },
   })
 }
 
@@ -136,6 +136,7 @@ export async function getContents(
       },
     },
     where: {
+      deleted:false,
       title: query
         ? {
             contains: query.trim(),
@@ -260,6 +261,7 @@ export async function getLikedContents(userId: string) {
       },
     },
     where: {
+      deleted:false,
       published: true,
       likes: {
         some: {
@@ -288,6 +290,7 @@ export async function getBoostedContents(userId: string) {
       },
     },
     where: {
+      deleted:false,
       userId,
       published: true,
       Boost: {
@@ -318,6 +321,7 @@ export async function getBoughtContents(userId: string) {
       },
     },
     where: {
+      deleted:false,
       published: true,
       Transaction: {
         some: {
@@ -342,6 +346,7 @@ export async function getContent(id: string, userId: string) {
       Transaction: true,
       View: true,
       Boost: true,
+      deleted:false,
       _count: {
         select: { likes: true, View: true },
       },

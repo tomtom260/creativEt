@@ -233,7 +233,7 @@ function Content({ content }: { content: ContentWithProfile }) {
                 onClick={
                   async ()=>{
                   // console.log(content.id)
-                  await axios.patch(`http://localhost:3000/api/content/reportedContents?contentId=${content.id}&description=inappropriate`)
+                  await axios.patch(`/api/content/reportedContents?contentId=${content.id}&description=inappropriate`)
 
                 }
                 // ()=>{
