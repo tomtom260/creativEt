@@ -296,7 +296,7 @@ function Content({ content }: { content: ContentWithProfile }) {
                   <Text className="semi-bold" varaint={TypographyVariant.H2}>
                     {contentQuery.data.createdBy.name}
                   </Text>
-                  <div className="flex gap-2  text-gray-dark">
+                  <div className="flex  gap-2  text-gray-dark">
                     <Text className="" varaint={TypographyVariant.Body2}>
                       {contentQuery.data.createdBy.username}
                     </Text>
@@ -310,6 +310,11 @@ function Content({ content }: { content: ContentWithProfile }) {
                 <Button
                   onClick={onFollowButtonClicked}
                   variant={ButtonVariants.OUTLINED}
+                  className={
+                    createdByQuery.data.isFollowedByCurrentUser
+                      ? "bg-secondary-light text-white hover:bg-secondary-dark"
+                      : ""
+                  }
                 >
                   {createdByQuery.data.isFollowedByCurrentUser
                     ? "Following"
