@@ -34,8 +34,6 @@ export type ChatBoxProps = {
   image: string
   roomId: string
   id: string
-  typingUser: TTypingUser
-  setIsTyping: Dispatch<SetStateAction<boolean>>
 }
 
 function ChatBox({ name, image, id, roomId }: ChatBoxProps) {

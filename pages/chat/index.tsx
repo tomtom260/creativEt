@@ -19,6 +19,8 @@ import { PusherContext } from "@/hooks/pusher"
 import { Message, Room } from "@prisma/client"
 import { useRouter } from "next/router"
 import { Channel } from "pusher-js"
+import { useCreateRoomMutation } from "@/modules/chat/hooks"
+import { createRoom } from "@/modules/chat/server/services"
 
 type ChatPageProps = {
   user: ChatBoxProps
@@ -118,14 +120,24 @@ function Chat({ user, rooms }: ChatPageProps) {
 
 export async function getServerSideProps({ query, req }: NextPageContext) {
   const session = await getSession({ req })
-  const [{ image, name, id }] = await searchUser(query.username!)
   const rooms = await getAllRooms(session?.user.id)
-  const room = rooms.find((room) =>
-    room.members.find((mem) => mem.Profile?.username === query.username)
-  )
+  let user
+
+  if (query.username) {
+    const [{ image, name, id }] = await searchUser(query.username as string)
+    const room = rooms.find((room) =>
+      room.members.find((mem) => mem.Profile?.username === query.username)
+    )
+    user = { name, id, image, roomId: room?.id }
+
+    if (!user.roomId) {
+      user.roomId = (await createRoom([session?.user.id, id])).id
+      rooms.push(user)
+    }
+  }
   return {
     props: changeDateInJSONToMoment({
-      user: room ? { name, id, image, roomId: room.id } : null,
+      user,
       rooms,
       protected: true,
     }),
