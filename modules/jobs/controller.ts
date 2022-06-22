@@ -47,7 +47,6 @@ export async function rejectJobController(id: string) {
 }
 
 export async function finishJobController(id: string, image: string) {
-  console.log(image)
   return await updateJob(id, {
     status: JobsStatus.SUBMITTED,
     image,
@@ -58,13 +57,15 @@ export async function successJobController(id: string) {
   const job = await updateJob(id, {
     status: JobsStatus.SUCCESS,
   })
-  PublishContent(job.contentId as string)
-  createMoneyTransaction({
+  // PublishContent(job.contentId as string)
+  await createMoneyTransaction({
     amount: job.price,
     description: `Gig ${job.title}`,
     userId: job.employeeId,
     type: MoneyTransactionType.DEPOSIT,
     status: MoneyTransactionStatus.SUCCESS,
+  }).catch((err) => {
+    console.log(err)
   })
   return job
 }

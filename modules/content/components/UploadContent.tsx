@@ -48,6 +48,7 @@ function UploadContent({
   const { uploadContent } = useContentService()
   const dispatch = useAppDispatch()
   const { lang, setLang, selectedLang } = useContext(LangContext)
+  const [loading, setLoading] = useState(false)
 
   const errorMessage = (code: string) => {
     switch (code) {
@@ -75,6 +76,7 @@ function UploadContent({
   }
 
   const onUpload = () => {
+    setLoading(true)
     uploadContent({
       imageToBeUploaded: imageToBeUploaded as File,
       tags: selectedTags,
@@ -83,6 +85,7 @@ function UploadContent({
       description,
       userId,
     }).then((res) => {
+      setLoading(false)
       if (jobId) {
         finishJobMutation.mutate({ id: jobId, image: res.data.data.image })
         dispatch(hideModal())
@@ -244,8 +247,17 @@ function UploadContent({
           imagePreview ? "mt-12" : "mt-10"
         }`}
       >
-        <Button onClick={onUpload} variant={ButtonVariants.PRIMARY}>
-          {lang.continue}
+        <Button
+          onClick={onUpload}
+          disabled={
+            !modal
+              ? !price || !title || !imageToBeUploaded || loading
+              : !imageToBeUploaded
+          }
+          variant={ButtonVariants.PRIMARY}
+          className=" disabled:!bg-blue-200 !w-20 disabled:cursor-not-allowed"
+        >
+          {!loading ? lang.upload : "..."}
         </Button>
       </div>
     </>
