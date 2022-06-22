@@ -67,7 +67,7 @@ export function useGetMessagesWithRoomId(id?: string) {
 }
 
 export function useGetAllRoomsQuery(
-  initialData: Prisma.RoomGetPayload<{
+  initialData?: Prisma.RoomGetPayload<{
     include: {
       Message: true
       members: true

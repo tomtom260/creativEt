@@ -114,7 +114,7 @@ function ChatBox({ name, image, id, roomId }: ChatBoxProps) {
       }
     })
 
-    return () => channel.unsubscribe()
+    // return () => channel.unsubscribe()
   }, [roomId])
 
   useEffect(() => {

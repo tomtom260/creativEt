@@ -91,7 +91,7 @@ function Card({
       setIsOnline(false)
     })
 
-    return () => channel.unsubscribe()
+    // return () => channel.unsubscribe()
   }, [roomId])
 
   const time = moment(message?.createdAt)

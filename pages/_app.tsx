@@ -6,7 +6,7 @@ import "@fontsource/poppins"
 import "react-toastify/dist/ReactToastify.css"
 import "nprogress/nprogress.css"
 import type { AppProps } from "next/app"
-import { ReactNode, useEffect, useRef, ReactElement } from "react"
+import { ReactNode, useEffect, useRef, ReactElement, useContext } from "react"
 import { SessionProvider, useSession } from "next-auth/react"
 import { Provider } from "react-redux"
 import { store } from "store"
@@ -15,11 +15,12 @@ import { Router, useRouter } from "next/router"
 import { ReactQueryDevtools } from "react-query/devtools"
 import { useGetCurrentUser } from "@/hooks/user"
 import { useAppSelector } from "@/hooks/redux"
-import PusherProvider from "@/hooks/pusher"
+import PusherProvider, { PusherContext } from "@/hooks/pusher"
 import { ToastContainer } from "react-toastify"
 import type { NextPage } from "next"
 import NProgress from "nprogress"
 import LoadingIcon from "@/components/LoadingIcon"
+import { useGetAllRoomsQuery } from "@/modules/chat/hooks"
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode
@@ -80,6 +81,8 @@ const App = ({
   const router = useRouter()
   const isModalVisible = useAppSelector((state) => !!state.modal.modalType)
 
+  const rooms = useGetAllRoomsQuery().data
+
   useEffect(() => {
     console.log("modal", isModalVisible)
     if (isModalVisible) {
@@ -90,6 +93,17 @@ const App = ({
   }, [isModalVisible])
 
   const userQuery = useGetCurrentUser()
+  const pusherClient = useContext(PusherContext)
+
+  useEffect(() => {
+    if (rooms) {
+      rooms?.forEach(({ id }) => {
+        console.log("id", id)
+        pusherClient.subscribe(`presence-room-${id}`)
+      })
+    }
+  }, [rooms])
+
   useEffect(() => {
     const handleRouteStart = () => NProgress.start()
     const handleRouteDone = () => NProgress.done()
@@ -104,7 +118,6 @@ const App = ({
     Router.events.on("routeChangeError", handleRouteDone)
 
     return () => {
-      // Make sure to remove the event handler on unmount!
       Router.events.off("routeChangeStart", handleRouteStart)
       Router.events.off("routeChangeComplete", handleRouteDone)
       Router.events.off("routeChangeError", handleRouteDone)
@@ -114,8 +127,12 @@ const App = ({
     if (status === "unauthenticated") {
       router.push("/auth/signin")
     }
-    if (!userQuery.data) 
-    return <div><LoadingIcon></LoadingIcon></div>
+    if (!userQuery.data)
+      return (
+        <div>
+          <LoadingIcon></LoadingIcon>
+        </div>
+      )
   }
 
   return <div>{Children}</div>

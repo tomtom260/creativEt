@@ -51,5 +51,5 @@ export async function createNewRoom(members: NewRoomDTO) {
 }
 
 export async function getAllRooms(id: string) {
-  return await getRoom(id)
+  return await (await getRoom(id)).filter((room) => room.Message.length)
 }
