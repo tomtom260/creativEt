@@ -12,10 +12,11 @@ import useContentService from "@/service/content"
 import { images } from "@/utils/images"
 import Image from "next/image"
 import { useRouter } from "next/router"
-import React, { useState } from "react"
+import React, { useState,useContext } from "react"
 import Dropzone from "react-dropzone"
 import { useQueryClient } from "react-query"
 import { hideModal } from "store/modalSlice"
+import { LangContext } from "@/hooks/Lang"
 
 const MAX_IMAGE_SIZE = 1024 * 1024 * 10
 
@@ -46,6 +47,7 @@ function UploadContent({
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const { uploadContent } = useContentService()
   const dispatch = useAppDispatch()
+  const { lang, setLang, selectedLang } = useContext(LangContext)
 
   const errorMessage = (code: string) => {
     switch (code) {
@@ -97,14 +99,14 @@ function UploadContent({
   return (
     <>
       <Text varaint={TypographyVariant.H1} className="mb-4">
-        Upload your work
+        {lang.uploadYourWork}
       </Text>
       {!modal &&
         (imagePreview ? (
           <Input
             variant={InputType.NORMAL}
             label=""
-            placeholder="Content Title"
+            placeholder={lang.title}
             className={`text-base  px-0 ${
               !modal ? "md:text-3xl" : "md:text-lg"
             } `}
@@ -166,7 +168,8 @@ function UploadContent({
                   />
                 </div>
                 <Text varaint={TypographyVariant.Body1}>
-                  Drag and drop some files here, or click to browse image
+                  {/* Drag and drop some files here, or click to browse image */}
+                  {lang.dragNDrop}
                 </Text>
                 <ul
                   className={`flex flex-col items-start mt-2 md:mt-8 mb-10 list-disc ${
@@ -183,12 +186,12 @@ function UploadContent({
                     <>
                       <li>
                         <Text varaint={TypographyVariant.Body2}>
-                          1600X1200 or higher resolutions recommended. Max 10MB
+                          {lang.recommendedSize}
                         </Text>
                       </li>
                       <li>
                         <Text varaint={TypographyVariant.Body2}>
-                          Only upload media you own the rights to
+                          {lang.onlyYour}
                         </Text>
                       </li>
                     </>
@@ -211,7 +214,7 @@ function UploadContent({
             <>
               <Input
                 variant={InputType.NORMAL}
-                placeholder="Price"
+                placeholder={lang.price}
                 className={`text-base !px-0 !h-12 ${
                   modal ? "md:text-2xl" : "md:text-3xl"
                 } `}
@@ -223,7 +226,7 @@ function UploadContent({
               <Input
                 variant={InputType.TEXTAREA}
                 label=""
-                placeholder="Description"
+                placeholder={lang.description}
                 className={`text-base  px-0 ${
                   modal ? "md:text-2xl" : "md:text-3xl"
                 } `}
@@ -242,7 +245,7 @@ function UploadContent({
         }`}
       >
         <Button onClick={onUpload} variant={ButtonVariants.PRIMARY}>
-          Continue
+          {lang.continue}
         </Button>
       </div>
     </>

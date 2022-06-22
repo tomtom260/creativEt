@@ -53,14 +53,16 @@ function SignedInNavigation() {
       }
     )
   }, [])
+  const { lang, setLang, selectedLang } = useContext(LangContext)
 
   const userNavigation = [
-    { name: "Profile", href: `/${user?.username}`, onClick: () => {} },
-    { name: "Dashboard", href: "/account/dashboard", onClick: () => {} },
-    { name: "Jobs", href: "/account/jobs", onClick: () => {} },
-    { name: "Chat", href: "/chat", onClick: () => {} },
+    { name: lang.profile, href: `/${user?.username}`, onClick: () => {} },
+    { name: lang.dashboard, href: "/account/dashboard", onClick: () => {} },
+    { name: lang.jobs, href: "/account/jobs", onClick: () => {} },
+    { name: lang.chat, href: "/chat", onClick: () => {} },
+    { name: lang.wallet, href: "/account/wallet", onClick: () => {} },
     {
-      name: "Sign out",
+      name: lang.signout,
       href: "#",
       onClick: () => {
         router.push("/auth/signin")
@@ -71,7 +73,6 @@ function SignedInNavigation() {
   const [showNotification, setShowNotification] = useState(false)
 
   const imageUrl = getOptimisedProfileImage(user?.image!)
-  const { lang, setLang, selectedLang } = useContext(LangContext)
 
   return (
     <>
@@ -100,7 +101,7 @@ function SignedInNavigation() {
               type="button"
               className="ml-auto flex-shrink-0 bg-white rounded-full p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
-              <span className="sr-only">View notifications</span>
+              <span className="sr-only">{lang.viewNotification}</span>
               <div className="flex gap-3 items-center">
                 <Text
                   className="text-gray-400 cursor-pointer"
@@ -111,7 +112,7 @@ function SignedInNavigation() {
                 >
                   {selectedLang}
                 </Text>
-                <BellIcon className="h-6 w-6" aria-hidden="true" />
+                {/* <BellIcon className="h-6 w-6" aria-hidden="true" /> */}
               </div>
             </button>
           </div>
@@ -183,7 +184,7 @@ function SignedInNavigation() {
                           "block py-2 px-4 text-sm text-gray-700"
                         )}
                       >
-                        Moderator
+                        {lang.moderator}
                       </a>
                     </Link>
                   )}

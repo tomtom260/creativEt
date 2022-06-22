@@ -1,4 +1,4 @@
-import React, { useRef } from "react"
+import React, { useRef, useContext } from "react"
 import DefaultLayout from "@/layouts/DefaultLayout"
 import Stats from "@/components/Stats"
 import AreaChart from "@/components/Charts/Area"
@@ -11,6 +11,7 @@ import { TypographyVariant } from "@/components/Typography/textVariant.enum"
 import Button from "@/components/Button"
 import ButtonVariants from "@/components/Button/button.enum"
 import { useMediaQuery } from "react-responsive"
+import { LangContext } from "@/hooks/Lang"
 
 import {
   Chart as ChartJS,
@@ -72,6 +73,8 @@ function Dashboard({
   const { data: user } = useGetCurrentUser()
   const isSmallScreen = useMediaQuery({ query: "(max-width: 500px)" })
   const router = useRouter()
+  
+  const { lang, setLang, selectedLang } = useContext(LangContext)
 
   return (
     <DefaultLayout>
@@ -89,7 +92,7 @@ function Dashboard({
               <div className="flex md:flex-row items-center flex-col gap-12 overflow-x-auto pb-16">
                 <div className="">
                   <Text className="mb-4" varaint={TypographyVariant.Body1}>
-                    Revenue per day
+                    {lang.revenuePerDay}
                   </Text>
                   <AreaChart
                     stock={groupedRevenue}
@@ -102,7 +105,7 @@ function Dashboard({
                     className="mb-4 whitespace-nowrap"
                     varaint={TypographyVariant.Body1}
                   >
-                    Revenue Distribution
+                    {lang.revenueDistribution}
                   </Text>
                   <PieChart
                     distribution={revenueDistribution}
@@ -149,7 +152,7 @@ function Dashboard({
                   }}
                   variant={ButtonVariants.PRIMARY}
                 >
-                  View Profile
+                  {lang.viewProfile}
                 </Button>
                 <Button
                   onClick={() => {
@@ -157,7 +160,7 @@ function Dashboard({
                   }}
                   variant={ButtonVariants.OUTLINED}
                 >
-                  Edit Profile
+                  {lang.editProfile}
                 </Button>
               </div>
             </div>
@@ -165,7 +168,7 @@ function Dashboard({
           <div className="pb-16 col-span-4 flex md:flex-row  flex-col gap-4 md:gap-12 overflow-x-auto my-4 md:my-12 items-center md:items-end ">
             <div className="  ">
               <Text className="mb-4" varaint={TypographyVariant.Body1}>
-                Likes per day
+                {lang.likesPerDay}
               </Text>
               <AreaChart
                 stock={groupedLikes}
@@ -174,14 +177,14 @@ function Dashboard({
               />
             </div>
             <Card
-              title="Highest Grossing Content"
+              title={lang.highestGrossing}
               name={mostSoldContent.title}
               image={mostSoldContent.image}
               label="ETB"
               value={mostSoldContent.revenue}
             />
             <Card
-              title="Most Liked Content"
+              title={lang.mostLiked}
               name={mostLikedContent.title}
               image={mostLikedContent.image}
               label="likes"
@@ -191,7 +194,7 @@ function Dashboard({
           <div className="pb-16 col-span-4 flex md:flex-row flex-col gap-4  md:gap-14 overflow-x-auto items-center md:items-end  ">
             <div className="mt-12  ">
               <Text className="mb-4" varaint={TypographyVariant.Body1}>
-                Views per day
+                {lang.viewsPerDay}
               </Text>
               <AreaChart
                 stock={groupedViews}
@@ -200,7 +203,7 @@ function Dashboard({
               />
             </div>
             <Card
-              title="Most Viewed Content"
+              title={lang.mostViewed}
               name={mostViewedContent.title}
               image={mostViewedContent.image}
               label="views"

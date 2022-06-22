@@ -1,7 +1,8 @@
 import { motion, useViewportScroll, useTransform } from "framer-motion"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { Dispatch, SetStateAction } from "react"
+import { Dispatch, SetStateAction, useContext } from "react"
+import { LangContext } from "@/hooks/Lang"
 
 function Landing({
   onChange,
@@ -18,6 +19,7 @@ function Landing({
   const scale2 = useTransform(scrollYProgress, [0, 1], [0.6, 1])
   const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0])
   const router = useRouter()
+  const { lang } = useContext(LangContext)
 
   return (
     <motion.div
@@ -47,7 +49,8 @@ function Landing({
       >
         <p className=" text-xl text-white">
           {" "}
-          Explore through our diverse local & global digital content
+          {lang.exploreThrough}
+          {/* Explore through our diverse local & global digital content */}
         </p>
         <div className="flex items-center h-full relative">
           <label className="absolute left-2">
@@ -71,8 +74,8 @@ function Landing({
             className="w-[500px] h-10 border-2 rounded-md px-10"
             placeholder={
               router.pathname.includes("hire")
-                ? "Seatch for a creator or location"
-                : "Search for a content"
+                ? lang.searchCreator
+                : lang.searchContent
             }
           ></input>
         </div>
@@ -85,7 +88,7 @@ function Landing({
           className="bg-gray-800 p-3 text-md text-white rounded-lg absolute
             bottom-10 border shadow-lg border-white"
         >
-          Start Exploring
+          {lang.startExploring}
         </button>
       </motion.div>
       {/* <div className="w-screen h-screen bg-gradient-to-t from-gray-900 to-transparent absolute z-20"></div> */}
