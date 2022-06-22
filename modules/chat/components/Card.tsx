@@ -26,6 +26,7 @@ type UserCardProps = {
   id: string
   roomId?: string
   message?: Message
+  inputRef: React.MutableRefObject<HTMLInputElement>
 }
 
 function Card({
@@ -37,6 +38,7 @@ function Card({
   id,
   roomId,
   message,
+  inputRef,
 }: UserCardProps) {
   const router = useRouter()
   const queryClient = useQueryClient()
@@ -52,7 +54,16 @@ function Card({
 
   let roomid = roomId
 
+  console.log(inputRef)
+
   const createRoomMutation = useCreateRoomMutation()
+
+  const decreptedMessage =
+    message?.message &&
+    CryptoJS.AES.decrypt(
+      message?.message,
+      process.env.NEXT_PUBLIC_SECRET
+    ).toString(CryptoJS.enc.Utf8)
 
   useEffect(() => {
     const channel = pusherClient.subscribe(`presence-room-${roomId}`)
@@ -104,6 +115,7 @@ function Card({
             await createRoomMutation.mutateAsync([currentUserid, id])
           ).data.data.id
         }
+        inputRef.current.value = ""
         changeSelectedUser({
           name,
           image,
@@ -145,7 +157,7 @@ function Card({
             </span>
             {typingUser
               ? "typing"
-              : message?.message ||
+              : decreptedMessage ||
                 username.toLowerCase().replace(searchString.toLowerCase(), "")}
           </Text>
         </div>

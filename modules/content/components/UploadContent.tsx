@@ -218,6 +218,7 @@ function UploadContent({
                 value={price}
                 onChange={setPrice}
                 noBorder
+                type="number"
               />
               <Input
                 variant={InputType.TEXTAREA}

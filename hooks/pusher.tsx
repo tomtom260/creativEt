@@ -19,7 +19,7 @@ function PusherProvider({ children }) {
   console.log("puuuuuuuuuuuuuuuuuuuuush")
 
   useEffect(() => {
-    return pusherClient.disconnect
+    // return pusherClient.disconnect
   }, [])
 
   return (

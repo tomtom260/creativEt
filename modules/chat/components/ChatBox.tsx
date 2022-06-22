@@ -62,57 +62,59 @@ function ChatBox({ name, image, id, roomId }: ChatBoxProps) {
 
   useEffect(() => {
     const channel = pusherClient.subscribe(`presence-room-${roomId}`)
-    channel.bind("message:new", function (message: TMessage) {
-      const room = queryClient.getQueryData<TMessage[]>(["room", roomId])
-      if (room) {
-        const newMessageIndex = room.findIndex(
-          (mess) =>
-            mess.id === mess.message &&
-            message.senderId === mess.senderId &&
-            message.message === mess.message &&
-            message.roomId === mess.roomId
-        ) as number
-        if (newMessageIndex !== -1) {
-          console.log(newMessageIndex)
-          room[newMessageIndex] = message
-        } else {
-          room.push(message)
+    if (channel) {
+      channel.bind("message:new", function (message: TMessage) {
+        const room = queryClient.getQueryData<TMessage[]>(["room", roomId])
+        if (room) {
+          const newMessageIndex = room.findIndex(
+            (mess) =>
+              mess.id === mess.message &&
+              message.senderId === mess.senderId &&
+              message.message === mess.message &&
+              message.roomId === mess.roomId
+          ) as number
+          if (newMessageIndex !== -1) {
+            console.log(newMessageIndex)
+            room[newMessageIndex] = message
+          } else {
+            room.push(message)
+          }
+          queryClient.setQueryData(["room", roomId], room)
         }
-        queryClient.setQueryData(["room", roomId], room)
-      }
-    })
+      })
 
-    typingRef.current = channel.bind(
-      "client-message:typing",
-      function (typingUser: TTypingUser | null) {
-        setTypingUser(typingUser)
-      }
-    )
+      typingRef.current = channel.bind(
+        "client-message:typing",
+        function (typingUser: TTypingUser | null) {
+          setTypingUser(typingUser)
+        }
+      )
 
-    channel.bind("pusher:subscription_succeeded", function (members) {
-      setIsOnline(members.count === 2)
-      console.log(members)
-    })
-    channel.bind("pusher:member_added", function (member) {
-      // console.log(Object.keys(channel.members.members).includes(id))
-      setIsOnline(true)
-    })
+      channel.bind("pusher:subscription_succeeded", function (members) {
+        setIsOnline(members.count === 2)
+        console.log(members)
+      })
+      channel.bind("pusher:member_added", function (member) {
+        // console.log(Object.keys(channel.members.members).includes(id))
+        setIsOnline(true)
+      })
 
-    channel.bind("pusher:member_removed", function (member) {
-      // console.log(Object.keys(channel.members.members).includes(id))
-      setIsOnline(false)
-    })
+      channel.bind("pusher:member_removed", function (member) {
+        // console.log(Object.keys(channel.members.members).includes(id))
+        setIsOnline(false)
+      })
 
-    channel.bind("message:seen", function (message: TMessage) {
-      const seenMessage = queryClient.getQueryData<TMessage>([
-        "message",
-        message.id,
-      ])
-      if (seenMessage) {
-        seenMessage.seen = true
-        queryClient.invalidateQueries(["message", message.id])
-      }
-    })
+      channel.bind("message:seen", function (message: TMessage) {
+        const seenMessage = queryClient.getQueryData<TMessage>([
+          "message",
+          message.id,
+        ])
+        if (seenMessage) {
+          seenMessage.seen = true
+          queryClient.invalidateQueries(["message", message.id])
+        }
+      })
+    }
 
     // return () => channel.unsubscribe()
   }, [roomId])
@@ -156,7 +158,7 @@ function ChatBox({ name, image, id, roomId }: ChatBoxProps) {
           </div>
         </div>
         <div className="flex">
-          <Button
+          {/* <Button
             onClick={() => {
               console.log("clicked")
             }}
@@ -171,7 +173,7 @@ function ChatBox({ name, image, id, roomId }: ChatBoxProps) {
             variant={ButtonVariants.ICON}
           >
             <DotsVerticalIcon className="text-gray-normal w-7 h-7" />
-          </Button>
+          </Button> */}
         </div>
       </div>
       <div className="bg-white   h-[calc(100vh)] md:h-[calc(100vh-192px)]   md:rounded-xl md:px-4 md:pt-0 p-2 col-span-8 md:col-span-5 w-full flex flex-col">
@@ -200,8 +202,8 @@ function ChatBox({ name, image, id, roomId }: ChatBoxProps) {
             onChange={(val) => setNewMessage(val)}
             onKeyPress={(e) => {
               if (e.code === "Enter") {
-                setNewMessage("")
                 sendMessage(newMessage)
+                setNewMessage("")
               }
             }}
             onFocus={() => {

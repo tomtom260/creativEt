@@ -34,6 +34,11 @@ function Message({ type, message, time, image, seen, id }: MessageProps) {
     })
   }
 
+  const decreptedMessage = CryptoJS.AES.decrypt(
+    message,
+    process.env.NEXT_PUBLIC_SECRET
+  ).toString(CryptoJS.enc.Utf8)
+
   return (
     <div
       ref={ref}
@@ -54,7 +59,7 @@ function Message({ type, message, time, image, seen, id }: MessageProps) {
             : "bg-gray-light rounded-tl-none"
         } px-4 py-2 max-w-md rounded-xl  flex flex-col `}
       >
-        <Text varaint={TypographyVariant.Body1}>{message}</Text>
+        <Text varaint={TypographyVariant.Body1}>{decreptedMessage}</Text>
         <div className="flex gap-2 self-end items-end justify-end ">
           <Text
             className={`${

@@ -112,12 +112,20 @@ export function useSendMessage({
     if (!room) {
       await createRoomMutation.mutateAsync([currentUserId, id!]).then((res) => {
         createMessageMutation.mutateAsync({
-          message,
+          message: encrypted,
           roomId: res.data.data.id!,
         })
       })
     } else {
-      await createMessageMutation.mutateAsync({ message, roomId: room! })
+      const encrypted = CryptoJS.AES.encrypt(
+        message,
+        process.env.NEXT_PUBLIC_SECRET
+      ).toString()
+      console.log("encrypted", encrypted)
+      await createMessageMutation.mutateAsync({
+        message: encrypted,
+        roomId: room!,
+      })
     }
   }
 
