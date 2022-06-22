@@ -20,13 +20,14 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
       secret: process.env.SECRET,
     },
     callbacks: {
-      async jwt({ token, account }) {
+      async jwt({ token, account, user, profile }) {
+        console.log("account", account, token, user, profile)
         // if (token) {
         // 1. add token.type = account.userType
         // }
         return token
       },
-      async session({ session, token }) {
+      async session({ session, token, user }) {
         if (session) {
           session.user.id = token.sub
           // add  user type to your session object

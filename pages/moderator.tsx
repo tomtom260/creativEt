@@ -2,6 +2,8 @@ import ListBox from "../components/Form/ListBox"
 import ModeratorCard from "../components/Cards/ModeratorCard"
 import axios from "axios"
 import { useState } from "react"
+import { getSession } from "next-auth/react"
+import { UserRole } from ".prisma/client"
 
 const filterOptions = ["PENDING", "REMOVED", "DISMISSED", "ALL"]
 
@@ -51,10 +53,25 @@ function Moderator({ contents }) {
   )
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps({ req }) {
+  const session = await getSession({ req })
+
+  const user = await prisma?.user.findUnique({
+    where: {
+      id: session?.user.id,
+    },
+  })
+
+  if (user && user.role === UserRole.USER) {
+    return {
+      notFound: true,
+    }
+  }
+
   const contents = await axios.get(
     `${process.env.NEXT_PUBLIC_URL}/api/content/reportedContents?filter=PENDING`
   )
+
   contents.data.data.map((content) => {
     content.reportedAt = content.reportedAt.toString()
     content.contentReported.createdAt =
@@ -64,6 +81,7 @@ export async function getServerSideProps() {
   return {
     props: {
       contents: contents?.data.data || [],
+      protected: true,
     },
   }
 }

@@ -78,6 +78,7 @@ model User {
   notifiedBy       Notification[]     @relation("notifiedBy")
   availableForHire Boolean            @default(false)
   Ratings          Ratings[]
+  role             UserRole           @default(USER)
   // reports          Report[]           @relation("reportedBy")
 }
 
@@ -280,4 +281,9 @@ enum ReportStatus {
   PENDING
   REMOVED
   ALLOWED
+}
+
+enum UserRole {
+  USER
+  MODERATOR
 }

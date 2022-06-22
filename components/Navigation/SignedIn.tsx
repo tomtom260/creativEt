@@ -13,7 +13,7 @@ import { useGetNotifictionsQuery } from "@/modules/notification/hooks"
 import { PusherContext } from "@/hooks/pusher"
 import { useAppDispatch } from "@/hooks/redux"
 import { addToast } from "store/toastSlice"
-import { Notification } from "@prisma/client"
+import { Notification, UserRole } from "@prisma/client"
 import { useQueryClient } from "react-query"
 import { useRouter } from "next/router"
 import { toast } from "react-toastify"
@@ -56,7 +56,11 @@ function SignedInNavigation() {
   const userNavigation = [
     { name: "Profile", href: `/${user?.username}`, onClick: () => {} },
     { name: "Dashboard", href: "/account/dashboard", onClick: () => {} },
-    { name: "Wallet", href: "/account/wallet", onClick: () => {} },
+    { name: "Jobs", href: "/account/jobs", onClick: () => {} },
+    { name: "Chat", href: "/chat", onClick: () => {} },
+    user.role === UserRole.MODERATOR
+      ? { name: "Moderate", href: "/moderator", onClick: () => {} }
+      : undefined,
     {
       name: "Sign out",
       href: "#",
