@@ -25,10 +25,9 @@ export default async function userHandler(
         await getAllRooms(session?.user.id)
       ).filter((room) => room.Message.length)
       const users = (await searchUsers(username)).filter((user) => {
-        return !rooms.find((room) =>
-          room.members.find((mem) => mem.id === user.id)
-        )
+        return user.id !== session?.user.id
       })
+      console.log(users)
       return SuccessAPIResponse(res, users)
 
     default:
