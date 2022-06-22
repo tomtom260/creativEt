@@ -42,6 +42,7 @@ function Moderator({ contents }) {
               numReport={content.reportCount}
               reportId={content.id}
               resolutionStat={content.resolved}
+              setReportedContents
             />
           )
         })}

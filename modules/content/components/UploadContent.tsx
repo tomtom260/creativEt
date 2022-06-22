@@ -222,7 +222,7 @@ function UploadContent({
               <Input
                 variant={InputType.TEXTAREA}
                 label=""
-                placeholder="Descritption"
+                placeholder="Description"
                 className={`text-base  px-0 ${
                   modal ? "md:text-2xl" : "md:text-3xl"
                 } `}

@@ -15,6 +15,7 @@ function Landing({
   const y2 = useTransform(scrollYProgress, (value) => value * -300)
   const y3 = useTransform(scrollYProgress, (value) => value * -500)
   const scale = useTransform(scrollYProgress, [0, 1], [1, 1.5])
+  const scale2 = useTransform(scrollYProgress, [0, 1], [0.6, 1])
   const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0])
   const router = useRouter()
 
@@ -25,19 +26,19 @@ function Landing({
     >
       <motion.img
         style={{ y: y1, scale }}
-        src="./assets/images/landing/background.png"
+        src="./assets/images/landing/landscape.png"
         className="object-cover min-w-full min-h-full absolute z-[5]"
       ></motion.img>
       <motion.img
-        style={{ y: y2, scale }}
-        src="./assets/images/landing/middleground.png"
-        className="object-cover min-w-full min-h-full  absolute z-[10]"
+        style={{scale: scale2 }}
+        src="./assets/images/landing/photographer.png"
+        className="object-cover  min-h-full  absolute z-[10] bottom-0 origin-bottom"
       ></motion.img>
-      <motion.img
+      {/* <motion.img
         style={{ y: y3, scale }}
         src="./assets/images/landing/foreground.png"
         className="object-cover min-w-full min-h-full absolute z-[15] "
-      ></motion.img>
+      ></motion.img> */}
       <motion.div
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
@@ -87,7 +88,7 @@ function Landing({
           Start Exploring
         </button>
       </motion.div>
-      <div className="w-screen h-screen bg-gradient-to-t from-gray-900 to-transparent absolute z-20"></div>
+      {/* <div className="w-screen h-screen bg-gradient-to-t from-gray-900 to-transparent absolute z-20"></div> */}
     </motion.div>
   )
 }
