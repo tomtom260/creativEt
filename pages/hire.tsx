@@ -82,11 +82,11 @@ export default function Home({ users }: HomeProps) {
       >
         <div className=" flex  sticky top-[60px] py-8 px-2  bg-white z-20 w-full  flex-1 justify-between  items-center">
           <div className="w-32 ">
-            <ListBox
+            {/* <ListBox
               selected={selectedFilterOption}
               changeSelected={(val) => setSelectedFilterOption(val)}
               options={filterOptions}
-            />
+            /> */}
           </div>
           <div className="  flex self-center  justify-self-center  gap-6"></div>
           {/* <Button

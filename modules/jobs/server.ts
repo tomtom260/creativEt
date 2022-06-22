@@ -70,6 +70,7 @@ export async function updateJob(
           name: true,
         },
       },
+      content: true,
     },
     where: {
       id,
