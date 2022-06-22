@@ -4,6 +4,7 @@ import axios from "axios"
 import { useState } from "react"
 import { getSession } from "next-auth/react"
 import { UserRole } from ".prisma/client"
+import { prisma } from "@/utils/db"
 
 const filterOptions = ["PENDING", "REMOVED", "DISMISSED", "ALL"]
 
