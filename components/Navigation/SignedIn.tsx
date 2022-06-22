@@ -24,6 +24,7 @@ import NotifcationCard, {
 } from "@/modules/notification/components/NotificationCard"
 import Text from "../Typography"
 import { TypographyVariant } from "../Typography/textVariant.enum"
+import { LangContext } from "@/hooks/Lang"
 
 function SignedInNavigation() {
   const { data: user } = useGetCurrentUser()
@@ -70,6 +71,7 @@ function SignedInNavigation() {
   const [showNotification, setShowNotification] = useState(false)
 
   const imageUrl = getOptimisedProfileImage(user?.image!)
+  const { lang, setLang, selectedLang } = useContext(LangContext)
 
   return (
     <>
@@ -99,12 +101,32 @@ function SignedInNavigation() {
               className="ml-auto flex-shrink-0 bg-white rounded-full p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               <span className="sr-only">View notifications</span>
-              <BellIcon className="h-6 w-6" aria-hidden="true" />
+              <div className="flex gap-3 items-center">
+                <Text
+                  className="text-gray-400 cursor-pointer"
+                  onClick={() =>
+                    selectedLang === "AM" ? setLang("EN") : setLang("AM")
+                  }
+                  varaint={TypographyVariant.Body1}
+                >
+                  {selectedLang}
+                </Text>
+                <BellIcon className="h-6 w-6" aria-hidden="true" />
+              </div>
             </button>
           </div>
         )}
         NavigationRightSide={() => (
           <div className="hidden  lg:flex w-min  lg:items-center justify-self-end lg:justify-end xl:col-span-3">
+            <Text
+              className="text-gray-400 cursor-pointer"
+              onClick={() =>
+                selectedLang === "AM" ? setLang("EN") : setLang("AM")
+              }
+              varaint={TypographyVariant.Body1}
+            >
+              {selectedLang}
+            </Text>
             <div className="relative">
               <div
                 onClick={() => setShowNotification((val) => !val)}
@@ -187,7 +209,7 @@ function SignedInNavigation() {
             </Menu>
             <Link passHref href="/upload">
               <span className="ml-6 inline-flex cursor-pointer items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                Upload
+                {lang.upload}
               </span>
             </Link>
           </div>

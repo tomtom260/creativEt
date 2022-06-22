@@ -21,6 +21,7 @@ import type { NextPage } from "next"
 import NProgress from "nprogress"
 import LoadingIcon from "@/components/LoadingIcon"
 import { useGetAllRoomsQuery } from "@/modules/chat/hooks"
+import LangProvider from "@/hooks/Lang"
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode
@@ -48,20 +49,22 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
       <SessionProvider session={pageProps.session}>
         <QueryClientProvider client={queryClient}>
           <Provider store={store}>
-            <App privatePage={pageProps.protected}>
-              {getLayout(
-                <>
-                  <Component {...pageProps} />
-                  <ToastContainer
-                    style={{
-                      width: "450px",
-                    }}
-                    className={"w-40"}
-                    hideProgressBar
-                  />
-                </>
-              )}
-            </App>
+            <LangProvider>
+              <App privatePage={pageProps.protected}>
+                {getLayout(
+                  <>
+                    <Component {...pageProps} />
+                    <ToastContainer
+                      style={{
+                        width: "450px",
+                      }}
+                      className={"w-40"}
+                      hideProgressBar
+                    />
+                  </>
+                )}
+              </App>
+            </LangProvider>
           </Provider>
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>

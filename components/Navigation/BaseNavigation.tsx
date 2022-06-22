@@ -1,4 +1,4 @@
-import React, { FC } from "react"
+import React, { FC, useContext } from "react"
 import { Popover } from "@headlessui/react"
 import { MenuIcon, XIcon } from "@heroicons/react/outline"
 import Image from "next/image"
@@ -6,6 +6,7 @@ import Link from "next/link"
 import classNames from "../../utils/classNames"
 import Text from "../Typography"
 import { TypographyVariant } from "../Typography/textVariant.enum"
+import { LangContext } from "@/hooks/Lang"
 
 export type BaseNavigationProps = {
   NavigationRightSide: FC
@@ -18,9 +19,11 @@ function BaseNavigation({
   MobileNavigationRightSide,
   userNavigation,
 }: BaseNavigationProps) {
+  const { lang } = useContext(LangContext)
+
   const navigation = [
-    { name: "Marketplace", href: "/", current: true },
-    { name: "Hire Creators", href: "/hire", current: false },
+    { name: lang.marketPlace, href: "/", current: true },
+    { name: lang.hireCreator, href: "/hire", current: false },
   ]
 
   return (
@@ -36,7 +39,7 @@ function BaseNavigation({
         }
       >
         {({ open }) => (
-          <div className="bg-white fixed top-0 z-[25] w-full">
+          <div className="bg-white mt-3 md:mt-0 fixed top-0 z-[25] w-full">
             <div className="max-w-7xl      w-full bg-white mx-auto px-4 sm:px-6 lg:px-8">
               <div className="relative flex justify-between xl:grid xl:grid-cols-12 lg:gap-8">
                 <div className="flex md:absolute md:left-0 md:inset-y-0 lg:static xl:col-span-4">
@@ -105,6 +108,13 @@ function BaseNavigation({
               <div className="border-t border-gray-200 pt-4 pb-3">
                 {MobileNavigationRightSide && <MobileNavigationRightSide />}
                 <div className="mt-3 max-w-3xl mx-auto px-2 space-y-1 sm:px-4">
+                  <div className="flex items-center justify-end">
+                    <Link passHref href="/upload">
+                      <span className="ml-6 inline-flex cursor-pointer items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        {lang.upload}
+                      </span>
+                    </Link>
+                  </div>
                   {userNavigation.map((item) => (
                     <a
                       onClick={item.onClick}
