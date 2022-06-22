@@ -15,13 +15,31 @@ export function selectMessage(type: NotificationType) {
     case NotificationType.JOB:
       return (
         <>
-          offered you a <span className="font-bold">job</span>`
+          offered you a <span className="font-bold">job</span>.
         </>
       )
     case NotificationType.MESSAGE:
       return (
         <>
-          sent you a new <span className="font-bold">message</span>`
+          sent you a new <span className="font-bold">message</span>.
+        </>
+      )
+    case NotificationType.FOLLOW:
+      return (
+        <>
+          started <span className="font-bold">following</span> you.
+        </>
+      )
+    case NotificationType.BOUGHT:
+      return (
+        <>
+          <span className="font-bold">bought</span> a content from you.
+        </>
+      )
+    case NotificationType.LIKE:
+      return (
+        <>
+          liked your <span className="font-bold">content</span>.`
         </>
       )
   }
