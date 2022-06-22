@@ -22,7 +22,7 @@ type HomeProps = {
   tags: string[]
 }
 
-const filterOptions = ["All", "Following", "Popular", "New"]
+const filterOptions = ["All", "Popular", "New"]
 const filterAdvancedOptions = [
   "Price (Cheapest)",
   "Price (Expensive)",
