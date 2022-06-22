@@ -16,9 +16,13 @@ export async function createNewMessage(newMessage: createNewMessageParams) {
   pusherServer
     .trigger(`presence-room-${message.roomId}`, "message:new", message)
     .catch((err) => console.log(err))
+  const [reciever] = message.room.members.filter(
+    (memb) => memb.id !== message.senderId
+  )
+
   createNotifcationController({
     title: "New Message",
-    userId: message.senderId,
+    userId: reciever.id,
     type: NotificationType.MESSAGE,
     notifiedById: message.senderId,
   })

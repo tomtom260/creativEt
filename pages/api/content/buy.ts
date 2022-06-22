@@ -1,4 +1,5 @@
 /* eslint-disable no-case-declarations */
+import { createNotifcationController } from "@/modules/notification/controller"
 import { createMoneyTransaction } from "@/modules/walet/server"
 import { MoneyTransactionStatus, MoneyTransactionType } from "@prisma/client"
 import { NextApiRequest, NextApiResponse } from "next"
@@ -42,7 +43,12 @@ export default async function userHandler(
           contentId: content.id,
         },
       })
-
+      createNotifcationController({
+        title: "Buy",
+        userId: transaction.sellerId,
+        type: "BOUGHT",
+        notifiedById: transaction.buyerId,
+      })
       createMoneyTransaction({
         amount: content.price,
         userId: content.createdBy.id,

@@ -30,7 +30,7 @@ function Landing({
         className="object-cover min-w-full min-h-full absolute z-[5]"
       ></motion.img>
       <motion.img
-        style={{scale: scale2 }}
+        style={{ scale: scale2 }}
         src="./assets/images/landing/photographer.png"
         className="object-cover  min-h-full  absolute z-[10] bottom-0 origin-bottom"
       ></motion.img>

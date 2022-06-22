@@ -5,7 +5,11 @@ export async function createMessage(message: createNewMessageParams) {
   return await prisma.message.create({
     data: message,
     include: {
-      room: true,
+      room: {
+        include: {
+          members: true,
+        },
+      },
     },
   })
 }

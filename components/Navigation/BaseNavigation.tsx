@@ -24,7 +24,7 @@ function BaseNavigation({
   ]
 
   return (
-    <>
+    <div>
       {/* When the mobile menu is open, add `overflow-hidden` to the `body` element to prevent double scrollbars */}
       <Popover
         as="header"
@@ -36,7 +36,7 @@ function BaseNavigation({
         }
       >
         {({ open }) => (
-          <div className="bg-white fixed z-[25] w-full">
+          <div className="bg-white fixed top-0 z-[25] w-full">
             <div className="max-w-7xl      w-full bg-white mx-auto px-4 sm:px-6 lg:px-8">
               <div className="relative flex justify-between xl:grid xl:grid-cols-12 lg:gap-8">
                 <div className="flex md:absolute md:left-0 md:inset-y-0 lg:static xl:col-span-4">
@@ -121,7 +121,8 @@ function BaseNavigation({
           </div>
         )}
       </Popover>
-    </>
+      <div className="mb-[60px]" />
+    </div>
   )
 }
 

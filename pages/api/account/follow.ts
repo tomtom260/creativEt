@@ -1,3 +1,4 @@
+import { createNotifcationController } from "@/modules/notification/controller"
 import { NextApiRequest, NextApiResponse } from "next"
 import { getSession } from "next-auth/react"
 import {
@@ -27,6 +28,12 @@ export default async function userHandler(
           followerId: followerId,
           followingId,
         },
+      })
+      createNotifcationController({
+        title: "Follow",
+        userId: followObj.followingId,
+        type: "FOLLOW",
+        notifiedById: followObj.followerId,
       })
       return SuccessAPIResponse(res, followObj)
     case "DELETE":

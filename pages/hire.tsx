@@ -19,6 +19,7 @@ import { User } from "types/user"
 import { getUsersForHIre } from "@/modules/user/server"
 import { useGetUsersForHireQuery } from "@/hooks/user"
 import HireModal from "@/modules/user/component/HireModal"
+import Head from "next/head"
 
 type HomeProps = {
   users: User[]
@@ -48,6 +49,23 @@ export default function Home({ users }: HomeProps) {
 
   return (
     <>
+      <Head>
+        <link
+          rel="preload"
+          as="image"
+          href="./assets/images/landing/background.png"
+        />
+        <link
+          rel="preload"
+          as="image"
+          href="./assets/images/landing/middleground.png"
+        />
+        <link
+          rel="preload"
+          as="image"
+          href="./assets/images/landing/foreground.png"
+        />
+      </Head>
       <Landing
         value={displayQuery}
         onChange={(val) => {
