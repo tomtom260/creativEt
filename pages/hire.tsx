@@ -50,7 +50,7 @@ export default function Home({ users }: HomeProps) {
   return (
     <>
       <Head>
-        <link
+        {/* <link
           rel="preload"
           as="image"
           href="./assets/images/landing/background.png"
@@ -64,6 +64,16 @@ export default function Home({ users }: HomeProps) {
           rel="preload"
           as="image"
           href="./assets/images/landing/foreground.png"
+        /> */}
+        <link
+          rel="preload"
+          as="image"
+          href="./assets/images/landing/landscape.png"
+        />
+        <link
+          rel="preload"
+          as="image"
+          href="./assets/images/landing/hireLandscape.png"
         />
       </Head>
       <Landing
