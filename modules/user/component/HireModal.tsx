@@ -65,6 +65,7 @@ function HireModal() {
             error={balance < price ? "Insufficient balance" : ""}
             className="w-full"
             type="number"
+            min={0}
             onChange={(val) => setPrice(val)}
             value={price}
             variant={InputType.NORMAL}
@@ -93,7 +94,7 @@ function HireModal() {
             Cancel
           </Button>
           <Button
-            disabled={balance < price}
+            disabled={balance < price || !price || !date || !title}
             onClick={() => {
               createJobMutation.mutate({
                 price: Number(price),

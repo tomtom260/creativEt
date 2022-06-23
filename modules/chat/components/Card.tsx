@@ -54,8 +54,6 @@ function Card({
 
   let roomid = roomId
 
-  console.log(inputRef)
-
   const createRoomMutation = useCreateRoomMutation()
 
   const decreptedMessage =
@@ -115,7 +113,7 @@ function Card({
             await createRoomMutation.mutateAsync([currentUserid, id])
           ).data.data.id
         }
-        inputRef.current.value = ""
+        // inputRef.current.value = ""
         changeSelectedUser({
           name,
           image,
