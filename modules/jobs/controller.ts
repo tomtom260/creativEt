@@ -79,12 +79,6 @@ export async function reviseContentJobController(id: string) {
 export async function cancelJobController(id: string, canceledBy: string) {
   const job = await getJobsById(id)
 
-  await updateJob(id, {
-    status: JobsStatus.CANCELED,
-  })
-
-  console.log(job)
-
   createMoneyTransaction({
     amount: job.price,
     description:
@@ -98,5 +92,7 @@ export async function cancelJobController(id: string, canceledBy: string) {
     type: MoneyTransactionType.DEPOSIT,
     status: MoneyTransactionStatus.SUCCESS,
   })
-  return {}
+  return await updateJob(id, {
+    status: JobsStatus.CANCELED,
+  })
 }
