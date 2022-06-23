@@ -49,15 +49,15 @@ function Landing({
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         transition={{ duration: "1" }}
-        className="flex flex-col z-[22] items-start self-start space-y-4 pl-24"
+        className="flex flex-col z-[22] items-center md:items-start self-center md:self-start space-y-4 md:pl-24"
       >
-        <p className=" text-lg font-black leading-[6rem] text-white md:text-[6rem]">
+        <p className=" text-4xl font-black text-center md:text-left  md:leading-[6rem] text-white md:text-[6rem]">
           {" "}
           {lang.exploreThrough}
           <br></br>
           {lang.ourDiverse}
           <br/>
-          {lang.content}
+          {router.pathname.includes("hire")? lang.creators : lang.content}
           {/* Explore through our diverse local & global digital content */}
         </p>
         <div className="flex items-center h-full relative">

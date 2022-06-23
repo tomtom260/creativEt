@@ -33,7 +33,8 @@ const EngObject = {
   viewProfile: "View Profile",
   highestGrossing: "Highest Grossing",
   mostLiked: "Most Liked",
-  mostViewed: "Most Viewed"
+  mostViewed: "Most Viewed",
+  creators: "Creators"
 
 }
 

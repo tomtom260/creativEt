@@ -6,7 +6,7 @@ const AmhObject = {
   dragNDrop: "ፎቶዎችን ወደዚህ ሳብ ወይም ምረጥ",
   recommendedSize: "1600X1200 ወይም ተጨማሪ ሪዞሊውሽን ይመከራል። ቢበዛ 10ሜባ",
   exploreThrough: "ዓለም አቀፍ እና ሀገር",
-  ourDiverse: "አቀፍ ምስሎቻችንን",
+  ourDiverse: "አቀፍ ምስል",
   content: "ይከታተሉ።",
   searchContent: "ፎቶዎች ፈልግ",
   searchCreator: "ሰሪዎችን ፈልግ",
@@ -33,7 +33,8 @@ const AmhObject = {
   viewProfile: "መረጃ ተመልከት",
   highestGrossing: "ብዙ ገቢ ያስገባ",
   mostLiked: "ብዙ የተወደደ",
-  mostViewed: "ብዙ የታየ"
+  mostViewed: "ብዙ የታየ",
+  creators: "አንሺዎችን ይፈልጉ።"
 }
 
 export default AmhObject
