@@ -6,6 +6,7 @@ import { getSession } from "next-auth/react"
 import { UserRole } from ".prisma/client"
 import { prisma } from "@/utils/db"
 import DefaultLayout from "@/layouts/DefaultLayout"
+import { changeDateInJSONToMoment } from "@/utils/changeDateToMoment"
 
 const filterOptions = ["PENDING", "REMOVED", "DISMISSED", "ALL"]
 
@@ -74,15 +75,10 @@ export async function getServerSideProps({ req }) {
     `${process.env.NEXT_PUBLIC_URL}/api/content/reportedContents?filter=PENDING`
   )
 
-  contents.data.data.map((content) => {
-    content.reportedAt = content.reportedAt.toString()
-    content.contentReported.createdAt =
-      content.contentReported.createdAt.toString()
-  })
   //   console.log(contents)
   return {
     props: {
-      contents: contents?.data.data || [],
+      contents: changeDateInJSONToMoment(contents?.data.data || []),
       protected: true,
     },
   }
