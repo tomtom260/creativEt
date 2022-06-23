@@ -96,8 +96,9 @@ export async function getServerSideProps({ req }) {
 //     )
 
 // }
-export default Moderator
 
-Moderator.getLayout = function getLayout(page: ReactElement) {
-  return <DefaultLayout>{page}</DefaultLayout>
-}
+// Moderator.getLayout = function getLayout(page: ReactElement) {
+//   return <DefaultLayout padded={false}>{page}</DefaultLayout>
+// }
+
+export default Moderator

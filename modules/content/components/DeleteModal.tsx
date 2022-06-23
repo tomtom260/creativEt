@@ -6,6 +6,7 @@ import { TypographyVariant } from "@/components/Typography/textVariant.enum"
 import { useAppDispatch, useAppSelector } from "@/hooks/redux"
 import useContentService from "@/service/content"
 import React from "react"
+import { toast } from "react-toastify"
 import { hideModal, ModalType } from "store/modalSlice"
 import { useDeleteContentMutation } from "../hooks"
 
@@ -39,7 +40,9 @@ function DeleteModal() {
           <Button
             onClick={() => {
               //   onContentBuy(modalPayload.id)
-              deleteContentMutation.mutate()
+              deleteContentMutation.mutateAsync().then(() => {
+                toast("Content Deleted")
+              })
               dispatch(hideModal())
             }}
             className="bg-red-600"

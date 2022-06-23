@@ -6,6 +6,7 @@ import { TypographyVariant } from "@/components/Typography/textVariant.enum"
 import { useAppDispatch, useAppSelector } from "@/hooks/redux"
 import useContentService from "@/service/content"
 import React from "react"
+import { toast } from "react-toastify"
 import { hideModal, ModalType } from "store/modalSlice"
 import { useBoostContentMutation } from "../hooks"
 
@@ -38,7 +39,9 @@ function BoostModal() {
           <Button
             onClick={() => {
               //   onContentBuy(modalPayload.id)
-              boostContentMutation.mutate()
+              boostContentMutation.mutateAsync().then(() => {
+                toast.success("Content Boosted")
+              })
               dispatch(hideModal())
             }}
             variant={ButtonVariants.PRIMARY}

@@ -12,11 +12,12 @@ import useContentService from "@/service/content"
 import { images } from "@/utils/images"
 import Image from "next/image"
 import { useRouter } from "next/router"
-import React, { useState,useContext } from "react"
+import React, { useState, useContext } from "react"
 import Dropzone from "react-dropzone"
 import { useQueryClient } from "react-query"
 import { hideModal } from "store/modalSlice"
 import { LangContext } from "@/hooks/Lang"
+import { toast } from "react-toastify"
 
 const MAX_IMAGE_SIZE = 1024 * 1024 * 10
 
@@ -93,6 +94,7 @@ function UploadContent({
         queryClient.removeQueries(["contents"])
         router.push("/")
       }
+      toast.success("Content Uploaded")
     })
   }
   const router = useRouter()

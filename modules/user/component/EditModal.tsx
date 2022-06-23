@@ -12,6 +12,7 @@ import Script from "next/script"
 import Select from "@/components/Form/Select"
 import { useUpdateContent } from "@/modules/content/hooks"
 import { Content } from "types/content"
+import { toast } from "react-toastify"
 
 function EditModal() {
   const { modalPayload, modalType } = useAppSelector((state) => state.modal)
@@ -94,16 +95,20 @@ function EditModal() {
           </Button>
           <Button
             onClick={() => {
-              updateContentMutation.mutate({
-                id: content?.id as string,
-                data: {
-                  title,
-                  tags: selectedTags,
-                  description,
-                  price,
-                },
-              })
-              dispatch(hideModal())
+              updateContentMutation
+                .mutateAsync({
+                  id: content?.id as string,
+                  data: {
+                    title,
+                    tags: selectedTags,
+                    description,
+                    price,
+                  },
+                })
+                .then(() => {
+                  toast.success("Content Edited")
+                  dispatch(hideModal())
+                })
             }}
             variant={ButtonVariants.PRIMARY}
           >
