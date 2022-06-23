@@ -51,6 +51,7 @@ import InsufficientBalanceModal from "@/modules/content/components/InsufficientB
 import { fetchUserWithProfile, transformUserResponse } from "@/modules/user/api"
 import Link from "next/link"
 import axios from "axios"
+import { toast } from "react-toastify"
 
 function Content({ content }: { content: ContentWithProfile }) {
   const { data: user } = useGetCurrentUser()
@@ -231,15 +232,20 @@ function Content({ content }: { content: ContentWithProfile }) {
                 className="absolute hidden md:visible z-10  sm:flex z- left-4 bottom-6"
                 variant={ButtonVariants.PRIMARY}
                 onClick={
-                  async ()=>{
-                  // console.log(content.id)
-                  await axios.patch(`/api/content/reportedContents?contentId=${content.id}&description=inappropriate`)
-
-                }
-                // ()=>{
+                  async () => {
+                    // console.log(content.id)
+                    await axios
+                      .patch(
+                        `/api/content/reportedContents?contentId=${content.id}&description=inappropriate`
+                      )
+                      .then(() => {
+                        toast("Content Reported")
+                      })
+                  }
+                  // ()=>{
 
                   // console.log(content)
-                // }
+                  // }
                   // reportContent
                 }
                 appendComponent={<WarnSVG />}
@@ -503,7 +509,7 @@ const EmailShare = ({ shareUrl }: { shareUrl: string }) => (
   </EmailShareButton>
 )
 
-const reportContent = async ()=>{
+const reportContent = async () => {
   // contents.
   // await addToReport('cl4nxo7a90130jsur4o7pplm6','inappropriate')
 }
