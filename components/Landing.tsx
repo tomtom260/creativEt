@@ -24,11 +24,15 @@ function Landing({
   return (
     <motion.div
       style={{ opacity }}
-      className="bg-white min-w-screen h-[calc(100vh-60px)]  relative overflow-hidden flex justify-center items-center"
+      className="bg-white min-w-screen h-[calc(100vh-60px)]  relative overflow-hidden flex flex-col justify-center items-center"
     >
       <motion.img
         style={{ y: y1, scale }}
-        src="./assets/images/landing/landscape.png"
+        src={router.pathname.includes("hire") ?
+        "./assets/images/landing/hireLandscape.jpg" :
+        "./assets/images/landing/landscape.png"
+      
+        }
         className="object-cover min-w-full min-h-full absolute z-[5]"
       ></motion.img>
       <motion.img
@@ -45,11 +49,15 @@ function Landing({
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         transition={{ duration: "1" }}
-        className="flex flex-col z-[22] items-center space-y-4"
+        className="flex flex-col z-[22] items-start self-start space-y-4 pl-24"
       >
-        <p className=" text-xl text-white">
+        <p className=" text-lg font-black leading-[6rem] text-white md:text-[6rem]">
           {" "}
           {lang.exploreThrough}
+          <br></br>
+          {lang.ourDiverse}
+          <br/>
+          {lang.content}
           {/* Explore through our diverse local & global digital content */}
         </p>
         <div className="flex items-center h-full relative">
@@ -71,7 +79,7 @@ function Landing({
             onChange={(e) => onChange(e.target.value)}
             value={value}
             name="navSearch"
-            className="w-[500px] h-10 border-2 rounded-md px-10"
+            className="w-[300px] md:w-[500px] h-10 border-2 rounded-md px-10"
             placeholder={
               router.pathname.includes("hire")
                 ? lang.searchCreator
@@ -85,13 +93,12 @@ function Landing({
               behavior: "smooth",
             })
           }}
-          className="bg-gray-800 p-3 text-md text-white rounded-lg absolute
-            bottom-10 border shadow-lg border-white"
+          className="bg-gray-800 p-3 text-md text-white rounded-lg  border shadow-lg border-white"
         >
           {lang.startExploring}
         </button>
       </motion.div>
-      {/* <div className="w-screen h-screen bg-gradient-to-t from-gray-900 to-transparent absolute z-20"></div> */}
+      <div className="w-screen h-screen bg-gradient-to-r via-black/10 from-gray-900/80 to-transparent absolute z-20"></div>
     </motion.div>
   )
 }
