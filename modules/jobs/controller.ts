@@ -41,6 +41,18 @@ export async function acceptJobController(id: string) {
 }
 
 export async function rejectJobController(id: string) {
+  const job = await getJobsById(id)
+
+  await createMoneyTransaction({
+    amount: job.price,
+    description: `Gig ${job.title}`,
+    userId: job.employerId,
+    type: MoneyTransactionType.DEPOSIT,
+    status: MoneyTransactionStatus.SUCCESS,
+  }).catch((err) => {
+    console.log(err)
+  })
+
   return await updateJob(id, {
     status: JobsStatus.CANCELED,
   })
