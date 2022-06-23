@@ -89,7 +89,7 @@ function Jobs({ jobs }: JobsPageProps) {
 export async function getServerSideProps({ req }) {
   const user = await getSession({ req })
   const jobs = await getJobsController({
-    employeeId: user?.user?.id,
+    employerId: user?.user?.id,
   })
   return {
     props: {

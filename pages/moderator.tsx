@@ -1,10 +1,11 @@
 import ListBox from "../components/Form/ListBox"
 import ModeratorCard from "../components/Cards/ModeratorCard"
 import axios from "axios"
-import { useState } from "react"
+import { ReactElement, useState } from "react"
 import { getSession } from "next-auth/react"
 import { UserRole } from ".prisma/client"
 import { prisma } from "@/utils/db"
+import DefaultLayout from "@/layouts/DefaultLayout"
 
 const filterOptions = ["PENDING", "REMOVED", "DISMISSED", "ALL"]
 
@@ -96,3 +97,7 @@ export async function getServerSideProps({ req }) {
 
 // }
 export default Moderator
+
+Moderator.getLayout = function getLayout(page: ReactElement) {
+  return <DefaultLayout>{page}</DefaultLayout>
+}

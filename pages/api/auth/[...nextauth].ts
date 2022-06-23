@@ -21,7 +21,6 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
     },
     callbacks: {
       async jwt({ token, account, user, profile }) {
-        console.log("account", account, token, user, profile)
         // if (token) {
         // 1. add token.type = account.userType
         // }

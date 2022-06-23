@@ -7,7 +7,7 @@ import {
 import { PublishContent } from "../content/server"
 import { createNotifcationController } from "../notification/controller"
 import { createMoneyTransaction } from "../walet/server"
-import { createJob, getJobs, updateJob } from "./server"
+import { createJob, getJobs, getJobsById, updateJob } from "./server"
 
 export async function createJobController(data: Prisma.JobsCreateInput) {
   const job = await createJob(data)
@@ -77,9 +77,7 @@ export async function reviseContentJobController(id: string) {
 }
 
 export async function cancelJobController(id: string, canceledBy: string) {
-  const job = await updateJob(id, {
-    status: JobsStatus.CANCELED,
-  })
+  const job = await getJobsById(id)
 
   createMoneyTransaction({
     amount: job.price,
@@ -94,5 +92,7 @@ export async function cancelJobController(id: string, canceledBy: string) {
     type: MoneyTransactionType.DEPOSIT,
     status: MoneyTransactionStatus.SUCCESS,
   })
-  return {}
+  return await updateJob(id, {
+    status: JobsStatus.CANCELED,
+  })
 }
