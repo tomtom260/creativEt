@@ -104,7 +104,7 @@ export default function Home({ contents, tags }: HomeProps) {
                 options={filterOptions}
               />
             </div>
-            <div className="  flex self-center  justify-self-center  gap-6">
+            <div className="  flex self-center  justify-self-center  gap-3 max-w-[300px] md:max-w-full overflow-x-scroll">
               {tags.map((tag) => (
                 <Tag
                   key={tag}
