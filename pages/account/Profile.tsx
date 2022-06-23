@@ -1,5 +1,5 @@
 import ProfileLayout from "@/layouts/ProfileLayout"
-import React, { useState, InputHTMLAttributes } from "react"
+import React, { useState, InputHTMLAttributes, useContext } from "react"
 import Text from "@/components/Typography"
 import Button from "@/components/Button"
 import ButtonVariants from "@/components/Button/button.enum"
@@ -10,6 +10,7 @@ import Image from "next/image"
 import { getOptimisedProfileImage } from "@/utils/cloudinary"
 import useUserService from "@/service/user"
 import { useGetCurrentUser } from "@/hooks/user"
+import { LangContext} from "@/hooks/Lang"
 
 function Profile() {
   const { updateCurrentUserProfileImage, updateCurrentUserProfile } =
@@ -24,6 +25,8 @@ function Profile() {
   const [name, setName] = useState(user?.name || "")
   const [location, setLocation] = useState(user?.location || "")
   const [bio, setBio] = useState(user?.bio || "")
+  
+  const { lang, setLang, selectedLang } = useContext(LangContext)
 
   const checkIfImageIsValidBeforeUpload = (image: File) => {
     if (!image.type.includes("image")) {
@@ -126,7 +129,7 @@ function Profile() {
                 onClick={uploadImage}
                 variant={ButtonVariants.PRIMARY}
               >
-                Upload
+                {lang.upload}
               </Button>
             </div>
             <Input
