@@ -49,9 +49,12 @@ export async function boostContent(id: string) {
   })
 }
 export async function deleteContent(id: string) {
-  return await prisma.content.delete({
+  return await prisma.content.update({
     where: {
       id,
+    },
+    data: {
+      deleted: true,
     },
   })
 }
